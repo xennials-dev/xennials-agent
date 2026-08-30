@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights & Research Hub — Xennials | AI Engineering & Automation</title>
+    <meta name="description" content="Technical research, agentic architecture deep dives, DeepTutor breakthroughs, and automation blueprints from Xennials.">
+    <meta name="keywords" content="AI Research, DeepTutor, Multi-Agent Systems, n8n, Activepieces, LLM Caching, Xennials Blog">
+    
+    <!-- Preload Fonts & Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-200 overflow-x-hidden relative">
+
+    <!-- Universal Navigation Header with Projects Dropdown -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold font-space flex items-center gap-2 group">
+                    <span class="w-3 h-3 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform"></span>
+                    <span class="gradient-text tracking-tight">Xennials</span>
+                </a>
+                
+                <div class="hidden lg:flex items-center space-x-7 text-sm font-medium">
+                    <a href="index.html" class="hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="deeptutor.html" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+                        <i class="fas fa-graduation-cap text-indigo-400"></i> DeepTutor
+                    </a>
+                    <a href="playground.html" class="hover:text-indigo-400 transition-colors">Playground</a>
+                    <a href="blog.html" class="text-indigo-400 font-semibold flex items-center gap-1.5 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-500/40">
+                        <i class="fas fa-newspaper"></i> Blog & Insights
+                    </a>
+                    
+                    <!-- Projects Directory Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="flex items-center gap-1.5 hover:text-indigo-400 transition-colors py-1 focus:outline-none" aria-expanded="false">
+                            <span>Projects</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <div class="px-3 py-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider border-b border-slate-800">
+                                Uploaded Projects & Repos
+                            </div>
+                            <a href="deeptutor.html" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-950 flex items-center justify-center text-indigo-400"><i class="fas fa-graduation-cap"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">DeepTutor</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Agent-Native Tutoring Platform</div>
+                                </div>
+                            </a>
+                            <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-cyan-950 flex items-center justify-center text-cyan-400"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">TutorBot Agents</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Live Multi-Agent Workspace</div>
+                                </div>
+                            </a>
+                            <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-amber-950 flex items-center justify-center text-amber-400"><i class="fas fa-brain"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Xennials AI Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Enterprise Autonomous Agents</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-pink-950 flex items-center justify-center text-pink-400"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">21st - UI Components</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Design System & Marketplace</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-purple-950 flex items-center justify-center text-purple-400"><i class="fab fa-python"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">ADK Python</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">AI Agent Framework Toolkit</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400"><i class="fas fa-globe"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Agent-E Web Engine</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Autonomous Web Automation</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-blue-950 flex items-center justify-center text-blue-400"><i class="fas fa-code"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">VS Code Developer Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Custom Developer Toolchains</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="index.html#contact" class="hover:text-indigo-400 transition-colors">Contact</a>
+                    
+                    <!-- Theme Switcher -->
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-full">
+                        <button class="theme-option w-5 h-5 rounded-full bg-indigo-500 hover:scale-110 transition-transform" data-theme-name="default" title="Indigo & Pink"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-cyan-500 hover:scale-110 transition-transform" data-theme-name="cyan" title="Cyber Cyan & Emerald"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-purple-500 hover:scale-110 transition-transform" data-theme-name="purple" title="Deep Purple & Amber"></button>
+                    </div>
+
+                    <div class="h-4 w-px bg-slate-800"></div>
+                    <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="text-gray-400 hover:text-white transition-colors text-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <button class="lg:hidden text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Dropdown -->
+            <div class="hidden lg:hidden mt-4 py-4 px-6 bg-slate-900/95 border border-slate-800 rounded-xl space-y-3" id="mobile-menu">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-indigo-400">Home</a>
+                <a href="deeptutor.html" class="block py-2 text-gray-300 hover:text-indigo-400">DeepTutor (AI Copilot)</a>
+                <a href="playground.html" class="block py-2 text-gray-300 hover:text-indigo-400">Playground</a>
+                <a href="blog.html" class="block py-2 text-indigo-400 font-semibold">Blog & Insights</a>
+                <div class="pt-2 pb-1 border-t border-slate-800">
+                    <span class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Uploaded Projects</span>
+                    <div class="grid grid-cols-1 gap-1.5 mt-2">
+                        <a href="deeptutor.html" class="text-sm py-1 text-indigo-400 hover:text-white"><i class="fas fa-graduation-cap mr-2"></i> DeepTutor Platform</a>
+                        <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-robot mr-2"></i> TutorBot Agents</a>
+                        <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-brain mr-2"></i> Xennials AI Suite</a>
+                        <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-layer-group mr-2"></i> 21st UI Components</a>
+                        <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fab fa-python mr-2"></i> ADK Python</a>
+                        <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-globe mr-2"></i> Agent-E Web Engine</a>
+                        <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-code mr-2"></i> VS Code Extension Suite</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Header Section -->
+    <section class="pt-32 pb-12 relative overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-3xl mx-auto reveal-on-scroll">
+                <div class="inline-flex items-center gap-2 py-1 px-4 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+                    <i class="fas fa-lightbulb"></i> Research, Engineering & AI Horizons
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-space leading-tight mb-6">
+                    Insights & <span class="gradient-text">Research Hub</span>
+                </h1>
+                <p class="text-lg text-gray-400 font-light leading-relaxed mb-8">
+                    Deep dives into agent-native learning architectures, production prompt caching, cognitive memory systems, and full-stack automation engineering.
+                </p>
+
+                <!-- Search and Filters -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
+                    <div class="relative w-full">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="blog-search" placeholder="Search articles, architectures, tags..." class="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Feed Section -->
+    <section class="py-12 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- Filter Categories -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal-on-scroll">
+                <button class="filter-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-category="all">All Articles</button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-category="deeptutor">DeepTutor & Education</button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-category="ai">AI Agent Swarms</button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-category="automation">n8n & Pipelines</button>
+            </div>
+
+            <!-- Featured Article -->
+            <div class="mb-16 reveal-on-scroll" data-article-category="deeptutor">
+                <div class="p-8 sm:p-12 rounded-3xl border border-indigo-500/40 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 shadow-2xl relative overflow-hidden group">
+                    <div class="grid lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-8 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <span class="px-3 py-1 rounded-full bg-indigo-900/80 text-indigo-300 text-xs font-mono border border-indigo-500/30">FEATURED RESEARCH</span>
+                                <span class="text-xs text-gray-400 font-mono">August 2026 • 8 min read</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-space text-white group-hover:text-indigo-300 transition-colors">
+                                DeepTutor Architecture: Moving Beyond Ephemeral LLM Chats to Lifelong Cognitive Companions
+                            </h2>
+                            <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                                Why single-window chatbots fail at true personalized education, and how DeepTutor combines 8 synchronized learning surfaces, a 3-layer persistent memory model, and Socratic multi-agent swarms to achieve permanent student retention.
+                            </p>
+                            <div class="flex flex-wrap items-center gap-4 pt-2">
+                                <a href="deeptutor.html" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold text-sm hover:from-indigo-500 hover:to-pink-500 transition-all inline-flex items-center gap-2">
+                                    Explore DeepTutor Platform <i class="fas fa-arrow-right text-xs"></i>
+                                </a>
+                                <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-gray-300 font-semibold text-sm transition-colors inline-flex items-center gap-2 font-mono">
+                                    <i class="fab fa-github"></i> Repository
+                                </a>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-4 flex justify-center">
+                            <div class="w-48 h-48 sm:w-64 sm:h-64 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex flex-col items-center justify-center text-center p-6 shadow-xl relative">
+                                <i class="fas fa-graduation-cap text-5xl text-indigo-400 mb-3 animate-float"></i>
+                                <span class="font-space font-bold text-white text-base">DeepTutor Engine</span>
+                                <span class="text-xs text-indigo-400 font-mono mt-1">Multi-Agent Socratic Core</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Articles Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/60 glass-panel flex flex-col justify-between reveal-on-scroll" data-article-category="ai">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-indigo-300 font-mono">AI Agents</span>
+                            <span>6 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-3 hover:text-indigo-300 transition-colors">
+                            Byte-Stable Prompt Caching & High-Velocity LLM Agent Routing
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            How we architected the Xennials AI agent runtime with prompt caching to reduce token latency by 68% and slash inference overhead across enterprise CRM workflows.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center gap-1">
+                            Launch Agent Suite <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                        <span class="text-xs text-gray-500">Aug 2026</span>
+                    </div>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/60 glass-panel flex flex-col justify-between reveal-on-scroll" data-article-category="deeptutor">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-pink-300 font-mono">DeepTutor</span>
+                            <span>5 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-3 hover:text-pink-300 transition-colors">
+                            The Socratic Loop: Preventing Passive Knowledge Decay in AI Learning
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Analyzing DeepTutor's active question generation engine and how Leitner spaced repetition algorithms keep complex mathematical proofs fresh indefinitely.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <a href="deeptutor.html" class="text-xs font-mono text-pink-400 hover:text-pink-300 font-semibold inline-flex items-center gap-1">
+                            Explore Socratic Engine <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                        <span class="text-xs text-gray-500">Aug 2026</span>
+                    </div>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/60 glass-panel flex flex-col justify-between reveal-on-scroll" data-article-category="automation">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-gray-400 mb-4">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-cyan-300 font-mono">Automation</span>
+                            <span>7 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-3 hover:text-cyan-300 transition-colors">
+                            Analog Instinct Meets Digital Precision: The Xennial Blueprint
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Bridging tactile analog foundations with autonomous n8n pipelines, Activepieces triggers, and custom Python microservices for resilient operations.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <a href="index.html#calculator" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 font-semibold inline-flex items-center gap-1">
+                            Calculate ROI <i class="fas fa-calculator text-[10px]"></i>
+                        </a>
+                        <span class="text-xs text-gray-500">Aug 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-8 text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2">
+                    <a href="index.html" class="text-2xl font-bold font-space inline-block mb-4">
+                        <span class="gradient-text">Xennials</span>
+                    </a>
+                    <p class="text-gray-400 max-w-md leading-relaxed mb-4 text-xs sm:text-sm">
+                        Bridging analog vibration with digital precision through AI automation, DeepTutor agent learning, and high-performance web engineering.
+                    </p>
+                    <p class="text-gray-500 text-xs">
+                        &copy; 2026 Xennials. All Rights Reserved.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="index.html" class="hover:text-indigo-400 transition-colors">Main Portal</a></li>
+                        <li><a href="deeptutor.html" class="hover:text-indigo-400 transition-colors">DeepTutor Showcase</a></li>
+                        <li><a href="playground.html" class="hover:text-indigo-400 transition-colors">Agent Playground</a></li>
+                        <li><a href="blog.html" class="text-indigo-400 font-semibold">Research Hub</a></li>
+                        <li><a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-400 transition-colors">DeepTutor GitHub</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Connect</h4>
+                    <div class="flex space-x-3 mb-4 text-lg">
+                        <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                        <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" class="hover:text-white transition-colors"><i class="fas fa-globe"></i></a>
+                        <a href="https://xennials.blog" target="_blank" rel="noopener noreferrer" aria-label="Blog" class="hover:text-white transition-colors"><i class="fas fa-rss"></i></a>
+                    </div>
+                    <p class="text-gray-500 text-xs font-mono">teefisher2k20@github.com</p>
+                    <p class="text-gray-500 text-xs font-mono mt-1">xennials.tech</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                <div>
+                    Xennials Research & Insights Hub
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300">DeepTutor GitHub</a>
+                    <span>&bull;</span>
+                    <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300">Official Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back To Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Custom Script -->
+    <script type="module" src="/script.js"></script>
+</body>
+</html>
