@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDeepTutorSimulator();
     initPlaygroundStudio();
     initBlogHub();
+    initWorkflowSuite();
 });
 
 /* Hero Background Ambient Canvas */
@@ -870,3 +871,213 @@ function initBlogHub() {
         });
     });
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   AUTONOMOUS WORKFLOWS & MULTI-AGENT PIPELINE SUITE
+   ═════════════════════════════════════════════════════════════════════ */
+
+function initWorkflowSuite() {
+    initWorkflowTabs();
+    initPipelineInspectorAndSimulator();
+    initCostOptimizerCalculator();
+}
+
+function initWorkflowTabs() {
+    const tabButtons = document.querySelectorAll('.workflow-tab-btn');
+    const tabPanels = document.querySelectorAll('.workflow-tab-content');
+
+    if (!tabButtons.length) return;
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-wf-tab');
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            tabPanels.forEach(panel => {
+                if (panel.id === `wf-panel-${target}`) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            });
+        });
+    });
+}
+
+function initPipelineInspectorAndSimulator() {
+    const nodes = document.querySelectorAll('.pipeline-node');
+    const badgeEl = document.getElementById('inspector-step-badge');
+    const titleEl = document.getElementById('inspector-step-title');
+    const costEl = document.getElementById('inspector-step-cost');
+    const configCodeEl = document.getElementById('inspector-config-code');
+    const payloadCodeEl = document.getElementById('inspector-payload-code');
+    const runBtn = document.getElementById('run-pipeline-sim-btn');
+    const keywordInput = document.getElementById('sim-pipeline-keyword');
+    const statusText = document.getElementById('pipeline-status-text');
+    const liveLogs = document.getElementById('pipeline-live-logs');
+
+    if (!nodes.length) return;
+
+    const STEP_DETAILS = {
+        '1': {
+            badge: 'STEP 1',
+            title: 'Trigger: Google Sheets Watch Changes',
+            cost: 'Cost: $0.00 (Native Trigger)',
+            config: `{\n  "app": "Google Sheets",\n  "action": "Watch Changes",\n  "worksheet": "Video Queue",\n  "triggerColumn": "Status = 'Pending'",\n  "filter": "Keyword is not empty"\n}`,
+            payload: `// Payload emitted to downstream pipeline:\n{\n  "job_id": "vid_89412",\n  "keyword": "how to build an automated AI business",\n  "client_id": "client_acme_01",\n  "tone": "casual_engaging",\n  "target_duration_sec": 60\n}`
+        },
+        '2': {
+            badge: 'STEP 2',
+            title: 'Research Agent: Perplexity API / GPT-4o RAG',
+            cost: 'Cost: ~$0.02 (250 tokens)',
+            config: `{\n  "endpoint": "https://api.perplexity.ai/chat/completions",\n  "model": "sonar-medium-online",\n  "max_tokens": 500,\n  "cache_strategy": "24h_redis_kv"\n}`,
+            payload: `// Research Output Data:\n{\n  "facts": [\n    "Solo entrepreneurs use agent swarms to scale 10x output.",\n    "Make.com + LangGraph reduces delivery time from 4h to 15m.",\n    "Average API operational cost is under $0.50 per final video."\n  ],\n  "sources": ["https://techcrunch.com/ai-agents", "https://arxiv.org/abs/2401"]\n}`
+        },
+        '3': {
+            badge: 'STEP 3',
+            title: 'Script Synthesis: Claude 3.7 / GPT-4o',
+            cost: 'Cost: ~$0.04 (550 words / 480 tokens)',
+            config: `{\n  "model": "claude-3-7-sonnet-20250219",\n  "system_prompt_id": "sys_hook_retention_v3",\n  "temperature": 0.65,\n  "rules": ["Hook in first 3s", "Casual tone", "CTA at end"]\n}`,
+            payload: `// Generated Script:\n{\n  "hook": "What if a one-person business could outproduce a 10-person media team?",\n  "body": "Here is the exact 3-step agent blueprint: 1. Automated lead capture, 2. Multi-agent video assembly, 3. Zero-touch CRM delivery...",\n  "duration_sec": 58\n}`
+        },
+        '4': {
+            badge: 'STEP 4',
+            title: 'Voice Synthesis: ElevenLabs Turbo v2',
+            cost: 'Cost: ~$0.15 (Turbo Model, 50% savings)',
+            config: `{\n  "url": "https://api.elevenlabs.io/v1/text-to-speech/voice_adam_turbo",\n  "model_id": "eleven_turbo_v2",\n  "stability": 0.5,\n  "similarity_boost": 0.75\n}`,
+            payload: `// Audio Output Metadata:\n{\n  "audio_format": "audio/mp3",\n  "duration_sec": 58.4,\n  "sample_rate": 44100,\n  "file_url": "https://cdn.xennials.tech/audio/voice_89412.mp3"\n}`
+        },
+        '5': {
+            badge: 'STEP 5',
+            title: 'Video Compositor: JSON2Video / Pictory API',
+            cost: 'Cost: ~$0.25 (1080p Cloud Render)',
+            config: `{\n  "resolution": "1080x1920",\n  "fps": 30,\n  "scenes": 7,\n  "captions": "auto_animated_subtitles",\n  "audio_track": "voice_89412.mp3"\n}`,
+            payload: `// Rendered Video Asset:\n{\n  "render_id": "rnd_44901",\n  "status": "COMPLETED",\n  "video_url": "https://cdn.xennials.tech/rendered/vid_89412_final.mp4",\n  "filesize_mb": 24.8\n}`
+        },
+        '6': {
+            badge: 'STEP 6',
+            title: 'Auto Delivery & CRM: Drive, Notion, Stripe',
+            cost: 'Cost: $0.00 (Webhook Automation)',
+            config: `{\n  "route_a": "Google Drive: /Client_Acme/March_2026/",\n  "route_b": "Notion Database: Update Status to Completed",\n  "route_c": "Gmail: Auto-notify client with download link"\n}`,
+            payload: `// Delivery Confirmation:\n{\n  "notion_item_updated": true,\n  "drive_file_id": "1xZ9...kM8",\n  "client_email_sent": "client@acmestudios.com",\n  "time_elapsed_total": "14m 32s"\n}`
+        }
+    };
+
+    nodes.forEach(node => {
+        node.addEventListener('click', () => {
+            const stepId = node.getAttribute('data-step-id');
+            nodes.forEach(n => n.classList.remove('active'));
+            node.classList.add('active');
+
+            const info = STEP_DETAILS[stepId];
+            if (info) {
+                if (badgeEl) badgeEl.textContent = info.badge;
+                if (titleEl) titleEl.textContent = info.title;
+                if (costEl) costEl.textContent = info.cost;
+                if (configCodeEl) configCodeEl.textContent = info.config;
+                if (payloadCodeEl) payloadCodeEl.textContent = info.payload;
+            }
+        });
+    });
+
+    // Run Pipeline Simulator
+    if (runBtn) {
+        runBtn.addEventListener('click', () => {
+            const keyword = keywordInput ? keywordInput.value.trim() : 'how to build an automated AI business';
+            if (!keyword) return;
+
+            runBtn.disabled = true;
+            runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Executing Swarm...</span>';
+            if (liveLogs) {
+                liveLogs.classList.remove('hidden');
+                liveLogs.innerHTML = `<div class="text-indigo-400">[00:00] 🚀 Initializing Autonomous Agent Swarm for: "${keyword}"...</div>`;
+            }
+            if (statusText) statusText.innerHTML = 'Status: <span class="text-pink-400 font-bold animate-pulse">Running Swarm...</span>';
+
+            const logs = [
+                { delay: 800, step: 1, log: `[00:02] [Make.com] Row fetched from Google Sheet. Trigger verified for keyword: "${keyword}".` },
+                { delay: 2000, step: 2, log: `[00:05] [Perplexity Agent] 5 research facts & citations extracted (0.8s latency, 240 tokens).` },
+                { delay: 3400, step: 3, log: `[00:09] [Claude 3.7 Sonnet] High-retention 58-second script synthesized with 3-second hook.` },
+                { delay: 4800, step: 4, log: `[00:12] [ElevenLabs Turbo v2] Generated voiceover MP3 (Cost: $0.15, -14 LUFS normalized).` },
+                { delay: 6400, step: 5, log: `[00:15] [JSON2Video Engine] Matched 7 dynamic stock scenes & rendered 1080p MP4 master.` },
+                { delay: 7800, step: 6, log: `[00:18] [Delivery Router] Video saved to Google Drive /Client_Acme/, Notion status updated to Completed ✅.` }
+            ];
+
+            const container = document.getElementById('pipeline-nodes-container');
+            if (container) container.classList.add('sim-running');
+
+            logs.forEach(item => {
+                setTimeout(() => {
+                    nodes.forEach(n => n.classList.remove('running-step'));
+                    const activeNode = document.querySelector(`.pipeline-node[data-step-id="${item.step}"]`);
+                    if (activeNode) {
+                        activeNode.classList.add('running-step');
+                        activeNode.click();
+                    }
+                    if (liveLogs) {
+                        const logRow = document.createElement('div');
+                        logRow.className = 'text-gray-300';
+                        logRow.innerHTML = `<span class="text-emerald-400">✓</span> ${item.log}`;
+                        liveLogs.appendChild(logRow);
+                        liveLogs.scrollTop = liveLogs.scrollHeight;
+                    }
+                }, item.delay);
+            });
+
+            setTimeout(() => {
+                if (container) container.classList.remove('sim-running');
+                nodes.forEach(n => n.classList.remove('running-step'));
+                runBtn.disabled = false;
+                runBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span>Simulation Complete (Run Again)</span>';
+                if (statusText) statusText.innerHTML = 'Status: <span class="text-emerald-400 font-bold">Delivered (100% Zero-Touch)</span>';
+                showToast('Pipeline execution simulation complete!', 'success');
+            }, 8500);
+        });
+    }
+}
+
+function initCostOptimizerCalculator() {
+    const jobsSlider = document.getElementById('cost-calc-jobs');
+    const jobsVal = document.getElementById('cost-calc-jobs-val');
+    const cacheCheckbox = document.getElementById('cost-opt-cache');
+    const routingCheckbox = document.getElementById('cost-opt-routing');
+    const unoptEl = document.getElementById('cost-unopt-total');
+    const optEl = document.getElementById('cost-opt-total');
+    const savingsEl = document.getElementById('cost-savings-monthly');
+
+    if (!jobsSlider) return;
+
+    function updateCalculations() {
+        const jobs = parseInt(jobsSlider.value, 10);
+        if (jobsVal) jobsVal.textContent = `${jobs} videos`;
+
+        const unoptimizedPerJob = 2.10;
+        let optimizedPerJob = 2.10;
+
+        // Apply savings
+        if (routingCheckbox && routingCheckbox.checked) {
+            optimizedPerJob -= 0.90; // Smart model routing
+        }
+        if (cacheCheckbox && cacheCheckbox.checked) {
+            optimizedPerJob -= 0.74; // Prompt caching & system prompt separation
+        }
+
+        // Clamp to minimum cost ($0.46)
+        optimizedPerJob = Math.max(0.46, optimizedPerJob);
+
+        const unoptTotal = jobs * unoptimizedPerJob;
+        const optTotal = jobs * optimizedPerJob;
+        const monthlySavings = unoptTotal - optTotal;
+
+        if (unoptEl) unoptEl.textContent = `$${unoptTotal.toFixed(2)}/mo`;
+        if (optEl) optEl.textContent = `$${optTotal.toFixed(2)}/mo`;
+        if (savingsEl) savingsEl.textContent = `$${monthlySavings.toFixed(2)} / month`;
+    }
+
+    jobsSlider.addEventListener('input', updateCalculations);
+    if (cacheCheckbox) cacheCheckbox.addEventListener('change', updateCalculations);
+    if (routingCheckbox) routingCheckbox.addEventListener('change', updateCalculations);
+    updateCalculations();
+}
+

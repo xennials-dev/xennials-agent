@@ -1047,7 +1047,11 @@
             "What are the primary attack vectors against LLM Agent tool execution (Prompt Injection, Indirect Injection, Tool Poisoning) and how to mitigate them?",
             "Write a comprehensive benchmark comparing React Server Components vs Island Architecture in Astro and Fresh.",
             "Explain the difference between FlashAttention-1, 2, and 3 in terms of GPU SRAM tiling, HBM memory IO reduction, and causal masking.",
-            "Write an optimized SQL query for calculating 30-day customer retention cohorts with window functions."
+            "Write an optimized SQL query for calculating 30-day customer retention cohorts with window functions.",
+            "Design an end-to-end Make.com 6-stage video automation pipeline connecting Google Sheets, Perplexity API for RAG, Claude 3.7 for script synthesis, ElevenLabs Turbo v2 for audio, and JSON2Video for rendering.",
+            "Provide the architectural blueprint for a 7-agent autonomous workforce (Orchestrator, Deep Research, Content Writer, Visuals, Voice, Video Editor, QA/Evaluator) using LangGraph state machines.",
+            "Write a complete API cost optimization guide for generative AI workloads: compare naive brute-force inference vs smart model routing (Flash vs Pro) and prompt caching, calculating $/month savings and margin.",
+            "Outline an automated client onboarding workflow using Typeform, PandaDoc e-sign webhooks, Stripe billing, and automatic monthly PDF reporting with APITemplate.io."
         ],
         compare: [
             "Write a Python function that solves the 0/1 Knapsack problem using dynamic programming with memory space optimization O(W). Explain every step.",
