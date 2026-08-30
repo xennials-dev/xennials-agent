@@ -60,6 +60,7 @@
         bindImageMode();
         bindVideoMode();
         bindAutoResize();
+        bindRandomPromptGenerators();
 
         // Load saved config from localStorage
         const savedUrl = localStorage.getItem('pg_gateway_url');
@@ -1025,6 +1026,141 @@
         html = html.replace(/\n/g, '<br>');
 
         return html;
+    }
+
+    // ═════════════════════════════════════════════════════════════════════
+    // RANDOM PROMPT GENERATOR ENGINE
+    // ═════════════════════════════════════════════════════════════════════
+
+    const RANDOM_PROMPT_LIBRARY = {
+        chat: [
+            "Explain the architectural trade-offs between Multi-Head Self-Attention and Grouped-Query Attention (GQA) in modern LLMs.",
+            "Write a production-ready Python asynchronous web scraper using httpx and asyncio with automatic rate limiting and retries.",
+            "Design a distributed event-driven workflow engine in TypeScript with durable execution and step idempotency.",
+            "Explain the mathematical proof behind why Gradient Descent converges on convex loss landscapes with Lipschitz continuous gradients.",
+            "Compare the memory overhead and lookup performance of B-Trees vs Log-Structured Merge (LSM) Trees in write-heavy databases.",
+            "Draft an architectural blueprint for an autonomous multi-agent code refactoring swarm with tool verification.",
+            "How does zero-knowledge proof (zk-SNARKs) verify computational integrity without revealing underlying private inputs?",
+            "Write a high-performance Rust function that implements SIMD-accelerated cosine similarity between two 1536-dimensional embeddings.",
+            "Explain quantum error correction using surface codes and physical vs logical qubit scaling laws.",
+            "Create a clean TypeScript implementation of the Actor Model concurrency pattern with mailbox backpressure.",
+            "What are the primary attack vectors against LLM Agent tool execution (Prompt Injection, Indirect Injection, Tool Poisoning) and how to mitigate them?",
+            "Write a comprehensive benchmark comparing React Server Components vs Island Architecture in Astro and Fresh.",
+            "Explain the difference between FlashAttention-1, 2, and 3 in terms of GPU SRAM tiling, HBM memory IO reduction, and causal masking.",
+            "Write an optimized SQL query for calculating 30-day customer retention cohorts with window functions."
+        ],
+        compare: [
+            "Write a Python function that solves the 0/1 Knapsack problem using dynamic programming with memory space optimization O(W). Explain every step.",
+            "A train leaves station A at 60 mph heading to B (120 miles away). A fly starts at A at 90 mph, flies to B, turns around, and continues back and forth until the trains meet. How far did the fly travel? Provide formal logic proof.",
+            "Refactor this JavaScript callback hell into a clean async/await pattern with robust concurrent Promise.allSettled error boundaries.",
+            "Critique the CAP theorem vs PACELC theorem in modern distributed databases like CockroachDB, Spanner, and DynamoDB.",
+            "Which sorting algorithm would you select for sorting 100GB of integers on a machine with 4GB RAM? Detail the external merge sort algorithm and disk I/O.",
+            "Is P vs NP independent of ZFC set theory? Discuss current theoretical consensus and barrier results (Relativization, Natural Proofs, Algebrization).",
+            "Write a complete Docker Compose environment for a microservices cluster with Redis Sentinel, Postgres read-replicas, and LiteLLM proxy."
+        ],
+        image: [
+            "A futuristic cyberpunk skyscraper atrium at dusk, holographic neon interfaces glowing in cyan and magenta, lush vertical hydroponic gardens, volumetric god rays, cinematic 8k, Unreal Engine 5 render.",
+            "Ethereal bioluminescent jellyfish floating through a cosmic planetary nebula, stardust particles, deep indigo and golden luminescence, photorealistic macro photography.",
+            "An isometric miniature 3D diorama of an AI research laboratory inside a glowing quartz crystal, microscopic robotic drones, intricate detail, octane render.",
+            "A serene Japanese tea house built atop a mist-covered mountain peak at golden hour, cherry blossom petals blowing in the wind, hyper-detailed oil painting style, artstation trending.",
+            "A sleek retro-futuristic humanoid robot playing a glass grand piano in a moonlit cathedral, reflections on polished marble floor, moody atmospheric lighting, cinematic 35mm.",
+            "An ancient library carved directly into a massive emerald cavern, floating glowing parchment scrolls, ancient runes etched in gold, photorealistic, 8k resolution.",
+            "A high-tech cybernetic tiger with glowing fiber-optic fur walking through a rain-slicked Tokyo alley, neon reflections in puddles, dramatic cinematic rim lighting."
+        ],
+        video: [
+            "A breathtaking cinematic drone shot gliding smoothly over a neon-lit futuristic metropolis at golden hour, flying vehicles soaring between glass spires, photorealistic 4k 60fps motion.",
+            "Macro slow-motion camera zoom into a crystal sphere revealing an entire swirling galaxy within, liquid starlight ripples, smooth fluid dynamics, 8k cinematic masterpiece.",
+            "Time-lapse of vibrant emerald aurora borealis dancing across a starry night sky above a glowing modular scientific base in the Arctic, smooth atmospheric transitions.",
+            "A robotic golden hummingbird hovering in front of a blooming mechanical flower, intricate gear movements, high-speed macro shutter, ultra-smooth motion.",
+            "First-person perspective flying through a surreal cosmic canyon made of glowing purple crystalline structures, hyper-speed smooth glide, volumetric light shafts.",
+            "Cinematic tracking shot following an autonomous electric hypercar speeding across a scenic coastal mountain highway during a dramatic sunset."
+        ]
+    };
+
+    function bindRandomPromptGenerators() {
+        // Chat Mode Random Prompt
+        const chatInput = $('#chat-input');
+        const chatSendBtn = $('#chat-send-btn');
+        const triggerChat = (btn) => {
+            const pool = RANDOM_PROMPT_LIBRARY.chat;
+            const prompt = pool[Math.floor(Math.random() * pool.length)];
+            if (chatInput) {
+                chatInput.value = prompt;
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
+                if (chatSendBtn && STATE.selectedModel) {
+                    chatSendBtn.disabled = false;
+                }
+                chatInput.classList.remove('prompt-flash-highlight');
+                void chatInput.offsetWidth; // trigger reflow
+                chatInput.classList.add('prompt-flash-highlight');
+                chatInput.focus();
+            }
+            if (btn) {
+                btn.classList.add('rolling');
+                setTimeout(() => btn.classList.remove('rolling'), 500);
+            }
+        };
+
+        const chatBtn = $('#random-chat-prompt-btn');
+        const chatIconBtn = $('#random-chat-icon-btn');
+        if (chatBtn) chatBtn.addEventListener('click', () => triggerChat(chatBtn));
+        if (chatIconBtn) chatIconBtn.addEventListener('click', () => triggerChat(chatIconBtn));
+
+        // Compare Mode Random Prompt
+        const comparePrompt = $('#compare-prompt');
+        const compareBtn = $('#random-compare-prompt-btn');
+        const compareSendBtn = $('#compare-send-btn');
+        if (compareBtn && comparePrompt) {
+            compareBtn.addEventListener('click', () => {
+                const pool = RANDOM_PROMPT_LIBRARY.compare;
+                const prompt = pool[Math.floor(Math.random() * pool.length)];
+                comparePrompt.value = prompt;
+                comparePrompt.classList.remove('prompt-flash-highlight');
+                void comparePrompt.offsetWidth;
+                comparePrompt.classList.add('prompt-flash-highlight');
+                comparePrompt.focus();
+                if (compareSendBtn && $('#compare-model-a').value && $('#compare-model-b').value) {
+                    compareSendBtn.disabled = false;
+                }
+                compareBtn.classList.add('rolling');
+                setTimeout(() => compareBtn.classList.remove('rolling'), 500);
+            });
+        }
+
+        // Image Mode Random Prompt
+        const imagePrompt = $('#image-prompt');
+        const imageBtn = $('#random-image-prompt-btn');
+        if (imageBtn && imagePrompt) {
+            imageBtn.addEventListener('click', () => {
+                const pool = RANDOM_PROMPT_LIBRARY.image;
+                const prompt = pool[Math.floor(Math.random() * pool.length)];
+                imagePrompt.value = prompt;
+                imagePrompt.classList.remove('prompt-flash-highlight');
+                void imagePrompt.offsetWidth;
+                imagePrompt.classList.add('prompt-flash-highlight');
+                imagePrompt.focus();
+                imageBtn.classList.add('rolling');
+                setTimeout(() => imageBtn.classList.remove('rolling'), 500);
+            });
+        }
+
+        // Video Mode Random Prompt
+        const videoPrompt = $('#video-prompt');
+        const videoBtn = $('#random-video-prompt-btn');
+        if (videoBtn && videoPrompt) {
+            videoBtn.addEventListener('click', () => {
+                const pool = RANDOM_PROMPT_LIBRARY.video;
+                const prompt = pool[Math.floor(Math.random() * pool.length)];
+                videoPrompt.value = prompt;
+                videoPrompt.classList.remove('prompt-flash-highlight');
+                void videoPrompt.offsetWidth;
+                videoPrompt.classList.add('prompt-flash-highlight');
+                videoPrompt.focus();
+                videoBtn.classList.add('rolling');
+                setTimeout(() => videoBtn.classList.remove('rolling'), 500);
+            });
+        }
     }
 
     function showToast(message, type = 'info') {

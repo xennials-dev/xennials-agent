@@ -378,27 +378,37 @@
                         </div>
 
                         <!-- Prompt Preset Pills -->
-                        <div class="px-6 py-2 bg-slate-950/60 border-t border-slate-800/80 flex items-center gap-2 overflow-x-auto text-xs">
-                            <span class="text-gray-500 text-[11px] uppercase font-semibold flex-shrink-0">Presets:</span>
-                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="attention">
-                                Multi-Head Attention
-                            </button>
-                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="gradient">
-                                Gradient Descent Derivation
-                            </button>
-                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="redblack">
-                                Red-Black Trees Balancing
-                            </button>
-                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="schrodinger">
-                                Schrödinger Wave Equation
+                        <div class="px-6 py-2.5 bg-slate-950/60 border-t border-slate-800/80 flex items-center justify-between gap-2 overflow-x-auto text-xs">
+                            <div class="flex items-center gap-2 overflow-x-auto">
+                                <span class="text-gray-500 text-[11px] uppercase font-semibold flex-shrink-0">Presets:</span>
+                                <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="attention">
+                                    Multi-Head Attention
+                                </button>
+                                <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="gradient">
+                                    Gradient Descent Derivation
+                                </button>
+                                <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="redblack">
+                                    Red-Black Trees Balancing
+                                </button>
+                                <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="schrodinger">
+                                    Schrödinger Wave Equation
+                                </button>
+                            </div>
+                            <button type="button" id="random-sim-prompt-btn" class="random-prompt-btn bg-indigo-950/90 border-indigo-500/40 text-indigo-300 hover:text-white flex-shrink-0" title="Generate random research topic">
+                                <i class="fas fa-dice"></i> <span>Random Topic</span>
                             </button>
                         </div>
 
                         <!-- Input Bar -->
                         <div class="p-4 bg-slate-950 border-t border-slate-800">
                             <form id="sim-input-form" class="flex gap-3">
-                                <input type="text" id="sim-user-input" placeholder="Ask DeepTutor a technical concept, derivation, or problem..." class="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
-                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold text-sm hover:from-indigo-500 hover:to-pink-500 transition-all flex items-center gap-2">
+                                <div class="flex-1 relative">
+                                    <input type="text" id="sim-user-input" placeholder="Ask DeepTutor a technical concept, derivation, or problem..." class="w-full px-4 py-3 bg-slate-900 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors pr-11">
+                                    <button type="button" id="random-sim-icon-btn" class="absolute right-3.5 top-3 text-indigo-400/60 hover:text-indigo-300 transition-all hover:scale-110" title="Surprise me with a technical topic">
+                                        <i class="fas fa-dice text-base"></i>
+                                    </button>
+                                </div>
+                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold text-sm hover:from-indigo-500 hover:to-pink-500 transition-all flex items-center gap-2 flex-shrink-0">
                                     <span>Send</span> <i class="fas fa-paper-plane text-xs"></i>
                                 </button>
                             </form>

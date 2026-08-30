@@ -703,6 +703,40 @@ function initDeepTutorSimulator() {
         });
     });
 
+    // Random Technical Topic Generator
+    const STEM_TOPICS = [
+        "Explain how Scaled Dot-Product Attention maintains gradient stability as key dimension d_k increases.",
+        "Derive the Backpropagation equations for a 2-layer MLP with Cross-Entropy Loss from first principles.",
+        "Prove that any comparison-based sorting algorithm has a lower bound of Ω(n log n) comparisons.",
+        "How do Raft consensus leader election and log replication guarantees prevent split-brain partitions?",
+        "Explain the physics of quantum entanglement and Bell's theorem violation in EPR paradox experiments.",
+        "Analyze why transformer KV-cache memory usage scales linearly with sequence length O(N) and batch size.",
+        "Derive the Euler-Lagrange equations from the Principle of Stationary Action in classical mechanics.",
+        "Explain the formal proof of Gödel's First Incompleteness Theorem using Gödel numbering and self-reference.",
+        "How does TCP BBR congestion control estimate bottleneck bandwidth and round-trip propagation time without packet loss?",
+        "Explain Fourier Transform duality: why sharp localization in the time domain creates broad spread in the frequency domain."
+    ];
+
+    const randomSimBtn = document.getElementById('random-sim-prompt-btn');
+    const randomSimIcon = document.getElementById('random-sim-icon-btn');
+    const triggerSimRandom = (btn) => {
+        const topic = STEM_TOPICS[Math.floor(Math.random() * STEM_TOPICS.length)];
+        if (simInput) {
+            simInput.value = topic;
+            simInput.classList.remove('prompt-flash-highlight');
+            void simInput.offsetWidth;
+            simInput.classList.add('prompt-flash-highlight');
+            simInput.focus();
+        }
+        if (btn) {
+            btn.classList.add('rolling');
+            setTimeout(() => btn.classList.remove('rolling'), 500);
+        }
+    };
+
+    if (randomSimBtn) randomSimBtn.addEventListener('click', () => triggerSimRandom(randomSimBtn));
+    if (randomSimIcon) randomSimIcon.addEventListener('click', () => triggerSimRandom(randomSimIcon));
+
     // Custom Form Submit
     simForm.addEventListener('submit', (e) => {
         e.preventDefault();
