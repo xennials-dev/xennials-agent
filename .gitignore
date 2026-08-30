@@ -1,0 +1,4 @@
+node_modules
+.env.playground
+.env.local
+*.db

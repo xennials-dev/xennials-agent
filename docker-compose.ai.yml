@@ -1,0 +1,189 @@
+# ============================================================================
+# Xennials AI Playground — Docker Compose Stack
+# ============================================================================
+# Three-tier architecture:
+#   1. LiteLLM Proxy   → Unified OpenAI-compatible API gateway (:4000)
+#   2. Ollama           → Local LLM inference engine (:11434)
+#   3. Open WebUI       → Full-featured chat UI (optional, :3000)
+#
+# Quick Start:
+#   1. Copy .env.playground.example → .env.playground  (fill in API keys)
+#   2. docker compose -f docker-compose.ai.yml up -d
+#   3. Pull models:  docker exec ollama ollama pull llama3.3
+#   4. Open:
+#      - LiteLLM admin:  http://localhost:4000/ui
+#      - Open WebUI:     http://localhost:3000
+#      - Your playground: http://localhost:5173/playground.html
+#        (set LITELLM_BASE_URL=http://localhost:4000/v1)
+# ============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  # Ollama — Local Model Inference Engine
+  # --------------------------------------------------------------------------
+  # Runs open-weights LLMs (Llama, Qwen, DeepSeek, Gemma, Phi, Mistral)
+  # on your local GPU or CPU. Models are pulled on-demand and cached to
+  # a persistent Docker volume.
+  #
+  # GPU Support:
+  #   - NVIDIA: Uncomment the 'deploy' block below (requires nvidia-container-toolkit)
+  #   - AMD ROCm: Use image 'ollama/ollama:rocm' + device passthrough
+  #   - CPU-only: Works as-is (slower inference, quantized models recommended)
+  # --------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*                        # Allow cross-origin requests
+      - OLLAMA_NUM_PARALLEL=4                   # Concurrent request slots
+      - OLLAMA_MAX_LOADED_MODELS=3              # Max models in VRAM simultaneously
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    # ── NVIDIA GPU Acceleration ─────────────────────────────────────────────
+    # Uncomment the block below if you have an NVIDIA GPU + nvidia-container-toolkit
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all                       # Use 'all' or a specific count (1, 2)
+    #           capabilities: [gpu]
+
+  # --------------------------------------------------------------------------
+  # Model Bootstrap — Auto-Pull Essential Models on First Run
+  # --------------------------------------------------------------------------
+  # This one-shot init container pulls a curated starter set of models
+  # into Ollama so the playground is immediately usable after `docker compose up`.
+  # It exits after pulling and does not consume ongoing resources.
+  # --------------------------------------------------------------------------
+  ollama-init:
+    image: curlimages/curl:latest
+    container_name: ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "═══════════════════════════════════════════════════"
+        echo "  Pulling starter models into Ollama..."
+        echo "═══════════════════════════════════════════════════"
+
+        # Fast small models (good for CPU / low-VRAM)
+        curl -sf http://ollama:11434/api/pull -d '{"name":"phi4"}'
+        echo " ✓ phi4 (14B) pulled"
+
+        curl -sf http://ollama:11434/api/pull -d '{"name":"mistral-nemo"}'
+        echo " ✓ mistral-nemo (12B) pulled"
+
+        curl -sf http://ollama:11434/api/pull -d '{"name":"nomic-embed-text"}'
+        echo " ✓ nomic-embed-text (embeddings) pulled"
+
+        echo ""
+        echo "═══════════════════════════════════════════════════"
+        echo "  Starter models ready!"
+        echo "  For larger models, run manually:"
+        echo "    docker exec ollama ollama pull llama3.3"
+        echo "    docker exec ollama ollama pull qwen2.5-coder:32b"
+        echo "    docker exec ollama ollama pull deepseek-r1:14b"
+        echo "    docker exec ollama ollama pull gemma2:27b"
+        echo "═══════════════════════════════════════════════════"
+
+  # --------------------------------------------------------------------------
+  # LiteLLM Proxy — Unified OpenAI-Compatible Gateway
+  # --------------------------------------------------------------------------
+  # Single /v1 endpoint that routes to:
+  #   • Local Ollama models
+  #   • Cloud open-weights APIs (Groq, Together, DeepInfra, OpenRouter)
+  #   • fal.ai media generation endpoints
+  #
+  # Admin UI:  http://localhost:4000/ui
+  # API Base:  http://localhost:4000/v1
+  # --------------------------------------------------------------------------
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm-proxy
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    environment:
+      # ── Gateway Master Key (change for production!) ──────────────────────
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY:-sk-xennials-playground-dev-key}
+
+      # ── Cloud Provider API Keys (set in .env.playground) ─────────────────
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY:-}
+      - DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - FAL_KEY=${FAL_KEY:-}
+    command:
+      - "--config=/app/config.yaml"
+      - "--port=4000"
+      - "--detailed_debug=false"
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:4000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # --------------------------------------------------------------------------
+  # Open WebUI — Feature-Rich Chat & Playground Interface (Optional)
+  # --------------------------------------------------------------------------
+  # Full-featured alternative / companion UI with:
+  #   • Multi-model side-by-side comparisons
+  #   • RAG document upload & embedding
+  #   • System prompt management
+  #   • Parameter tuning (temperature, top-P, top-K, repeat penalty)
+  #   • Conversation history & sharing
+  #
+  # Points to LiteLLM as its backend, so all models are automatically available.
+  # Comment out this entire service if you only use your custom playground.html.
+  # --------------------------------------------------------------------------
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    volumes:
+      - open_webui_data:/app/backend/data
+    environment:
+      # Point to LiteLLM proxy as the OpenAI-compatible backend
+      - OPENAI_API_BASE_URL=http://litellm:4000/v1
+      - OPENAI_API_KEY=${LITELLM_MASTER_KEY:-sk-xennials-playground-dev-key}
+      # Also register Ollama directly for native Ollama model management
+      - OLLAMA_BASE_URL=http://ollama:11434
+      # WebUI settings
+      - WEBUI_AUTH=false                        # Disable auth for local dev
+      - WEBUI_NAME=Xennials AI Playground
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_EMBEDDING_MODEL=nomic-embed-text
+    depends_on:
+      litellm:
+        condition: service_healthy
+
+# ---------------------------------------------------------------------------
+# Persistent Volumes
+# ---------------------------------------------------------------------------
+volumes:
+  ollama_data:
+    name: xennials_ollama_data
+  open_webui_data:
+    name: xennials_open_webui_data

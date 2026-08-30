@@ -1,0 +1,672 @@
+# ============================================================================
+# LiteLLM Proxy — Unified Open-Source & Open-Weights AI Gateway
+# Global Free-Tier Router & Multi-Provider Load Balancer
+# ============================================================================
+# Automatically routes all generation requests to the best available free-tier
+# endpoints first (Groq free tier, OpenRouter :free, Hugging Face free tier,
+# and local Ollama zero-cost GPU/CPU inference) with seamless failover.
+# ============================================================================
+
+general_settings:
+  master_key: "sk-xennials-playground-dev-key"
+  database_url: "sqlite:///litellm_proxy.db"
+  alerting: []
+
+litellm_settings:
+  num_retries: 3
+  request_timeout: 180
+  drop_params: true
+  set_verbose: false
+  telemetry: false
+
+# ---------------------------------------------------------------------------
+# Router Settings — Smart Free-Tier Routing & Category Aliases
+# ---------------------------------------------------------------------------
+router_settings:
+  routing_strategy: "latency-based-routing"
+  enable_pre_call_checks: true
+
+  model_group_alias:
+    # ── Master Default: Always routes to the Best Free Model available ─────
+    "default":
+      - "free-tier-best"
+    "best":
+      - "free-tier-best"
+    "auto":
+      - "free-tier-best"
+
+    # ── Tier 1: Highest Quality Free General Purpose ────────────────────────
+    "free-tier-best":
+      - "groq-llama-3.3-70b"                # Ultra-fast 70B (Free tier)
+      - "openrouter-llama-3.3-70b-free"     # OpenRouter 70B Free
+      - "groq-deepseek-r1-70b"              # DeepSeek R1 70B (Free tier)
+      - "openrouter-deepseek-r1-free"       # DeepSeek R1 Free
+      - "openrouter-gemini-2.0-flash-free"  # Google 2.0 Flash Free
+      - "ollama-qwen2.5-latest"             # Local Ollama Qwen 2.5 (100% Free)
+      - "ollama-llama-3.3-70b"              # Local Ollama Llama 3.3
+      - "ollama-deepseek-coder-latest"      # Local Ollama DeepSeek Coder
+
+    # ── Tier 2: Free Reasoning & Deep Thinking ──────────────────────────────
+    "free-tier-reasoning":
+      - "groq-deepseek-r1-70b"              # Groq R1 70B (Free)
+      - "openrouter-deepseek-r1-free"       # OpenRouter R1 (Free)
+      - "ollama-deepseek-r1-14b"            # Local R1 14B
+      - "ollama-deepseek-coder-latest"      # Local DeepSeek Coder
+      - "ollama-qwen2.5-latest"             # Local Qwen 2.5
+
+    # ── Tier 3: Free Coding & Software Engineering ──────────────────────────
+    "free-tier-code":
+      - "openrouter-qwen-2.5-coder-free"    # Qwen 2.5 Coder 32B Free
+      - "ollama-deepseek-coder-latest"      # Local DeepSeek Coder (Installed)
+      - "ollama-qwen2.5-latest"             # Local Qwen 2.5 (Installed)
+      - "groq-llama-3.3-70b"                # Groq 70B Free
+      - "openrouter-devstral-free"          # Mistral Devstral Free
+
+    # ── Tier 4: Free Ultra-Fast & Low Latency ───────────────────────────────
+    "free-tier-fast":
+      - "groq-gemma-2-9b"                   # Groq Gemma 2 9B (~300+ tok/s Free)
+      - "groq-llama-3.3-70b"                # Groq Llama 3.3 70B (~250+ tok/s Free)
+      - "openrouter-gemini-2.0-flash-free"  # OpenRouter Flash Free
+      - "ollama-qwen2.5-latest"             # Local Qwen 2.5
+
+    # ── Tier 5: Free Vision & Multimodal ────────────────────────────────────
+    "free-tier-vision":
+      - "openrouter-gemini-2.0-flash-free"  # Gemini 2.0 Flash Multimodal Free
+      - "openrouter-llama-3.2-11b-vision"   # Llama 3.2 11B Vision Free
+      - "ollama-llava-13b"                  # Local LLaVA 13B (Ollama)
+
+model_list:
+
+  # ========================================================================
+  # 1. LOCAL INFERENCE ENGINE (Ollama — 100% Free & Private)
+  # ========================================================================
+  - model_name: ollama-qwen2.5-latest
+    litellm_params:
+      model: ollama/qwen2.5:latest
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "Qwen 2.5 (Local Ollama — Installed)"
+      mode: chat
+
+  - model_name: ollama-deepseek-coder-latest
+    litellm_params:
+      model: ollama/deepseek-coder:latest
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "DeepSeek Coder (Local Ollama — Installed)"
+      mode: chat
+
+  - model_name: ollama-yi-latest
+    litellm_params:
+      model: ollama/yi:latest
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "01.AI Yi (Local Ollama — Installed)"
+      mode: chat
+
+  - model_name: ollama-llama-3.3-70b
+    litellm_params:
+      model: ollama/llama3.3
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "Meta Llama 3.3 70B (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-deepseek-r1-14b
+    litellm_params:
+      model: ollama/deepseek-r1:14b
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "DeepSeek R1 14B Reasoning (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-gemma-2-27b
+    litellm_params:
+      model: ollama/gemma2:27b
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "Google Gemma 2 27B (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-mistral-nemo
+    litellm_params:
+      model: ollama/mistral-nemo
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "Mistral Nemo 12B (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-phi-4
+    litellm_params:
+      model: ollama/phi4
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "Microsoft Phi-4 14B (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-llava-13b
+    litellm_params:
+      model: ollama/llava:13b
+      api_base: http://host.docker.internal:11434
+      stream: true
+    model_info:
+      description: "LLaVA 1.6 13B Vision (Local Ollama)"
+      mode: chat
+
+  - model_name: ollama-nomic-embed-text
+    litellm_params:
+      model: ollama/nomic-embed-text
+      api_base: http://host.docker.internal:11434
+    model_info:
+      description: "Nomic Embeddings (Local Ollama)"
+      mode: embedding
+
+  # ========================================================================
+  # 2. CLOUD FREE-TIER PROVIDERS (Groq & OpenRouter Free Tier)
+  # ========================================================================
+  - model_name: groq-llama-3.3-70b
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      description: "Meta Llama 3.3 70B via Groq (Free Tier / Ultra-Fast)"
+      mode: chat
+
+  - model_name: groq-deepseek-r1-70b
+    litellm_params:
+      model: groq/deepseek-r1-distill-llama-70b
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      description: "DeepSeek R1 Distill 70B via Groq (Free Tier)"
+      mode: chat
+
+  - model_name: groq-gemma-2-9b
+    litellm_params:
+      model: groq/gemma2-9b-it
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      description: "Gemma 2 9B via Groq (Free Tier / 300+ tok/s)"
+      mode: chat
+
+  - model_name: openrouter-llama-3.3-70b-free
+    litellm_params:
+      model: openrouter/meta-llama/llama-3.3-70b-instruct:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Llama 3.3 70B (OpenRouter 100% Free Endpoint)"
+      mode: chat
+
+  - model_name: openrouter-deepseek-r1-free
+    litellm_params:
+      model: openrouter/deepseek/deepseek-r1:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "DeepSeek R1 (OpenRouter 100% Free Endpoint)"
+      mode: chat
+
+  - model_name: openrouter-qwen-2.5-coder-free
+    litellm_params:
+      model: openrouter/qwen/qwen-2.5-coder-32b-instruct:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 2.5 Coder 32B (OpenRouter Free Endpoint)"
+      mode: chat
+
+  - model_name: openrouter-gemini-2.0-flash-free
+    litellm_params:
+      model: openrouter/google/gemini-2.0-flash-exp:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Google Gemini 2.0 Flash (OpenRouter Free Multimodal)"
+      mode: chat
+
+  - model_name: openrouter-llama-3.2-11b-vision
+    litellm_params:
+      model: openrouter/meta-llama/llama-3.2-11b-vision-instruct:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Llama 3.2 11B Vision (OpenRouter Free)"
+      mode: chat
+
+  - model_name: openrouter-devstral-free
+    litellm_params:
+      model: openrouter/mistralai/devstral-small-2505:free
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Mistral Devstral (OpenRouter Free)"
+      mode: chat
+
+  # ========================================================================
+  # 3. GLOBAL OPEN-WEIGHTS BENCHMARK CATALOG (Hosted / Self-Hostable)
+  # ========================================================================
+
+  # ── Moonshot Kimi Series ────────────────────────────────────────────────
+  - model_name: kimi-k3-max
+    litellm_params:
+      model: openrouter/moonshotai/kimi-k3
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Kimi K3 (max) — 2.8T MoE / 104B active / 1M context"
+      mode: chat
+
+  - model_name: kimi-k2.7-code
+    litellm_params:
+      model: openrouter/moonshotai/kimi-k2.7-code
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Kimi K2.7 Code — 1T MoE / 32B active / 256k context"
+      mode: chat
+
+  - model_name: kimi-k2.6
+    litellm_params:
+      model: openrouter/moonshotai/kimi-k2.6
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Kimi K2.6 — 1T MoE / 32B active / 256k context"
+      mode: chat
+
+  # ── Z AI GLM Series ─────────────────────────────────────────────────────
+  - model_name: glm-5.3-max
+    litellm_params:
+      model: openrouter/zai-org/glm-5.3
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "GLM-5.3 (max) — 753B MoE / 40B active / 1M context"
+      mode: chat
+
+  - model_name: glm-5.3-flash
+    litellm_params:
+      model: openrouter/zai-org/glm-5.3-flash
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "GLM-5.3-Flash — 320B MoE / 18B active / 1M context"
+      mode: chat
+
+  - model_name: glm-5.2-max
+    litellm_params:
+      model: openrouter/zai-org/glm-5.2
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "GLM-5.2 (max) — 753B MoE / 40B active / 1M context"
+      mode: chat
+
+  - model_name: glm-4.7-flash
+    litellm_params:
+      model: openrouter/zai-org/glm-4.7-flash
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "GLM-4.7-Flash — 31.2B MoE / 3B active / 200k context"
+      mode: chat
+
+  # ── Alibaba Qwen 3 / 3.5 / 3.8 Series ───────────────────────────────────
+  - model_name: qwen-3.8-2.4t-a95b
+    litellm_params:
+      model: openrouter/qwen/qwen3.8-2.4t-a95b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.8 — 2.4T MoE / 95B active / 984k context"
+      mode: chat
+
+  - model_name: qwen-3.8-flash-next
+    litellm_params:
+      model: openrouter/qwen/qwen3.8-flash-next
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.8-Flash-Next — 180B MoE / 6B active / 256k context"
+      mode: chat
+
+  - model_name: qwen-3.8-27b
+    litellm_params:
+      model: openrouter/qwen/qwen3.8-27b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.8 27B — 256k context reasoning"
+      mode: chat
+
+  - model_name: qwen-3.5-397b-a17b
+    litellm_params:
+      model: openrouter/qwen/qwen3.5-397b-a17b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.5 397B A17B — Reasoning MoE"
+      mode: chat
+
+  - model_name: qwen-3.5-122b-a10b
+    litellm_params:
+      model: openrouter/qwen/qwen3.5-122b-a10b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.5 122B A10B — Reasoning MoE"
+      mode: chat
+
+  - model_name: qwen-3.5-27b
+    litellm_params:
+      model: openrouter/qwen/qwen3.5-27b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.5 27.8B — Reasoning & General"
+      mode: chat
+
+  - model_name: qwen-3.5-9b
+    litellm_params:
+      model: openrouter/qwen/qwen3.5-9b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3.5 9.7B — 262k context"
+      mode: chat
+
+  - model_name: qwen-3-vl-235b-a22b
+    litellm_params:
+      model: openrouter/qwen/qwen3-vl-235b-a22b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3 VL 235B A22B — Vision-Language Reasoning"
+      mode: chat
+
+  - model_name: qwen-3-coder-480b
+    litellm_params:
+      model: openrouter/qwen/qwen3-coder-480b-a35b-instruct
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Qwen 3 Coder 480B A35B — Frontier Coding Agent"
+      mode: chat
+
+  # ── DeepSeek Frontier Series ───────────────────────────────────────────
+  - model_name: deepseek-v4-pro
+    litellm_params:
+      model: openrouter/deepseek/deepseek-v4-pro
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "DeepSeek V4 Pro — 1.6T MoE / 49B active / 1M context"
+      mode: chat
+
+  - model_name: deepseek-v4-flash
+    litellm_params:
+      model: openrouter/deepseek/deepseek-v4-flash
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "DeepSeek V4 Flash — 284B MoE / 13B active / 1M context"
+      mode: chat
+
+  - model_name: deepseek-v3.2
+    litellm_params:
+      model: openrouter/deepseek/deepseek-v3.2
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "DeepSeek V3.2 — 685B MoE / 37B active"
+      mode: chat
+
+  - model_name: deepseek-v3
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-V3
+      api_key: os.environ/TOGETHER_API_KEY
+    model_info:
+      description: "DeepSeek V3 — 671B MoE / 37B active"
+      mode: chat
+
+  - model_name: deepseek-r1
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-R1
+      api_key: os.environ/TOGETHER_API_KEY
+    model_info:
+      description: "DeepSeek R1 — 671B Frontier Reasoning Model"
+      mode: chat
+
+  # ── MiniMax Series ─────────────────────────────────────────────────────
+  - model_name: minimax-m3
+    litellm_params:
+      model: openrouter/minimax/minimax-m3
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "MiniMax M3 — 428B MoE / 23B active / 1M context"
+      mode: chat
+
+  - model_name: minimax-m2.7
+    litellm_params:
+      model: openrouter/minimax/minimax-m2.7
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "MiniMax M2.7 — 230B MoE / 10B active"
+      mode: chat
+
+  # ── Xiaomi MiMo Series ─────────────────────────────────────────────────
+  - model_name: mimo-v2.5-pro
+    litellm_params:
+      model: openrouter/xiaomi/mimo-v2.5-pro
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Xiaomi MiMo V2.5 Pro — 1.0T MoE / 42B active / 1M context"
+      mode: chat
+
+  - model_name: mimo-v2.5
+    litellm_params:
+      model: openrouter/xiaomi/mimo-v2.5
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Xiaomi MiMo V2.5 — 310B MoE / 15B active"
+      mode: chat
+
+  # ── Google Gemma 4 & 3 Series ──────────────────────────────────────────
+  - model_name: gemma-4-31b-it
+    litellm_params:
+      model: openrouter/google/gemma-4-31b-it
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Google Gemma 4 31B — Reasoning IT"
+      mode: chat
+
+  - model_name: gemma-4-26b-a4b
+    litellm_params:
+      model: openrouter/google/gemma-4-26b-a4b-it
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Google Gemma 4 26B A4B MoE"
+      mode: chat
+
+  - model_name: gemma-4-12b
+    litellm_params:
+      model: openrouter/google/gemma-4-12b-it
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Google Gemma 4 12B Reasoning"
+      mode: chat
+
+  # ── NVIDIA Nemotron Frontier ───────────────────────────────────────────
+  - model_name: nemotron-3-ultra-550b
+    litellm_params:
+      model: openrouter/nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "NVIDIA Nemotron 3 Ultra 550B A55B Reasoning"
+      mode: chat
+
+  - model_name: nemotron-3-super-120b
+    litellm_params:
+      model: openrouter/nvidia/nvidia-nemotron-3-super-120b-a12b-bf16
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "NVIDIA Nemotron 3 Super 120B A12B MoE"
+      mode: chat
+
+  - model_name: nemotron-3.5-lightning
+    litellm_params:
+      model: openrouter/nvidia/nemotron-3-5-lightning
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "NVIDIA Nemotron 3.5 Lightning — 31.6B A3.6B"
+      mode: chat
+
+  # ── Mistral AI Suite ───────────────────────────────────────────────────
+  - model_name: mistral-medium-3.5
+    litellm_params:
+      model: openrouter/mistralai/mistral-medium-3.5-128b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Mistral Medium 3.5 128B"
+      mode: chat
+
+  - model_name: mistral-large-3
+    litellm_params:
+      model: openrouter/mistralai/mistral-large-3-675b-instruct-2512
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Mistral Large 3 — 675B MoE / 41B active"
+      mode: chat
+
+  - model_name: mistral-small-4
+    litellm_params:
+      model: openrouter/mistralai/mistral-small-4-119b-2603
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Mistral Small 4 — 119B MoE / 6.5B active"
+      mode: chat
+
+  - model_name: devstral-2
+    litellm_params:
+      model: openrouter/mistralai/devstral-2-123b-instruct-2512
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Mistral Devstral 2 125B Coding Agent"
+      mode: chat
+
+  # ── Meta Llama 4 & 3.3 Suite ───────────────────────────────────────────
+  - model_name: llama-4-maverick
+    litellm_params:
+      model: openrouter/meta-llama/llama-4-maverick-17b-128e-instruct
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Meta Llama 4 Maverick — 402B MoE / 17B active / 1M context"
+      mode: chat
+
+  - model_name: llama-4-scout
+    litellm_params:
+      model: openrouter/meta-llama/llama-4-scout-17b-16e-instruct
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Meta Llama 4 Scout — 109B MoE / 17B active / 10M context"
+      mode: chat
+
+  - model_name: llama-3.1-405b
+    litellm_params:
+      model: together_ai/meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
+      api_key: os.environ/TOGETHER_API_KEY
+    model_info:
+      description: "Meta Llama 3.1 405B Dense Flagship"
+      mode: chat
+
+  # ── Nous Research Hermes 4 Series ──────────────────────────────────────
+  - model_name: hermes-4-405b
+    litellm_params:
+      model: openrouter/nousresearch/hermes-4-405b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Nous Hermes 4 — 405B Reasoning"
+      mode: chat
+
+  - model_name: hermes-4-70b
+    litellm_params:
+      model: openrouter/nousresearch/hermes-4-70b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Nous Hermes 4 — 70B Reasoning"
+      mode: chat
+
+  # ── IBM Granite 4.2 / 4.1 ──────────────────────────────────────────────
+  - model_name: granite-4.2-30b
+    litellm_params:
+      model: openrouter/ibm-granite/granite-4.2-30b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "IBM Granite 4.2 30B"
+      mode: chat
+
+  - model_name: granite-4.2-8b
+    litellm_params:
+      model: openrouter/ibm-granite/granite-4.2-8b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "IBM Granite 4.2 8B"
+      mode: chat
+
+  # ── OpenAI Open Weights ────────────────────────────────────────────────
+  - model_name: gpt-oss-120b
+    litellm_params:
+      model: openrouter/openai/gpt-oss-120b
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "OpenAI gpt-oss-120b — 117B MoE / 5.1B active"
+      mode: chat
+
+  # ── Cohere Command A+ ──────────────────────────────────────────────────
+  - model_name: command-a-plus
+    litellm_params:
+      model: openrouter/cohere/command-a-plus-05-2026-bf16
+      api_key: os.environ/OPENROUTER_API_KEY
+    model_info:
+      description: "Cohere Command A+ — 218B MoE / 25B active"
+      mode: chat
+
+  # ========================================================================
+  # 4. MEDIA GENERATION SUITE (fal.ai)
+  # ========================================================================
+  - model_name: fal-flux-schnell
+    litellm_params:
+      model: openai/fal-ai/flux/schnell
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "FLUX.1 [schnell] — Fast Text-to-Image"
+      mode: image_generation
+
+  - model_name: fal-krea-2-turbo
+    litellm_params:
+      model: openai/fal-ai/krea-2/turbo
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "Krea 2 Turbo — High-Fidelity Text-to-Image"
+      mode: image_generation
+
+  - model_name: fal-minimax-h3-max-t2v
+    litellm_params:
+      model: openai/minimax/h3-max/text-to-video
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "MiniMax H3 Max — Text-to-Video"
+      mode: completion
+
+  - model_name: fal-seedance-2.5-t2v
+    litellm_params:
+      model: openai/bytedance/seedance-2.5/text-to-video
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "ByteDance Seedance 2.5 — Text-to-Video 720p"
+      mode: completion
+
+  - model_name: fal-flux-3-i2v
+    litellm_params:
+      model: openai/blackforestlabs/flux-3/image-to-video
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "FLUX 3 — Image-to-Video"
+      mode: completion
+
+  - model_name: fal-kling-v3-pro-i2v
+    litellm_params:
+      model: openai/fal-ai/kling-video/v3/pro/image-to-video
+      api_base: https://fal.run
+      api_key: os.environ/FAL_KEY
+    model_info:
+      description: "Kling Video v3 Pro — Cinematic I2V + Audio"
+      mode: completion

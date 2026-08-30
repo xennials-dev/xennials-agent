@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepTutor | Agent-Native Personalized Learning Platform — Xennials</title>
+    <meta name="description" content="DeepTutor is an open-source, agent-native lifelong personalized tutoring platform developed by HKUDS & Xennials. Explore multi-agent reasoning, persistent memory, and 8 learning surfaces.">
+    <meta name="keywords" content="DeepTutor, AI Tutor, Agent-Native Learning, Education AI, LLM Multi-Agent, RAG, Xennials, HKUDS">
+    <meta property="og:title" content="DeepTutor | Agent-Native Personalized Tutoring Platform">
+    <meta property="og:description" content="Moving beyond static chatbots into persistent cognitive modeling, multi-surface learning, and citation-grounded tutoring.">
+    <meta property="og:type" content="website">
+    
+    <!-- Preload Fonts & Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+  <script type="module" crossorigin src="/assets/script-BsLH3jMg.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/script-mrnTKaKR.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-200 overflow-x-hidden relative">
+
+    <!-- Universal Navigation Header with Projects Dropdown -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold font-space flex items-center gap-2 group">
+                    <span class="w-3 h-3 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform"></span>
+                    <span class="gradient-text tracking-tight">Xennials</span>
+                </a>
+                
+                <div class="hidden lg:flex items-center space-x-7 text-sm font-medium">
+                    <a href="index.html" class="hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="deeptutor.html" class="text-indigo-400 font-semibold flex items-center gap-1.5 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-500/40">
+                        <i class="fas fa-graduation-cap text-indigo-400"></i> DeepTutor
+                        <span class="px-1.5 py-0.2 bg-indigo-500 text-white rounded text-[10px] uppercase font-bold tracking-wider">AI</span>
+                    </a>
+                    <a href="playground.html" class="hover:text-indigo-400 transition-colors">Playground</a>
+                    <a href="blog.html" class="hover:text-indigo-400 transition-colors">Blog</a>
+                    
+                    <!-- Projects Directory Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="flex items-center gap-1.5 hover:text-indigo-400 transition-colors py-1 focus:outline-none" aria-expanded="false" id="projects-menu-btn">
+                            <span>Projects</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <div class="px-3 py-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider border-b border-slate-800">
+                                Uploaded Projects & Repos
+                            </div>
+                            <a href="deeptutor.html" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-950 flex items-center justify-center text-indigo-400"><i class="fas fa-graduation-cap"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">DeepTutor</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Agent-Native Tutoring Platform</div>
+                                </div>
+                            </a>
+                            <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-cyan-950 flex items-center justify-center text-cyan-400"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">TutorBot Agents</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Live Multi-Agent Workspace</div>
+                                </div>
+                            </a>
+                            <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-amber-950 flex items-center justify-center text-amber-400"><i class="fas fa-brain"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Xennials AI Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Enterprise Autonomous Agents</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-pink-950 flex items-center justify-center text-pink-400"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">21st - UI Components</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Design System & Marketplace</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-purple-950 flex items-center justify-center text-purple-400"><i class="fab fa-python"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">ADK Python</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">AI Agent Framework Toolkit</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400"><i class="fas fa-globe"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Agent-E Web Engine</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Autonomous Web Automation</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-blue-950 flex items-center justify-center text-blue-400"><i class="fas fa-code"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">VS Code Developer Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Custom Developer Toolchains</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="index.html#contact" class="hover:text-indigo-400 transition-colors">Contact</a>
+                    
+                    <!-- Theme Switcher -->
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-full">
+                        <button class="theme-option w-5 h-5 rounded-full bg-indigo-500 hover:scale-110 transition-transform" data-theme-name="default" title="Indigo & Pink"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-cyan-500 hover:scale-110 transition-transform" data-theme-name="cyan" title="Cyber Cyan & Emerald"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-purple-500 hover:scale-110 transition-transform" data-theme-name="purple" title="Deep Purple & Amber"></button>
+                    </div>
+
+                    <div class="h-4 w-px bg-slate-800"></div>
+                    <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" aria-label="DeepTutor GitHub Repository" class="text-indigo-400 hover:text-white transition-colors text-lg" title="DeepTutor GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <button class="lg:hidden text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Dropdown -->
+            <div class="hidden lg:hidden mt-4 py-4 px-6 bg-slate-900/95 border border-slate-800 rounded-xl space-y-3" id="mobile-menu">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-indigo-400">Home</a>
+                <a href="deeptutor.html" class="block py-2 text-indigo-400 font-semibold">DeepTutor (AI Copilot)</a>
+                <a href="playground.html" class="block py-2 text-gray-300 hover:text-indigo-400">Playground</a>
+                <a href="blog.html" class="block py-2 text-gray-300 hover:text-indigo-400">Blog</a>
+                <div class="pt-2 pb-1 border-t border-slate-800">
+                    <span class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Uploaded Projects</span>
+                    <div class="grid grid-cols-1 gap-1.5 mt-2">
+                        <a href="deeptutor.html" class="text-sm py-1 text-indigo-400 hover:text-white"><i class="fas fa-graduation-cap mr-2"></i> DeepTutor Platform</a>
+                        <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-robot mr-2"></i> TutorBot Agents</a>
+                        <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-brain mr-2"></i> Xennials AI Suite</a>
+                        <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-layer-group mr-2"></i> 21st UI Components</a>
+                        <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fab fa-python mr-2"></i> ADK Python</a>
+                        <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-globe mr-2"></i> Agent-E Web Engine</a>
+                        <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-code mr-2"></i> VS Code Extension Suite</a>
+                    </div>
+                </div>
+                <div class="flex space-x-6 pt-3 border-t border-slate-800">
+                    <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-white text-xl"><i class="fab fa-github"></i></a>
+                    <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white text-xl"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section: DeepTutor Platform -->
+    <section class="min-h-[85vh] flex items-center pt-32 pb-16 relative overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 text-center lg:text-left reveal-on-scroll">
+                    <!-- Project Badge -->
+                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gradient-to-r from-indigo-950/80 to-pink-950/80 border border-indigo-500/40 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span>Open Source AI Agent Platform</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="text-pink-400 font-mono">xennials-dev/DeepTutor</span>
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-space leading-tight mb-6">
+                        Agent-Native <br class="hidden sm:block">
+                        <span class="gradient-text">Lifelong Personalized</span> <br class="hidden sm:block">
+                        Tutoring Ecosystem
+                    </h1>
+                    
+                    <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                        DeepTutor transcends simple chat interfaces by establishing a persistent multi-agent cognitive architecture. Featuring 8 integrated learning surfaces, multi-turn Socratic reasoning, and zero-data-leakage local deployment.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold hover:from-indigo-700 hover:to-pink-700 transition-all transform hover:scale-[1.03] shadow-lg shadow-indigo-600/30 text-center flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> Launch Live TutorBot App <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                        </a>
+                        <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-7 py-3.5 border border-slate-700 hover:border-indigo-500 rounded-xl text-gray-200 font-semibold hover:bg-slate-800/60 transition-all text-center flex items-center justify-center gap-2 font-mono text-sm">
+                            <i class="fab fa-github text-lg"></i> Clone Repo (.git)
+                        </a>
+                        <a href="#simulator" class="w-full sm:w-auto px-6 py-3.5 bg-slate-900 border border-slate-800 rounded-xl text-indigo-400 hover:text-white hover:bg-slate-800 transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fas fa-terminal"></i> Try Simulator
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-5 relative reveal-on-scroll">
+                    <div class="relative z-10 animate-float">
+                        <div class="rounded-2xl overflow-hidden border border-indigo-500/40 shadow-2xl shadow-indigo-500/25 bg-slate-900/90 backdrop-blur-md p-4">
+                            <!-- Terminal Window Header -->
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+                                    <span class="text-xs font-mono text-gray-400 ml-2">deeptutor://agent-runtime/v2.5</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 font-mono text-[10px]">ACTIVE WORKSPACE</span>
+                            </div>
+                            
+                            <!-- Agent Status Cards -->
+                            <div class="space-y-3 font-mono text-xs">
+                                <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-900/60 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+                                            <i class="fas fa-brain"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-200 font-bold">Cognitive Memory Engine</div>
+                                            <div class="text-gray-500 text-[10px]">Three-Layer Persistent Store</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-emerald-400 font-bold">SYNCHRONIZED</span>
+                                </div>
+                                
+                                <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-pink-900/60 border border-pink-500/40 flex items-center justify-center text-pink-400">
+                                            <i class="fas fa-network-wired"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-200 font-bold">Multi-Agent Socratic Swarm</div>
+                                            <div class="text-gray-500 text-[10px]">Problem Solving + Citations</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-indigo-400 font-bold">5 AGENTS LIVE</span>
+                                </div>
+
+                                <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-cyan-900/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+                                            <i class="fas fa-book-open"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-200 font-bold">RAG Document Grounding</div>
+                                            <div class="text-gray-500 text-[10px]">Textbooks, Notes, arXiv</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-cyan-400 font-bold">ZERO LEAKAGE</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-gray-400">
+                                <span>HKUDS + Xennials Core</span>
+                                <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center gap-1">
+                                    github.com/xennials-dev/DeepTutor &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -top-10 -right-10 w-72 h-72 bg-purple-600/25 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 -left-10 w-72 h-72 bg-pink-600/25 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Direct Project Connect Bar -->
+    <section class="py-8 bg-slate-900/80 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-pink-600 flex items-center justify-center text-white text-xl shadow-lg shadow-indigo-600/30">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold font-space text-white">Direct Project Connection</h2>
+                        <p class="text-xs text-gray-400">Target Git: <span class="font-mono text-indigo-400">https://github.com/xennials-dev/DeepTutor.git</span></p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold text-xs tracking-wider uppercase transition-colors inline-flex items-center gap-2 font-mono">
+                        <i class="fas fa-external-link-alt"></i> Open Live App
+                    </a>
+                    <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-gray-200 font-semibold text-xs tracking-wider uppercase transition-colors inline-flex items-center gap-2 font-mono">
+                        <i class="fab fa-github"></i> Repository
+                    </a>
+                    <button class="px-4 py-2.5 bg-slate-800 hover:bg-indigo-950/70 border border-slate-700 hover:border-indigo-500/50 rounded-xl text-indigo-300 font-semibold text-xs transition-colors copy-btn" data-copy="git clone https://github.com/xennials-dev/DeepTutor.git">
+                        <i class="fas fa-copy mr-1"></i> Copy Clone URL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live TutorBot Agent Simulator -->
+    <section id="simulator" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <div class="inline-flex items-center gap-2 py-1 px-3.5 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">
+                    <i class="fas fa-flask"></i> Interactive Copilot Demo
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">Experience the <span class="gradient-text">TutorBot Workspace</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Select a topic domain and persona to witness DeepTutor's multi-agent reasoning, step-by-step chain of thought, and Socratic guidance in action.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                <!-- Simulation Controls Column -->
+                <div class="lg:col-span-4 space-y-6 reveal-on-scroll">
+                    <!-- Subject Selector -->
+                    <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 glass-panel">
+                        <h3 class="text-sm font-bold font-space text-gray-200 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fas fa-book text-indigo-400"></i> Subject Domain
+                        </h3>
+                        <div class="space-y-2" id="subject-selector">
+                            <button class="subject-btn active w-full text-left p-3 rounded-xl border border-indigo-500/50 bg-indigo-950/40 text-white font-medium text-sm flex items-center justify-between transition-all" data-subject="ai">
+                                <span class="flex items-center gap-2.5"><i class="fas fa-brain text-indigo-400"></i> Neural Networks & Attention</span>
+                                <i class="fas fa-check text-xs text-indigo-400"></i>
+                            </button>
+                            <button class="subject-btn w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-gray-300 hover:border-slate-700 font-medium text-sm flex items-center justify-between transition-all" data-subject="math">
+                                <span class="flex items-center gap-2.5"><i class="fas fa-square-root-variable text-pink-400"></i> Multivariable Calculus</span>
+                                <i class="fas fa-chevron-right text-xs text-gray-500"></i>
+                            </button>
+                            <button class="subject-btn w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-gray-300 hover:border-slate-700 font-medium text-sm flex items-center justify-between transition-all" data-subject="cs">
+                                <span class="flex items-center gap-2.5"><i class="fas fa-code text-cyan-400"></i> Algorithms & System Design</span>
+                                <i class="fas fa-chevron-right text-xs text-gray-500"></i>
+                            </button>
+                            <button class="subject-btn w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-gray-300 hover:border-slate-700 font-medium text-sm flex items-center justify-between transition-all" data-subject="physics">
+                                <span class="flex items-center gap-2.5"><i class="fas fa-atom text-amber-400"></i> Quantum State Superposition</span>
+                                <i class="fas fa-chevron-right text-xs text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tutor Persona Selector -->
+                    <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 glass-panel">
+                        <h3 class="text-sm font-bold font-space text-gray-200 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fas fa-user-astronaut text-pink-400"></i> Tutor Persona & Soul
+                        </h3>
+                        <div class="grid grid-cols-2 gap-2" id="persona-selector">
+                            <button class="persona-btn active p-3 rounded-xl border border-pink-500/50 bg-pink-950/30 text-xs font-semibold text-white text-center transition-all" data-persona="socratic">
+                                <i class="fas fa-comments text-pink-400 mb-1 block text-base"></i> Socratic Mentor
+                            </button>
+                            <button class="persona-btn p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-xs font-semibold text-gray-300 hover:border-slate-700 text-center transition-all" data-persona="architect">
+                                <i class="fas fa-laptop-code text-cyan-400 mb-1 block text-base"></i> Code Architect
+                            </button>
+                            <button class="persona-btn p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-xs font-semibold text-gray-300 hover:border-slate-700 text-center transition-all" data-persona="scientist">
+                                <i class="fas fa-microscope text-emerald-400 mb-1 block text-base"></i> First Principles
+                            </button>
+                            <button class="persona-btn p-3 rounded-xl border border-slate-800 bg-slate-950/40 text-xs font-semibold text-gray-300 hover:border-slate-700 text-center transition-all" data-persona="crammer">
+                                <i class="fas fa-bolt text-amber-400 mb-1 block text-base"></i> Exam Drill
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cognitive Mastery Level Card -->
+                    <div class="bg-gradient-to-br from-indigo-950/40 to-pink-950/40 p-6 rounded-2xl border border-indigo-500/30 glass-panel">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs uppercase font-semibold text-gray-400 font-mono">Learner Retention Level</span>
+                            <span class="text-xs font-bold text-emerald-400 font-mono" id="sim-retention-score">94.2%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full transition-all duration-500" id="sim-progress-bar" style="width: 94%;"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            DeepTutor tracks foundational concepts and automatically generates targeted recall questions before memory decay sets in.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Chat Terminal -->
+                <div class="lg:col-span-8 reveal-on-scroll">
+                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel overflow-hidden flex flex-col h-[680px]">
+                        <!-- Terminal Bar -->
+                        <div class="px-6 py-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></div>
+                                <span class="font-space font-bold text-sm text-white" id="sim-agent-name">DeepTutor • Socratic Mentor</span>
+                                <span class="text-xs text-indigo-400 font-mono hidden sm:inline" id="sim-topic-tag">[AI Systems]</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="toggle-reasoning-btn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-mono text-gray-300 border border-slate-700 transition-colors">
+                                    <i class="fas fa-stream mr-1 text-indigo-400"></i> Chain-of-Thought
+                                </button>
+                                <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-indigo-600/80 hover:bg-indigo-500 rounded-lg text-xs font-mono text-white transition-colors">
+                                    Full App <i class="fas fa-external-link-alt text-[10px] ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Chat Messages Container -->
+                        <div class="flex-1 p-6 overflow-y-auto space-y-4 flex flex-col" id="sim-messages">
+                            <!-- User Message -->
+                            <div class="agent-chat-bubble user max-w-[85%]">
+                                <p id="sim-user-query">How does the Multi-Head Self-Attention mechanism compute queries, keys, and values?</p>
+                            </div>
+
+                            <!-- Reasoning Chain Container -->
+                            <div class="reasoning-panel max-w-[92%]" id="sim-reasoning">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-bold text-xs text-indigo-300"><i class="fas fa-cogs mr-1"></i> Multi-Agent Reasoning Chain</span>
+                                    <span class="text-[10px] text-emerald-400">3 Citations Grounded</span>
+                                </div>
+                                <ul class="space-y-1.5 text-xs text-slate-300">
+                                    <li>1. <span class="text-indigo-400 font-semibold">[RAG Engine]</span> Retrieved "Attention Is All You Need" (Vaswani et al.) Section 3.2.</li>
+                                    <li>2. <span class="text-indigo-400 font-semibold">[Cognitive Model]</span> Learner understands basic matrix multiplication; needs visual breakdown of scaled dot-product.</li>
+                                    <li>3. <span class="text-indigo-400 font-semibold">[Socratic Goal]</span> Explain linear projections first, formulate question on why dimension <span class="text-pink-400 font-mono">d_k</span> scaling prevents vanishing gradients.</li>
+                                </ul>
+                            </div>
+
+                            <!-- AI Message -->
+                            <div class="agent-chat-bubble ai max-w-[90%] space-y-3" id="sim-ai-response">
+                                <p>In Self-Attention, an input sequence is projected into three distinct representations through learned weight matrices:</p>
+                                <div class="bg-slate-950 p-3 rounded-lg font-mono text-xs text-indigo-300 border border-slate-800">
+                                    Q = X · W_Q &emsp;|&emsp; K = X · W_K &emsp;|&emsp; V = X · W_V
+                                </div>
+                                <p>We then compute the scaled dot-product attention formula:</p>
+                                <div class="latex-math text-center py-2 text-sm">
+                                    Attention(Q, K, V) = softmax((Q · Kᵀ) / √d_k) · V
+                                </div>
+                                <p class="text-sm text-gray-300">
+                                    <strong>Socratic Question for You:</strong> Why do we divide by <span class="latex-math">√d_k</span> inside the softmax rather than directly passing <span class="latex-math">Q · Kᵀ</span>? What happens to the gradients when <span class="latex-math">d_k</span> grows very large?
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Prompt Preset Pills -->
+                        <div class="px-6 py-2 bg-slate-950/60 border-t border-slate-800/80 flex items-center gap-2 overflow-x-auto text-xs">
+                            <span class="text-gray-500 text-[11px] uppercase font-semibold flex-shrink-0">Presets:</span>
+                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="attention">
+                                Multi-Head Attention
+                            </button>
+                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="gradient">
+                                Gradient Descent Derivation
+                            </button>
+                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="redblack">
+                                Red-Black Trees Balancing
+                            </button>
+                            <button class="preset-pill px-3 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-full text-gray-300 hover:text-white border border-slate-700/60 flex-shrink-0 transition-colors" data-prompt="schrodinger">
+                                Schrödinger Wave Equation
+                            </button>
+                        </div>
+
+                        <!-- Input Bar -->
+                        <div class="p-4 bg-slate-950 border-t border-slate-800">
+                            <form id="sim-input-form" class="flex gap-3">
+                                <input type="text" id="sim-user-input" placeholder="Ask DeepTutor a technical concept, derivation, or problem..." class="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
+                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold text-sm hover:from-indigo-500 hover:to-pink-500 transition-all flex items-center gap-2">
+                                    <span>Send</span> <i class="fas fa-paper-plane text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8 Integrated Learning Surfaces Grid -->
+    <section class="py-24 bg-slate-900/50 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <div class="inline-flex items-center gap-2 py-1 px-3.5 rounded-full bg-pink-950/60 border border-pink-500/30 text-pink-300 text-xs font-semibold uppercase tracking-wider mb-4">
+                    <i class="fas fa-layer-group"></i> Architecture Foundation
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">The 8 <span class="gradient-text">Learning Surfaces</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Unlike single-window chatbots, DeepTutor integrates eight synchronized modalities designed for deep conceptual retention.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Surface 1 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-indigo-950 rounded-xl border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl mb-4">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">1. Chat Workspace</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Multi-agent conversation with real-time citations, LaTeX equations, and dynamic code execution environments.
+                    </p>
+                </div>
+
+                <!-- Surface 2 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-pink-950 rounded-xl border border-pink-500/30 flex items-center justify-center text-pink-400 text-xl mb-4">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">2. Persistent Partner</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        An evolving AI companion that remembers past roadblocks, preferred learning pace, and conceptual blindspots.
+                    </p>
+                </div>
+
+                <!-- Surface 3 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-cyan-950 rounded-xl border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl mb-4">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">3. Co-Writing Canvas</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Interactive markdown and LaTeX canvas for collaborative thesis drafting, problem proofs, and technical essays.
+                    </p>
+                </div>
+
+                <!-- Surface 4 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-amber-950 rounded-xl border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-4">
+                        <i class="fas fa-book-bookmark"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">4. Books & RAG Hub</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Ingest PDFs, textbooks, lecture recordings, and research papers with zero hallucination and verifiable page citations.
+                    </p>
+                </div>
+
+                <!-- Surface 5 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-emerald-950 rounded-xl border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl mb-4">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">5. Mind Map Synthesis</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Automated visual knowledge graphs revealing prerequisite pathways and cross-disciplinary connections.
+                    </p>
+                </div>
+
+                <!-- Surface 6 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-purple-950 rounded-xl border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl mb-4">
+                        <i class="fas fa-clipboard-question"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">6. Adaptive Quizzes</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Dynamically calibrated testing tailored to challenge misconceptions with diagnostic feedback.
+                    </p>
+                </div>
+
+                <!-- Surface 7 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-blue-950 rounded-xl border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl mb-4">
+                        <i class="fas fa-clone"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">7. Spaced Flashcards</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Leitner retention scheduling backed by neuro-cognitive algorithms to ensure zero knowledge decay over months.
+                    </p>
+                </div>
+
+                <!-- Surface 8 -->
+                <div class="service-card p-6 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll">
+                    <div class="w-12 h-12 bg-rose-950 rounded-xl border border-rose-500/30 flex items-center justify-center text-rose-400 text-xl mb-4">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="font-bold font-space text-lg text-white mb-2">8. Mastery Analytics</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Granular skill breakdown with competence maps, velocity stats, and recommended review dates.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3-Layer Persistent Memory Architecture -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 reveal-on-scroll">
+                    <div class="inline-flex items-center gap-2 py-1 px-3.5 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4">
+                        <i class="fas fa-microchip"></i> Cognitive Engine
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-space mb-6">Three-Layer <span class="gradient-text-cyan">Persistent Memory</span></h2>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Standard LLM chats lose context as soon as a window closes. DeepTutor's three-tier memory architecture stores interactions at distinct temporal resolutions, ensuring your learning journey compounds forever.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-sm text-white mb-1"><i class="fas fa-bolt text-amber-400 mr-2"></i> Tier 1: Ephemeral Working Buffer</h4>
+                            <p class="text-xs text-gray-400">Maintains immediate conversation turn history, active scratchpad derivations, and tool outputs.</p>
+                        </div>
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-sm text-white mb-1"><i class="fas fa-layer-group text-indigo-400 mr-2"></i> Tier 2: Mid-Term Topic Knowledge</h4>
+                            <p class="text-xs text-gray-400">Tracks active course modules, solved problem sets, and diagnostic misconception markers.</p>
+                        </div>
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-sm text-white mb-1"><i class="fas fa-infinity text-pink-400 mr-2"></i> Tier 3: Lifelong Cognitive Profile</h4>
+                            <p class="text-xs text-gray-400">Stores deep cognitive strengths, learning preferences, and lifelong milestone achievements.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 reveal-on-scroll">
+                    <!-- Architecture Diagram & Quick Start Code -->
+                    <div class="bg-slate-950 p-8 rounded-2xl border border-slate-800 space-y-6 shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                            <h3 class="font-space font-bold text-lg text-white flex items-center gap-2">
+                                <i class="fas fa-terminal text-indigo-400"></i> Self-Host DeepTutor in 60s
+                            </h3>
+                            <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-mono text-gray-400">Docker & Pip Ready</span>
+                        </div>
+
+                        <!-- Step 1 -->
+                        <div>
+                            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">1. Clone Repository</div>
+                            <div class="code-block">
+                                <span class="copy-badge" data-copy="git clone https://github.com/xennials-dev/DeepTutor.git && cd DeepTutor">Copy</span>
+                                <code>git clone https://github.com/xennials-dev/DeepTutor.git && cd DeepTutor</code>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div>
+                            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">2. Install Dependencies</div>
+                            <div class="code-block">
+                                <span class="copy-badge" data-copy="pip install -r requirements.txt">Copy</span>
+                                <code>pip install -r requirements.txt</code>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div>
+                            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">3. Run Local AI Agent Workspace</div>
+                            <div class="code-block">
+                                <span class="copy-badge" data-copy="docker compose up -d">Copy</span>
+                                <code>docker compose up -d --build</code>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                            <div class="text-xs text-gray-400">
+                                Open in browser: <span class="font-mono text-indigo-400">http://localhost:3000</span>
+                            </div>
+                            <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold text-xs tracking-wider uppercase inline-flex items-center gap-2 font-mono">
+                                <i class="fab fa-github"></i> Star On GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-8 text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2">
+                    <a href="index.html" class="text-2xl font-bold font-space inline-block mb-4">
+                        <span class="gradient-text">Xennials</span>
+                    </a>
+                    <p class="text-gray-400 max-w-md leading-relaxed mb-4 text-xs sm:text-sm">
+                        DeepTutor is powered by Xennials AI engineering and HKUDS open-source research. Engineering lifelong personalized AI agent ecosystems.
+                    </p>
+                    <p class="text-gray-500 text-xs">
+                        &copy; 2026 Xennials & DeepTutor Project. All Rights Reserved.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Project Links</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="deeptutor.html" class="text-indigo-400 font-semibold">DeepTutor Showcase</a></li>
+                        <li><a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-400 transition-colors">TutorBot Live App</a></li>
+                        <li><a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-400 transition-colors">Xennials AI Suite</a></li>
+                        <li><a href="playground.html" class="hover:text-indigo-400 transition-colors">Playground Tools</a></li>
+                        <li><a href="blog.html" class="hover:text-indigo-400 transition-colors">Insights & Research</a></li>
+                        <li><a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-400 transition-colors">GitHub Repository</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Connect & Source</h4>
+                    <div class="flex space-x-3 mb-4 text-lg">
+                        <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" aria-label="DeepTutor GitHub" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                        <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" class="hover:text-white transition-colors"><i class="fas fa-globe"></i></a>
+                        <a href="https://xennials.blog" target="_blank" rel="noopener noreferrer" aria-label="Blog" class="hover:text-white transition-colors"><i class="fas fa-rss"></i></a>
+                    </div>
+                    <p class="text-gray-500 text-xs font-mono">teefisher2k20@github.com</p>
+                    <p class="text-gray-500 text-xs font-mono mt-1">xennials.tech</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                <div>
+                    DeepTutor Ecosystem • Agent-Native Lifelong Personalized Tutoring
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/xennials-dev/DeepTutor.git" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300">DeepTutor GitHub</a>
+                    <span>&bull;</span>
+                    <a href="index.html" class="hover:text-gray-300">Xennials Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"><i class="fas fa-check-circle text-emerald-400 text-lg"></i> <span id="toast-msg">Copied to clipboard</span></div>
+
+    <!-- Back To Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Custom Script -->
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xennials AI Autonomous Suite — 20-Second Commercial Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: #06080e;
+      color: #f8fafc;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .brand-logo-text {
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.4));
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: 16 / 9;
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(234, 179, 8, 0.25), 0 0 0 1px rgba(234, 179, 8, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Animated Canvas Background */
+    #fx-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Viewport Scenes Container */
+    .viewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .scene {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      opacity: 0;
+      transform: scale(0.92) translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .scene.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Scene Elements */
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      color: #facc15;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 40%, #eab308 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: #94a3b8;
+      max-width: 680px;
+      line-height: 1.5;
+    }
+
+    /* Scene 2 Elements */
+    .grid-platforms {
+      display: flex;
+      gap: 16px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .platform-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      animation: float 3s ease-in-out infinite alternate;
+    }
+
+    .platform-card:nth-child(2) { animation-delay: 0.4s; }
+    .platform-card:nth-child(3) { animation-delay: 0.8s; }
+    .platform-card:nth-child(4) { animation-delay: 1.2s; }
+
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
+
+    .metric-badge {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(16, 185, 129, 0.2));
+      border: 1px solid rgba(234, 179, 8, 0.5);
+      color: #fef08a;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* Scene 3 Elements */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .stat-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 36px;
+      font-weight: 900;
+      color: #facc15;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-lbl {
+      font-size: 13px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    /* Scene 4 Elements */
+    .cta-btn {
+      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+      color: #030712;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 0 35px rgba(234, 179, 8, 0.6);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(250, 204, 21, 0.9);
+    }
+
+    /* Overlay Video HUD Controls */
+    .video-controls {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(to top, rgba(3, 7, 18, 0.95), transparent);
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #eab308, #38bdf8, #818cf8);
+      border-radius: 999px;
+      transition: width 0.05s linear;
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f8fafc;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: rgba(234, 179, 8, 0.4);
+      color: #fef08a;
+    }
+
+    /* Subtitles Bar */
+    .subtitles {
+      font-size: 15px;
+      color: #e2e8f0;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      padding: 6px 16px;
+      border-radius: 8px;
+      backdrop-filter: blur(6px);
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand-header">
+    <div class="brand-logo-text">Xennials</div>
+    <div style="font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em;">Autonomous Agency Platform</div>
+  </div>
+
+  <div class="video-wrapper" id="player">
+    <canvas id="fx-canvas"></canvas>
+
+    <div class="viewport">
+      <!-- Scene 1: 0.0s - 5.0s -->
+      <div class="scene active" id="scene-1">
+        <div class="brand-badge">✨ Xennials AI Autonomous Suite</div>
+        <h1 class="hero-title">WHAT IF YOUR ENTERPRISE<br>RAN ITSELF?</h1>
+        <p class="hero-sub">The next-generation autonomous AI ecosystem orchestrating multi-channel sales, CRM pipelines, engineering, and enterprise operations.</p>
+      </div>
+
+      <!-- Scene 2: 5.0s - 10.0s -->
+      <div class="scene" id="scene-2">
+        <div class="brand-badge" style="color: #facc15; border-color: rgba(234,179,8,0.4); background: rgba(234,179,8,0.1);">🌐 Omnichannel Omnipresence</div>
+        <h2 class="hero-title">20+ CHANNELS. ZERO DELAY.</h2>
+        <div class="grid-platforms">
+          <div class="platform-card">📱 WhatsApp Business</div>
+          <div class="platform-card">✈️ Telegram Bots</div>
+          <div class="platform-card">💬 Discord Channels</div>
+          <div class="platform-card">💼 Slack Enterprise</div>
+        </div>
+        <div class="metric-badge">🎯 $125,000 Won Pipeline Value Verified</div>
+      </div>
+
+      <!-- Scene 3: 10.0s - 15.0s -->
+      <div class="scene" id="scene-3">
+        <div class="brand-badge" style="color: #38bdf8; border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.1);">🧠 Infinite Ecosystem</div>
+        <h2 class="hero-title">1,069+ SKILLS & PLUGINS</h2>
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-val">2,282</div>
+            <div class="stat-lbl">Claude Plugins</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val">1,069</div>
+            <div class="stat-lbl">Ecosystem Skills</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val">100%</div>
+            <div class="stat-lbl">Autonomous CRM & ERP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 4: 15.0s - 20.0s -->
+      <div class="scene" id="scene-4">
+        <div class="brand-badge" style="color: #facc15; border-color: rgba(234,179,8,0.4); background: rgba(234,179,8,0.1);">🚀 The Future is Autonomous</div>
+        <h1 class="hero-title">DEPLOY XENNIALS TODAY</h1>
+        <p class="hero-sub">Experience fully automated CRM, live war room dispatching, and zero-cost serverless intelligence.</p>
+        <button class="cta-btn" onclick="window.open('https://xennials.tech', '_blank')">
+          Launch Xennials Platform ↗
+        </button>
+      </div>
+    </div>
+
+    <!-- HUD Player Controls -->
+    <div class="video-controls">
+      <div class="subtitles" id="subtitles-text">
+        "What if your entire enterprise could run itself with autonomous precision?"
+      </div>
+
+      <div class="progress-bar-container" id="timeline" onclick="seek(event)">
+        <div class="progress-bar" id="progress"></div>
+      </div>
+
+      <div class="controls-row">
+        <div style="display: flex; gap: 8px;">
+          <button class="ctrl-btn" id="play-btn" onclick="togglePlay()">▶ Play 20s Ad</button>
+          <button class="ctrl-btn" onclick="restartAd()">⟲ Replay</button>
+          <button class="ctrl-btn" id="sound-btn" onclick="toggleSound()">🔊 Audio: ON</button>
+        </div>
+
+        <div id="timecode">00:00 / 00:20</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL_DURATION = 20.0;
+    let currentTime = 0.0;
+    let isPlaying = false;
+    let soundEnabled = true;
+    let lastTimestamp = null;
+    let audioCtx = null;
+
+    const scenes = [
+      { id: "scene-1", start: 0.0, end: 5.0, subtitle: "What if your entire enterprise could run itself with autonomous precision?" },
+      { id: "scene-2", start: 5.0, end: 10.0, subtitle: "Connect 20+ messaging platforms with real-time Xennials CRM pipeline execution." },
+      { id: "scene-3", start: 10.0, end: 15.0, subtitle: "Over 1,069 native skills and 2,282 Claude community plugins at your command." },
+      { id: "scene-4", start: 15.0, end: 20.0, subtitle: "Deploy the Xennials AI Platform today. The future of work is autonomous." }
+    ];
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTone(freq, duration, type = "sine") {
+      if (!soundEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function speakSubtitle(text) {
+      if (!soundEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.05;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    let lastSpokenScene = -1;
+
+    function updatePlayback(timestamp) {
+      if (!isPlaying) return;
+
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const delta = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      currentTime += delta;
+
+      if (currentTime >= TOTAL_DURATION) {
+        currentTime = TOTAL_DURATION;
+        isPlaying = false;
+        document.getElementById("play-btn").innerText = "▶ Replay";
+      }
+
+      // Update UI Progress
+      const pct = (currentTime / TOTAL_DURATION) * 100;
+      document.getElementById("progress").style.width = pct + "%";
+      const secs = Math.floor(currentTime);
+      const dec = Math.floor((currentTime % 1) * 10);
+      document.getElementById("timecode").innerText = `00:${secs < 10 ? '0' + secs : secs}.${dec} / 00:20`;
+
+      // Update Active Scene
+      scenes.forEach((sc, index) => {
+        const el = document.getElementById(sc.id);
+        if (currentTime >= sc.start && currentTime < sc.end) {
+          if (!el.classList.contains("active")) {
+            el.classList.add("active");
+            playTone(360 + index * 110, 0.4, "triangle");
+            if (lastSpokenScene !== index) {
+              lastSpokenScene = index;
+              speakSubtitle(sc.subtitle);
+            }
+          }
+          document.getElementById("subtitles-text").innerText = `"${sc.subtitle}"`;
+        } else {
+          el.classList.remove("active");
+        }
+      });
+
+      if (isPlaying) {
+        requestAnimationFrame(updatePlayback);
+      }
+    }
+
+    function togglePlay() {
+      initAudio();
+      isPlaying = !isPlaying;
+      const btn = document.getElementById("play-btn");
+
+      if (isPlaying) {
+        btn.innerText = "⏸ Pause";
+        if (currentTime >= TOTAL_DURATION) {
+          currentTime = 0;
+          lastSpokenScene = -1;
+        }
+        lastTimestamp = performance.now();
+        requestAnimationFrame(updatePlayback);
+      } else {
+        btn.innerText = "▶ Resume";
+        if ('speechSynthesis' in window) window.speechSynthesis.pause();
+      }
+    }
+
+    function restartAd() {
+      initAudio();
+      currentTime = 0;
+      lastSpokenScene = -1;
+      isPlaying = true;
+      document.getElementById("play-btn").innerText = "⏸ Pause";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(updatePlayback);
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById("sound-btn");
+      btn.innerText = soundEnabled ? "🔊 Audio: ON" : "🔇 Audio: OFF";
+      if (!soundEnabled && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function seek(event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+      currentTime = pct * TOTAL_DURATION;
+      lastSpokenScene = -1;
+      if (!isPlaying) {
+        updatePlayback(performance.now());
+      }
+    }
+
+    // Interactive Particle Background (Golden and Cyan Theme)
+    const canvas = document.getElementById("fx-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const particles = Array.from({ length: 45 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.random() * 2 + 1,
+      alpha: Math.random() * 0.5 + 0.2,
+      color: Math.random() > 0.5 ? "#facc15" : "#38bdf8"
+    }));
+
+    function renderFX() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(renderFX);
+    }
+    renderFX();
+  </script>
+</body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Playground & Agent Studio — Xennials</title>
+    <meta name="description" content="Interactive AI creativity studio and agent sandbox. Experiment with prompt engineering, multimodal generators, image tools, and automated pipelines.">
+    <meta name="keywords" content="AI Playground, Agent Studio, Prompt Generator, Image AI, Video AI, DeepTutor Sandbox, Xennials">
+    
+    <!-- Preload Fonts & Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+
+    <style>
+        /* ── Playground-Specific Styles ─────────────────────────────────── */
+        .pg-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+        /* Mode tab active state */
+        .mode-tab.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+            border-color: rgba(99, 102, 241, 0.5);
+            color: #e0e7ff;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.12);
+        }
+        .mode-tab.active .mode-icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        /* Model selector card */
+        .model-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .model-card:hover { border-color: rgba(99, 102, 241, 0.4); transform: translateY(-1px); }
+        .model-card.selected {
+            border-color: rgba(99, 102, 241, 0.6);
+            background: rgba(99, 102, 241, 0.08);
+            box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Chat messages */
+        .chat-msg { animation: msgSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes msgSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Streaming cursor blink */
+        .streaming-cursor::after {
+            content: '▊';
+            animation: cursorBlink 0.8s step-end infinite;
+            color: #818cf8;
+        }
+        @keyframes cursorBlink {
+            50% { opacity: 0; }
+        }
+
+        /* Slider track fill */
+        .param-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #6366f1 0%, #6366f1 var(--val, 50%), #1e293b var(--val, 50%), #1e293b 100%);
+            outline: none;
+        }
+        .param-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+            transition: transform 0.15s ease;
+        }
+        .param-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+
+        /* Status pulse dot */
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+        .status-dot.online { background: #10b981; }
+        .status-dot.offline { background: #ef4444; animation: none; }
+        .status-dot.checking { background: #f59e0b; }
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+
+        /* Side-by-side panels */
+        .comparison-panel {
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            transition: border-color 0.3s;
+        }
+        .comparison-panel:hover { border-color: rgba(99, 102, 241, 0.3); }
+
+        /* Image/Video result card */
+        .media-result {
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .media-result:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px -8px rgba(99, 102, 241, 0.25);
+        }
+
+        /* Loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Token counter badge */
+        .token-badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            color: #94a3b8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/playground-BwKONAWr.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/script-BsLH3jMg.js">
+  <link rel="stylesheet" crossorigin href="/assets/script-mrnTKaKR.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-200 overflow-x-hidden relative min-h-screen flex flex-col justify-between">
+
+    <!-- Universal Navigation Header with Projects Dropdown -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold font-space flex items-center gap-2 group">
+                    <span class="w-3 h-3 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform"></span>
+                    <span class="gradient-text tracking-tight">Xennials</span>
+                </a>
+                
+                <div class="hidden lg:flex items-center space-x-7 text-sm font-medium">
+                    <a href="index.html" class="hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="deeptutor.html" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+                        <i class="fas fa-graduation-cap text-indigo-400"></i> DeepTutor
+                    </a>
+                    <a href="playground.html" class="text-indigo-400 font-semibold flex items-center gap-1.5 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-500/40">
+                        <i class="fas fa-gamepad"></i> Playground
+                    </a>
+                    <a href="blog.html" class="hover:text-indigo-400 transition-colors">Blog</a>
+                    
+                    <!-- Projects Directory Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="flex items-center gap-1.5 hover:text-indigo-400 transition-colors py-1 focus:outline-none" aria-expanded="false">
+                            <span>Projects</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <div class="px-3 py-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider border-b border-slate-800">
+                                Uploaded Projects & Repos
+                            </div>
+                            <a href="deeptutor.html" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-950 flex items-center justify-center text-indigo-400"><i class="fas fa-graduation-cap"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">DeepTutor</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Agent-Native Tutoring Platform</div>
+                                </div>
+                            </a>
+                            <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-cyan-950 flex items-center justify-center text-cyan-400"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">TutorBot Agents</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Live Multi-Agent Workspace</div>
+                                </div>
+                            </a>
+                            <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-amber-950 flex items-center justify-center text-amber-400"><i class="fas fa-brain"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Xennials AI Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Enterprise Autonomous Agents</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-pink-950 flex items-center justify-center text-pink-400"><i class="fas fa-layer-group"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">21st - UI Components</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Design System & Marketplace</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-purple-950 flex items-center justify-center text-purple-400"><i class="fab fa-python"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">ADK Python</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">AI Agent Framework Toolkit</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-emerald-950 flex items-center justify-center text-emerald-400"><i class="fas fa-globe"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">Agent-E Web Engine</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Autonomous Web Automation</div>
+                                </div>
+                            </a>
+                            <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+                                <div class="w-7 h-7 rounded-lg bg-blue-950 flex items-center justify-center text-blue-400"><i class="fas fa-code"></i></div>
+                                <div>
+                                    <div class="font-semibold text-white">VS Code Developer Suite</div>
+                                    <div class="text-[11px] text-gray-400 font-mono">Custom Developer Toolchains</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="index.html#contact" class="hover:text-indigo-400 transition-colors">Contact</a>
+                    
+                    <!-- Theme Switcher -->
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-full">
+                        <button class="theme-option w-5 h-5 rounded-full bg-indigo-500 hover:scale-110 transition-transform" data-theme-name="default" title="Indigo & Pink"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-cyan-500 hover:scale-110 transition-transform" data-theme-name="cyan" title="Cyber Cyan & Emerald"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-purple-500 hover:scale-110 transition-transform" data-theme-name="purple" title="Deep Purple & Amber"></button>
+                    </div>
+
+                    <div class="h-4 w-px bg-slate-800"></div>
+                    <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="text-gray-400 hover:text-white transition-colors text-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <button class="lg:hidden text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Dropdown -->
+            <div class="hidden lg:hidden mt-4 py-4 px-6 bg-slate-900/95 border border-slate-800 rounded-xl space-y-3" id="mobile-menu">
+                <a href="index.html" class="block py-2 text-gray-300 hover:text-indigo-400">Home</a>
+                <a href="deeptutor.html" class="block py-2 text-gray-300 hover:text-indigo-400">DeepTutor (AI Copilot)</a>
+                <a href="playground.html" class="block py-2 text-indigo-400 font-semibold">Playground</a>
+                <a href="blog.html" class="block py-2 text-gray-300 hover:text-indigo-400">Blog</a>
+                <div class="pt-2 pb-1 border-t border-slate-800">
+                    <span class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Uploaded Projects</span>
+                    <div class="grid grid-cols-1 gap-1.5 mt-2">
+                        <a href="deeptutor.html" class="text-sm py-1 text-indigo-400 hover:text-white"><i class="fas fa-graduation-cap mr-2"></i> DeepTutor Platform</a>
+                        <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-robot mr-2"></i> TutorBot Agents</a>
+                        <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-sm py-1 text-gray-300 hover:text-white"><i class="fas fa-brain mr-2"></i> Xennials AI Suite</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- PLAYGROUND WORKSPACE                                                -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <main class="flex-1 pt-24 pb-16 px-4 sm:px-6 max-w-[1440px] mx-auto w-full">
+
+        <!-- ── Header Banner ──────────────────────────────────────────── -->
+        <div class="mb-6 p-5 bg-gradient-to-r from-indigo-950/60 via-purple-950/40 to-slate-900 rounded-2xl border border-indigo-500/30 glass-panel flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold font-space text-white flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-lg"><i class="fas fa-wand-magic-sparkles"></i></span>
+                    AI Playground & Agent Studio
+                </h1>
+                <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                    Multimodal AI sandbox — Chat, generate images & videos, compare models side-by-side. Powered by LiteLLM + Ollama + fal.ai.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <!-- Gateway Status -->
+                <div id="gateway-status" class="flex items-center gap-2 px-3 py-1.5 bg-slate-950/80 border border-slate-700 rounded-full text-xs pg-mono">
+                    <span class="status-dot checking"></span>
+                    <span class="text-gray-400">Checking gateway...</span>
+                </div>
+                <a href="deeptutor.html" class="px-4 py-2 bg-indigo-900/60 hover:bg-indigo-900 border border-indigo-500/40 rounded-xl text-xs pg-mono text-indigo-300 transition-colors inline-flex items-center gap-1.5">
+                    <i class="fas fa-graduation-cap"></i> DeepTutor
+                </a>
+            </div>
+        </div>
+
+        <!-- ── Mode Selector Tabs ─────────────────────────────────────── -->
+        <div class="flex flex-wrap gap-3 mb-6" id="mode-tabs">
+            <button class="mode-tab active flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="chat">
+                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 transition-all"><i class="fas fa-comments"></i></span>
+                <div class="text-left">
+                    <div class="text-white font-semibold">Chat</div>
+                    <div class="text-[10px] text-gray-500">LLM conversation</div>
+                </div>
+            </button>
+            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="compare">
+                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 transition-all"><i class="fas fa-columns"></i></span>
+                <div class="text-left">
+                    <div class="text-white font-semibold">Compare</div>
+                    <div class="text-[10px] text-gray-500">Side-by-side</div>
+                </div>
+            </button>
+            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="image">
+                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-pink-400 transition-all"><i class="fas fa-image"></i></span>
+                <div class="text-left">
+                    <div class="text-white font-semibold">Image</div>
+                    <div class="text-[10px] text-gray-500">Text-to-image</div>
+                </div>
+            </button>
+            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="video">
+                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400 transition-all"><i class="fas fa-film"></i></span>
+                <div class="text-left">
+                    <div class="text-white font-semibold">Video</div>
+                    <div class="text-[10px] text-gray-500">Text / image → video</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- ── Main Layout: Sidebar + Workspace ───────────────────────── -->
+        <div class="grid lg:grid-cols-12 gap-6 items-start">
+
+            <!-- ════════════════════════════════════════════════════════════ -->
+            <!-- LEFT SIDEBAR — Models & Parameters                          -->
+            <!-- ════════════════════════════════════════════════════════════ -->
+            <aside class="lg:col-span-3 space-y-4" id="sidebar">
+
+                <!-- Model Selector -->
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                    <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Model</h3>
+                        <button id="refresh-models-btn" class="text-indigo-400 hover:text-indigo-300 text-xs pg-mono" title="Refresh model list">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="p-3 space-y-1.5 max-h-[340px] overflow-y-auto" id="model-list">
+                        <!-- Populated dynamically -->
+                        <div class="shimmer h-10 rounded-lg"></div>
+                        <div class="shimmer h-10 rounded-lg"></div>
+                        <div class="shimmer h-10 rounded-lg"></div>
+                    </div>
+                </div>
+
+                <!-- System Prompt -->
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                    <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">System Prompt</h3>
+                        <button id="system-prompt-toggle" class="text-indigo-400 hover:text-indigo-300 text-xs">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="p-3" id="system-prompt-panel">
+                        <textarea id="system-prompt" rows="3" placeholder="You are a helpful AI assistant..." class="w-full px-3 py-2 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-lg text-gray-300 text-xs pg-mono focus:outline-none transition-colors resize-none"></textarea>
+                        <div class="flex flex-wrap gap-1.5 mt-2">
+                            <button class="system-preset px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-[10px] text-gray-400 hover:text-white transition-colors" data-preset="You are a helpful, concise AI assistant.">Concise</button>
+                            <button class="system-preset px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-[10px] text-gray-400 hover:text-white transition-colors" data-preset="You are an expert software engineer. Provide detailed, production-quality code with explanations.">Coder</button>
+                            <button class="system-preset px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-[10px] text-gray-400 hover:text-white transition-colors" data-preset="You are a creative writing assistant. Write vivid, engaging content with rich imagery.">Creative</button>
+                            <button class="system-preset px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md text-[10px] text-gray-400 hover:text-white transition-colors" data-preset="You are a Socratic tutor. Guide the student through questions rather than giving direct answers.">Tutor</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parameter Controls -->
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                    <div class="px-4 py-3 border-b border-slate-800">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Parameters</h3>
+                    </div>
+                    <div class="p-4 space-y-5">
+                        <!-- Temperature -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-medium text-gray-300">Temperature</label>
+                                <span class="token-badge" id="temp-val">0.7</span>
+                            </div>
+                            <input type="range" id="param-temperature" class="param-slider w-full" min="0" max="2" step="0.05" value="0.7" style="--val: 35%">
+                        </div>
+                        <!-- Top-P -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-medium text-gray-300">Top-P</label>
+                                <span class="token-badge" id="topp-val">0.9</span>
+                            </div>
+                            <input type="range" id="param-top-p" class="param-slider w-full" min="0" max="1" step="0.05" value="0.9" style="--val: 90%">
+                        </div>
+                        <!-- Max Tokens -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-medium text-gray-300">Max Tokens</label>
+                                <span class="token-badge" id="maxtok-val">2048</span>
+                            </div>
+                            <input type="range" id="param-max-tokens" class="param-slider w-full" min="64" max="16384" step="64" value="2048" style="--val: 12.3%">
+                        </div>
+                        <!-- Streaming Toggle -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-medium text-gray-300">Stream Response</label>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="param-stream" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-slate-700 peer-focus:ring-2 peer-focus:ring-indigo-500/50 rounded-full peer-checked:bg-indigo-600 transition-colors after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gateway Config -->
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                    <div class="px-4 py-3 border-b border-slate-800">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Gateway</h3>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div>
+                            <label class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1 block">Base URL / Proxy</label>
+                            <input type="text" id="gateway-url" value="/v1" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-lg text-gray-300 text-xs pg-mono focus:outline-none transition-colors" placeholder="/v1 or http://localhost:4000/v1">
+                            <p class="text-[10px] text-gray-500 mt-1">Auto-routes: <code class="text-indigo-300">/v1</code> (LiteLLM) or fallback <code class="text-emerald-300">/ollama</code></p>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1 block">API Key</label>
+                            <input type="password" id="gateway-key" value="sk-xennials-playground-dev-key" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-lg text-gray-300 text-xs pg-mono focus:outline-none transition-colors" placeholder="sk-...">
+                        </div>
+                        <button id="connect-gateway-btn" class="w-full px-3 py-2 bg-indigo-950 hover:bg-indigo-900 border border-indigo-500/40 rounded-lg text-xs font-medium text-indigo-300 hover:text-white transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-plug"></i> Connect / Refresh
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ════════════════════════════════════════════════════════════ -->
+            <!-- MAIN WORKSPACE                                              -->
+            <!-- ════════════════════════════════════════════════════════════ -->
+            <div class="lg:col-span-9 space-y-4">
+
+                <!-- ── CHAT MODE ──────────────────────────────────────── -->
+                <div id="mode-chat" class="mode-panel">
+                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel flex flex-col" style="min-height: 560px;">
+                        <!-- Chat Header -->
+                        <div class="px-5 py-3 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div>
+                                    <h2 class="font-space font-bold text-sm text-white" id="chat-model-name">Select a model</h2>
+                                    <p class="text-[10px] text-gray-500 pg-mono" id="chat-model-provider">—</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="token-badge" id="token-counter">0 tokens</span>
+                                <button id="clear-chat-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs text-gray-400 hover:text-white transition-colors" title="Clear conversation">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Messages -->
+                        <div class="flex-1 overflow-y-auto p-5 space-y-4" id="chat-messages">
+                            <!-- Welcome state -->
+                            <div class="flex flex-col items-center justify-center h-full text-center py-16" id="chat-welcome">
+                                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600/20 via-purple-600/20 to-pink-500/20 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-3xl mb-4">
+                                    <i class="fas fa-sparkles"></i>
+                                </div>
+                                <h3 class="font-space font-bold text-lg text-white mb-1">AI Playground</h3>
+                                <p class="text-sm text-gray-500 max-w-md mb-6">
+                                    Select a model from the sidebar, type a message below, and start chatting. Responses stream in real-time via LiteLLM gateway.
+                                </p>
+                                <div class="flex flex-wrap gap-2 justify-center max-w-lg">
+                                    <button class="quick-prompt px-3 py-1.5 bg-slate-800/80 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500/40 rounded-full text-xs text-gray-400 hover:text-indigo-300 transition-all">Explain quantum computing simply</button>
+                                    <button class="quick-prompt px-3 py-1.5 bg-slate-800/80 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500/40 rounded-full text-xs text-gray-400 hover:text-indigo-300 transition-all">Write a Python async web scraper</button>
+                                    <button class="quick-prompt px-3 py-1.5 bg-slate-800/80 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500/40 rounded-full text-xs text-gray-400 hover:text-indigo-300 transition-all">Compare React vs Vue vs Svelte</button>
+                                    <button class="quick-prompt px-3 py-1.5 bg-slate-800/80 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500/40 rounded-full text-xs text-gray-400 hover:text-indigo-300 transition-all">Design a REST API for a todo app</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="px-5 py-4 border-t border-slate-800 flex-shrink-0">
+                            <form id="chat-form" class="flex items-end gap-3">
+                                <div class="flex-1 relative">
+                                    <textarea id="chat-input" rows="1" placeholder="Message the AI..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors resize-none pr-12" style="max-height: 160px;"></textarea>
+                                </div>
+                                <button type="submit" id="chat-send-btn" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl text-white font-semibold text-sm transition-all shadow-lg flex items-center gap-2 flex-shrink-0" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span class="hidden sm:inline">Send</span>
+                                </button>
+                                <button type="button" id="chat-stop-btn" class="hidden px-5 py-3 bg-red-600/80 hover:bg-red-600 rounded-xl text-white font-semibold text-sm transition-all flex items-center gap-2 flex-shrink-0">
+                                    <i class="fas fa-stop"></i>
+                                    <span class="hidden sm:inline">Stop</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── COMPARE MODE ───────────────────────────────────── -->
+                <div id="mode-compare" class="mode-panel hidden">
+                    <div class="space-y-4">
+                        <!-- Compare Controls -->
+                        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-4">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+                                <div class="flex-1 w-full">
+                                    <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Prompt for Both Models</label>
+                                    <textarea id="compare-prompt" rows="2" placeholder="Enter a prompt to test across both models..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors resize-none"></textarea>
+                                </div>
+                                <button id="compare-send-btn" class="px-6 py-3 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 rounded-xl text-white font-semibold text-sm transition-all shadow-lg flex items-center gap-2 flex-shrink-0" disabled>
+                                    <i class="fas fa-play"></i> Compare
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Panels -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <!-- Panel A -->
+                            <div class="comparison-panel flex flex-col" style="min-height: 400px;">
+                                <div class="px-4 py-3 border-b border-slate-700/50 flex items-center justify-between">
+                                    <select id="compare-model-a" class="bg-slate-950 border border-slate-700 text-gray-300 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500 pg-mono w-full">
+                                        <option value="">Model A — select</option>
+                                    </select>
+                                </div>
+                                <div class="flex-1 p-4 overflow-y-auto text-sm text-gray-300" id="compare-output-a">
+                                    <div class="flex items-center justify-center h-full text-gray-600 text-xs">
+                                        <i class="fas fa-flask mr-2"></i> Waiting for prompt...
+                                    </div>
+                                </div>
+                                <div class="px-4 py-2 border-t border-slate-700/50 flex items-center justify-between text-[10px] text-gray-500 pg-mono">
+                                    <span id="compare-time-a">—</span>
+                                    <span id="compare-tokens-a">—</span>
+                                </div>
+                            </div>
+                            <!-- Panel B -->
+                            <div class="comparison-panel flex flex-col" style="min-height: 400px;">
+                                <div class="px-4 py-3 border-b border-slate-700/50 flex items-center justify-between">
+                                    <select id="compare-model-b" class="bg-slate-950 border border-slate-700 text-gray-300 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500 pg-mono w-full">
+                                        <option value="">Model B — select</option>
+                                    </select>
+                                </div>
+                                <div class="flex-1 p-4 overflow-y-auto text-sm text-gray-300" id="compare-output-b">
+                                    <div class="flex items-center justify-center h-full text-gray-600 text-xs">
+                                        <i class="fas fa-flask mr-2"></i> Waiting for prompt...
+                                    </div>
+                                </div>
+                                <div class="px-4 py-2 border-t border-slate-700/50 flex items-center justify-between text-[10px] text-gray-500 pg-mono">
+                                    <span id="compare-time-b">—</span>
+                                    <span id="compare-tokens-b">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── IMAGE MODE ─────────────────────────────────────── -->
+                <div id="mode-image" class="mode-panel hidden">
+                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-6 space-y-5">
+                        <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
+                            <div class="w-9 h-9 rounded-lg bg-pink-950 border border-pink-500/30 flex items-center justify-center text-pink-400">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-space font-bold text-lg text-white">Text-to-Image Generator</h2>
+                                <p class="text-xs text-gray-500">Powered by fal.ai — FLUX, Krea, and more</p>
+                            </div>
+                        </div>
+
+                        <!-- Image Model Selector -->
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Image Model</label>
+                            <select id="image-model" class="w-full bg-slate-950 border border-slate-700 text-gray-300 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-pink-500 pg-mono">
+                                <option value="fal-flux-schnell">FLUX.1 [schnell] — fast open-source</option>
+                                <option value="fal-krea-2-turbo">Krea 2 Turbo — high fidelity</option>
+                            </select>
+                        </div>
+
+                        <!-- Image Prompt -->
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Prompt</label>
+                            <textarea id="image-prompt" rows="3" placeholder="A cyberpunk cityscape at sunset, neon-lit streets, flying cars, ultra-detailed, 8k cinematic..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-pink-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+
+                        <!-- Image Settings -->
+                        <div class="grid sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1 block">Aspect Ratio</label>
+                                <div class="flex gap-2">
+                                    <button class="img-ratio-btn active px-3 py-1.5 bg-pink-950 border border-pink-500/50 text-pink-300 rounded-lg text-xs pg-mono font-medium" data-ratio="landscape_16_9">16:9</button>
+                                    <button class="img-ratio-btn px-3 py-1.5 bg-slate-800 border border-slate-700 text-gray-400 rounded-lg text-xs pg-mono font-medium" data-ratio="square">1:1</button>
+                                    <button class="img-ratio-btn px-3 py-1.5 bg-slate-800 border border-slate-700 text-gray-400 rounded-lg text-xs pg-mono font-medium" data-ratio="portrait_9_16">9:16</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1 block">Steps</label>
+                                <input type="number" id="image-steps" value="4" min="1" max="50" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 text-gray-300 text-xs pg-mono rounded-lg focus:outline-none focus:border-pink-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mb-1 block">Seed (optional)</label>
+                                <input type="number" id="image-seed" placeholder="Random" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 text-gray-300 text-xs pg-mono rounded-lg focus:outline-none focus:border-pink-500">
+                            </div>
+                        </div>
+
+                        <button id="image-generate-btn" class="px-8 py-3.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 rounded-xl text-white font-semibold text-sm transition-all shadow-lg flex items-center gap-2">
+                            <i class="fas fa-sparkles"></i> Generate Image
+                        </button>
+
+                        <!-- Image Output -->
+                        <div id="image-output" class="mt-4 grid sm:grid-cols-2 gap-4">
+                            <!-- Generated images appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── VIDEO MODE ─────────────────────────────────────── -->
+                <div id="mode-video" class="mode-panel hidden">
+                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-6 space-y-5">
+                        <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
+                            <div class="w-9 h-9 rounded-lg bg-amber-950 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-space font-bold text-lg text-white">Video Generator</h2>
+                                <p class="text-xs text-gray-500">MiniMax H3, Seedance 2.5, FLUX 3, Kling v3 Pro via fal.ai</p>
+                            </div>
+                        </div>
+
+                        <!-- Video Model Selector -->
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Video Model</label>
+                            <select id="video-model" class="w-full bg-slate-950 border border-slate-700 text-gray-300 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500 pg-mono">
+                                <optgroup label="Text → Video">
+                                    <option value="fal-minimax-h3-max-t2v">MiniMax H3 Max — high quality T2V</option>
+                                    <option value="fal-seedance-2.5-t2v">Seedance 2.5 — 30s 720p T2V</option>
+                                </optgroup>
+                                <optgroup label="Image → Video">
+                                    <option value="fal-flux-3-i2v">FLUX 3 — still-to-motion</option>
+                                    <option value="fal-minimax-h3-i2v">MiniMax H3 — image-to-2K-video</option>
+                                    <option value="fal-minimax-h3-max-i2v">MiniMax H3 Max — best aesthetics I2V</option>
+                                    <option value="fal-seedance-2.5-i2v">Seedance 2.5 — 30s 720p I2V</option>
+                                    <option value="fal-kling-v3-pro-i2v">Kling v3 Pro — cinematic + audio</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <!-- Video Prompt -->
+                        <div>
+                            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Prompt</label>
+                            <textarea id="video-prompt" rows="3" placeholder="A cinematic drone shot over a futuristic city at golden hour, smooth camera movement, photorealistic..." class="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+
+                        <!-- Image Upload for I2V -->
+                        <div id="video-image-upload" class="hidden">
+                            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Source Image (for Image→Video)</label>
+                            <div class="w-full p-6 border-2 border-dashed border-slate-700 hover:border-amber-500/40 rounded-xl bg-slate-950/50 text-center cursor-pointer transition-colors" id="video-drop-zone">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-gray-600 mb-2"></i>
+                                <p class="text-xs text-gray-500">Drop an image or <span class="text-amber-400 underline">click to browse</span></p>
+                                <input type="file" id="video-image-input" accept="image/*" class="hidden">
+                            </div>
+                            <div id="video-image-preview" class="hidden mt-3"></div>
+                        </div>
+
+                        <button id="video-generate-btn" class="px-8 py-3.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 rounded-xl text-white font-semibold text-sm transition-all shadow-lg flex items-center gap-2">
+                            <i class="fas fa-clapperboard"></i> Generate Video
+                        </button>
+
+                        <!-- Video Output -->
+                        <div id="video-output" class="mt-4">
+                            <!-- Generated videos appear here -->
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /main workspace -->
+        </div><!-- /grid -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-12 pb-6 text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+            <div>&copy; 2026 Xennials AI Studio & Playground. All Rights Reserved.</div>
+            <div class="flex space-x-4">
+                <a href="deeptutor.html" class="hover:text-gray-300">DeepTutor Showcase</a>
+                <span>&bull;</span>
+                <a href="index.html" class="hover:text-gray-300">Main Portal</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <!-- Back To Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Core Script (nav, theme, back-to-top) -->
+
+    <!-- Playground Engine -->
+</body>
+</html>
