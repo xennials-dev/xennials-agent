@@ -24,11 +24,27 @@ export default defineConfig({
         target: 'http://localhost:11434',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/ollama/, ''),
+        configure: (proxy) => {
+          proxy.on('error', (err, req, res) => {
+            if (!res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: { message: 'Ollama is offline or unreachable' } }));
+            }
+          });
+        },
       },
       // Proxy LiteLLM gateway (when running on :4000)
       '/v1': {
         target: 'http://localhost:4000',
         changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('error', (err, req, res) => {
+            if (!res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: { message: 'LiteLLM gateway offline — falling back to Ollama' } }));
+            }
+          });
+        },
       },
     },
   },
