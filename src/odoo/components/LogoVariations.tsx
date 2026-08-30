@@ -1,14 +1,20 @@
 import React from 'react';
 
-export type LogoStyle = 'neon_orbit' | 'corp_minimal' | 'tech_wireframe' | 'edit_elegance';
+export type LogoStyle = 'universal_gold' | 'neon_orbit' | 'corp_minimal' | 'tech_wireframe' | 'edit_elegance';
 
 interface LogoProps {
-  style: LogoStyle;
+  style?: LogoStyle;
   className?: string;
   size?: number | string;
 }
 
 export const LOGO_VARIANTS = [
+  {
+    id: 'universal_gold' as LogoStyle,
+    name: 'Xennials Universal Gold (Official)',
+    description: '3D metallic gold insignia with dynamic orbital arrows, representing continuous automation and agency scale.',
+    tag: 'Official/Universal'
+  },
   {
     id: 'neon_orbit' as LogoStyle,
     name: 'Xennials Neon Orbit',
@@ -35,10 +41,20 @@ export const LOGO_VARIANTS = [
   }
 ];
 
-export default function Logo({ style, className = '', size = 32 }: LogoProps) {
-  const sizeNum = typeof size === 'number' ? size : parseInt(String(size), 10) || 32;
+export default function Logo({ style = 'universal_gold', className = '', size = 36 }: LogoProps) {
+  const sizeNum = typeof size === 'number' ? size : parseInt(String(size), 10) || 36;
 
   switch (style) {
+    case 'universal_gold':
+      return (
+        <img
+          src="/assets/images/xennials-gold-logo.png"
+          alt="Xennials Official Gold Logo"
+          style={{ height: sizeNum, width: 'auto' }}
+          className={`object-contain transition-all duration-300 drop-shadow-[0_2px_12px_rgba(212,175,55,0.4)] ${className}`}
+        />
+      );
+
     case 'neon_orbit':
       return (
         <svg
