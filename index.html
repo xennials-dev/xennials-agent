@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xennials | AI Automation & Web Development</title>
+    <meta name="description" content="AI Automation & Web Development by Xennials - Transforming ideas into digital reality with intelligent automation solutions and high-performance web applications.">
+    <meta name="keywords" content="AI Automation, Web Development, n8n, Activepieces, React, TailwindCSS, Python, AI Agents">
+    <meta property="og:title" content="Xennials | AI Automation & Web Development">
+    <meta property="og:description" content="Bridging analog vibration with digital precision through intelligent AI automation and web development.">
+    <meta property="og:type" content="website">
+    
+    <!-- Preload Fonts & Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-200 overflow-x-hidden relative">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold font-space flex items-center gap-2 group">
+                    <span class="w-3 h-3 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform"></span>
+                    <span class="gradient-text tracking-tight">Xennials</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-7 text-sm font-medium">
+                    <a href="#about" class="hover:text-indigo-400 transition-colors">About</a>
+                    <a href="#services" class="hover:text-indigo-400 transition-colors">Services</a>
+                    <a href="#projects" class="hover:text-indigo-400 transition-colors">Projects</a>
+                    <a href="#calculator" class="hover:text-indigo-400 transition-colors">ROI Calculator</a>
+                    <a href="#tech" class="hover:text-indigo-400 transition-colors">Tech Stack</a>
+                    <a href="#contact" class="hover:text-indigo-400 transition-colors">Contact</a>
+                    
+                    <!-- Theme Switcher -->
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-full">
+                        <button class="theme-option w-5 h-5 rounded-full bg-indigo-500 hover:scale-110 transition-transform" data-theme-name="default" title="Indigo & Pink"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-cyan-500 hover:scale-110 transition-transform" data-theme-name="cyan" title="Cyber Cyan & Emerald"></button>
+                        <button class="theme-option w-5 h-5 rounded-full bg-purple-500 hover:scale-110 transition-transform" data-theme-name="purple" title="Deep Purple & Amber"></button>
+                    </div>
+
+                    <div class="h-4 w-px bg-slate-800"></div>
+                    <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="text-gray-400 hover:text-white transition-colors text-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" class="text-gray-400 hover:text-white transition-colors text-lg">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                
+                <button class="md:hidden text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div class="hidden md:hidden mt-4 py-4 px-6 bg-slate-900/95 border border-slate-800 rounded-xl space-y-3" id="mobile-menu">
+                <a href="#about" class="block py-2 text-gray-300 hover:text-indigo-400">About</a>
+                <a href="#services" class="block py-2 text-gray-300 hover:text-indigo-400">Services</a>
+                <a href="#projects" class="block py-2 text-gray-300 hover:text-indigo-400">Projects</a>
+                <a href="#calculator" class="block py-2 text-gray-300 hover:text-indigo-400">ROI Calculator</a>
+                <a href="#tech" class="block py-2 text-gray-300 hover:text-indigo-400">Tech Stack</a>
+                <a href="#contact" class="block py-2 text-gray-300 hover:text-indigo-400">Contact</a>
+                <div class="flex space-x-6 pt-3 border-t border-slate-800">
+                    <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" title="GitHub Profile" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-github"></i></a>
+                    <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" title="Website" class="text-gray-400 hover:text-white text-xl"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-28 pb-16 relative overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 text-center lg:text-left reveal-on-scroll">
+                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gradient-to-r from-indigo-950/60 to-pink-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        AI Automation & Web Development
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-space leading-tight mb-6">
+                        Bridging analog <br class="hidden sm:block">
+                        <span class="gradient-text">vibration</span> with <br class="hidden sm:block">
+                        digital precision
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                        Transforming complex ideas into intelligent automation solutions and custom web experiences that bridge tradition with digital innovation.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold hover:from-indigo-700 hover:to-pink-700 transition-all transform hover:scale-[1.03] shadow-lg shadow-indigo-600/30 text-center">
+                            Let's Connect <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </a>
+                        <a href="#projects" class="w-full sm:w-auto px-8 py-3.5 border border-slate-700 hover:border-indigo-500 rounded-xl text-gray-200 font-semibold hover:bg-slate-800/60 transition-all text-center">
+                            Explore Projects
+                        </a>
+                        <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-6 py-3.5 bg-slate-900 border border-slate-800 rounded-xl text-gray-300 hover:text-white hover:bg-slate-800 transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fab fa-github text-lg"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-5 relative reveal-on-scroll">
+                    <div class="relative z-10 animate-float">
+                        <div class="rounded-2xl overflow-hidden border border-indigo-500/30 shadow-2xl shadow-indigo-500/20 bg-slate-900/80 backdrop-blur-sm p-3">
+                            <img src="assets/images/hero-ai-automation.png" alt="AI Automation Visual" loading="eager" fetchpriority="high" decoding="async" class="w-full h-auto rounded-xl object-cover" width="600" height="400">
+                            <div class="p-4 bg-slate-900/90 rounded-b-xl border-t border-slate-800 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                                    <span class="text-xs font-mono text-gray-300">AI Agents Active</span>
+                                </div>
+                                <span class="text-xs font-mono text-indigo-400">v2.4.0 Live</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -top-10 -right-10 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 -left-10 w-72 h-72 bg-pink-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-slate-900/60 relative border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">About <span class="gradient-text">Me</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 reveal-on-scroll">
+                    <div class="relative group">
+                        <div class="w-full rounded-2xl overflow-hidden border border-slate-700 shadow-2xl bg-slate-800">
+                            <img src="assets/images/xennials-team.png" alt="Xennials Leadership Team" loading="lazy" decoding="async" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500" width="500" height="650">
+                        </div>
+                        <div class="absolute -bottom-5 -right-5 w-48 h-48 bg-gradient-to-br from-indigo-600/20 to-pink-600/20 rounded-2xl -z-10 blur-xl"></div>
+                        <div class="absolute bottom-4 left-4 right-4 bg-slate-950/80 backdrop-blur-md p-3.5 rounded-xl border border-slate-700 text-center">
+                            <p class="text-xs font-semibold text-gray-200">Xennial Mindset: Analog Roots & Digital Mastery</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-7 reveal-on-scroll">
+                    <h3 class="text-2xl sm:text-3xl font-bold font-space mb-6">Bridge Between Analog & Digital Worlds</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        As a Xennial, I bring a unique perspective shaped by both analog foundations and digital fluency. This background enables me to understand complex real-world workflows while building human-centered, automated digital solutions.
+                    </p>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        I specialize in AI automation and web development, transforming how teams operate. From crafting end-to-end autonomous workflows using n8n and Activepieces to building reactive web applications, I bridge the gap between technical complexity and effortless execution.
+                    </p>
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="p-5 bg-slate-800/60 rounded-xl border border-slate-700/80 text-center hover:border-indigo-500/50 transition-colors">
+                            <div class="text-3xl sm:text-4xl font-bold font-space gradient-text mb-1" data-counter="12" data-suffix="+">0</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Years Experience</div>
+                        </div>
+                        <div class="p-5 bg-slate-800/60 rounded-xl border border-slate-700/80 text-center hover:border-indigo-500/50 transition-colors">
+                            <div class="text-3xl sm:text-4xl font-bold font-space gradient-text mb-1" data-counter="379" data-suffix="+">0</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Projects Delivered</div>
+                        </div>
+                        <div class="p-5 bg-slate-800/60 rounded-xl border border-slate-700/80 text-center hover:border-indigo-500/50 transition-colors">
+                            <div class="text-3xl sm:text-4xl font-bold font-space gradient-text mb-1" data-counter="150" data-suffix="+">0</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">n8n Templates</div>
+                        </div>
+                        <div class="p-5 bg-slate-800/60 rounded-xl border border-slate-700/80 text-center hover:border-indigo-500/50 transition-colors">
+                            <div class="text-3xl sm:text-4xl font-bold font-space gradient-text mb-1" data-counter="100" data-suffix="%">0</div>
+                            <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Client Delight</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">My <span class="gradient-text">Services</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4 max-w-xl mx-auto">Tailored technological solutions engineered for efficiency, intelligence, and modern scale.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/50 glass-panel flex flex-col justify-between reveal-on-scroll">
+                    <div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-600/30">
+                            <i class="fas fa-robot text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-space mb-4">AI Automation</h3>
+                        <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                            Transform repetitive tasks into automated workflows using n8n, Activepieces, and custom AI agents. Create intelligent systems that scale without technical friction.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-indigo-300">n8n</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-indigo-300">Activepieces</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-indigo-300">AI Agents</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-indigo-300">Web Scraping</span>
+                        </div>
+                        <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold text-sm inline-flex items-center gap-2">
+                            View Automation Projects <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/50 glass-panel flex flex-col justify-between reveal-on-scroll">
+                    <div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-600 to-rose-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-pink-600/30">
+                            <i class="fas fa-code text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-space mb-4">Web Development</h3>
+                        <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                            Build modern, responsive applications with React, TailwindCSS, and modern web tech. Create stunning digital experiences that engage and convert users.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-pink-300">React</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-pink-300">TailwindCSS</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-pink-300">JavaScript</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-pink-300">Python</span>
+                        </div>
+                        <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="text-pink-400 hover:text-pink-300 font-semibold text-sm inline-flex items-center gap-2">
+                            Check UI Components <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card p-8 rounded-2xl border border-slate-800 bg-slate-900/50 glass-panel flex flex-col justify-between reveal-on-scroll">
+                    <div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-600/30">
+                            <i class="fas fa-network-wired text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-space mb-4">Solutions Architecture</h3>
+                        <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                            Design and implement robust end-to-end data pipelines. Connect disparate tools and APIs so business data flows securely across your organization.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-cyan-300">System Integration</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-cyan-300">REST APIs</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-cyan-300">Cloud Infra</span>
+                            <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-cyan-300">Consulting</span>
+                        </div>
+                        <a href="#contact" class="text-cyan-400 hover:text-cyan-300 font-semibold text-sm inline-flex items-center gap-2">
+                            Discuss Your Architecture <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="projects" class="py-24 bg-slate-900/60 border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">Featured <span class="gradient-text">Projects</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-6"></div>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Showcasing impactful work in AI automation, web engineering, and open-source software development.
+                </p>
+            </div>
+            
+            <!-- Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal-on-scroll">
+                <button class="filter-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-filter="all">
+                    All Projects
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-filter="automation">
+                    Automation
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-filter="web">
+                    Web Dev
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all border border-slate-700 bg-slate-800 text-gray-300" data-filter="ai">
+                    AI Agents
+                </button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1: TutorBot Agents -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="ai">
+                    <div>
+                        <div class="p-6 pb-0 flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <i class="fas fa-robot text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold font-space text-lg">TutorBot Agents</h3>
+                                    <p class="text-xs text-indigo-400 font-mono">Agent-Native Companion</p>
+                                </div>
+                            </div>
+                            <span class="bg-slate-800 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-mono">AI Agents</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Intelligent learning companion and multi-agent educational copilot. Manage in-process TutorBot instances with real-time reasoning workspaces.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://clever-mochi-c38d64.netlify.app/agents" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold inline-flex items-center gap-1.5 font-mono">
+                            Launch App <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-indigo-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="tutorbot-agents">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Project 2: Xennials AI Autonomous Suite -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="automation">
+                    <div>
+                        <div class="p-6 pb-0 flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                    <i class="fas fa-brain text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold font-space text-lg">Xennials AI Suite</h3>
+                                    <p class="text-xs text-amber-400 font-mono">Autonomous Agency Platform</p>
+                                </div>
+                            </div>
+                            <span class="bg-slate-800 text-amber-300 text-xs px-2.5 py-1 rounded-full font-mono">AI Automation</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Autonomous agent core with prompt caching, multi-platform messaging, 1,069+ skills, interactive voice ads, and full enterprise CRM pipeline automation.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://xennials-agent.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 text-sm font-semibold inline-flex items-center gap-1.5 font-mono">
+                            Launch App <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-amber-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="xennials-agent">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="web">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="assets/images/ui-components.png" alt="21st UI Components" loading="lazy" decoding="async" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" width="400" height="250">
+                            <div class="absolute top-3 right-3 bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs px-2.5 py-1 rounded-full font-mono">
+                                Web Dev
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold font-space text-lg mb-2">21st - UI Components</h3>
+                            <p class="text-xs text-cyan-400 mb-3 font-mono">Design System Library</p>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Premium marketplace of shadcn/ui-based React & Tailwind CSS components, blocks, and dynamic hooks for fast frontend delivery.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://github.com/teefisher2k20/21st" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 text-sm font-semibold inline-flex items-center gap-1.5">
+                            GitHub <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-cyan-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="ui-components">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="ai">
+                    <div>
+                        <div class="p-6 pb-0 flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                                    <i class="fab fa-python text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold font-space text-lg">ADK Python</h3>
+                                    <p class="text-xs text-purple-400 font-mono">AI Agent Toolkit</p>
+                                </div>
+                            </div>
+                            <span class="bg-slate-800 text-purple-300 text-xs px-2.5 py-1 rounded-full font-mono">AI Agents</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Code-first Python toolkit for building, evaluating, and deploying sophisticated multi-agent AI ecosystems with granular control.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://github.com/teefisher2k20/adk-python" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 text-sm font-semibold inline-flex items-center gap-1.5">
+                            GitHub <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-purple-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="adk-python">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="automation">
+                    <div>
+                        <div class="p-6 pb-0 flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <i class="fas fa-globe text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold font-space text-lg">Agent-E</h3>
+                                    <p class="text-xs text-indigo-400 font-mono">Web Automation Engine</p>
+                                </div>
+                            </div>
+                            <span class="bg-slate-800 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-mono">Automation</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Autonomous agent-driven web automation framework for headless browser tasks, data extraction, and dynamic navigation.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://github.com/teefisher2k20/agent-e" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold inline-flex items-center gap-1.5">
+                            GitHub <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-indigo-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="agent-e">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="repo-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between reveal-on-scroll" data-category="web">
+                    <div>
+                        <div class="p-6 pb-0 flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                                    <i class="fas fa-code text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold font-space text-lg">VS Code Extensions</h3>
+                                    <p class="text-xs text-cyan-400 font-mono">Developer Environment</p>
+                                </div>
+                            </div>
+                            <span class="bg-slate-800 text-cyan-300 text-xs px-2.5 py-1 rounded-full font-mono">Development</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Open source custom extensions and developer toolchains designed for streamlined coding efficiency and agentic debugging.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 flex justify-between items-center">
+                        <a href="https://github.com/teefisher2k20/vscode" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 text-sm font-semibold inline-flex items-center gap-1.5">
+                            GitHub <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                        <button class="text-xs text-slate-300 bg-slate-800 hover:bg-cyan-600 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors" data-project-key="vscode-tools">
+                            <i class="fas fa-eye mr-1"></i> Quick View
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 reveal-on-scroll">
+                <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-3.5 bg-slate-800 border border-slate-700 hover:border-indigo-500 rounded-xl text-white font-semibold hover:bg-slate-700 transition-all shadow-lg">
+                    <i class="fab fa-github text-xl"></i> View All 379+ Repositories
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Automation Savings & ROI Calculator Section -->
+    <section id="calculator" class="py-24 relative overflow-hidden bg-slate-900/40 border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">AI Automation <span class="gradient-text">ROI Calculator</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Estimate annual time and financial savings when deploying Xennials AI automation and n8n workflows across your team.
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <!-- Inputs -->
+                <div class="lg:col-span-7 bg-slate-900/80 p-8 rounded-2xl border border-slate-800 glass-panel reveal-on-scroll space-y-8">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="calc-team" class="font-semibold text-sm text-gray-200">Team Size</label>
+                            <span id="calc-team-val" class="font-mono text-indigo-400 font-bold text-lg">5</span>
+                        </div>
+                        <input type="range" id="calc-team" min="1" max="50" value="5" class="w-full" aria-label="Team Size">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="calc-hours" class="font-semibold text-sm text-gray-200">Manual Task Hours / Week / Person</label>
+                            <span id="calc-hours-val" class="font-mono text-indigo-400 font-bold text-lg">10 hrs/wk</span>
+                        </div>
+                        <input type="range" id="calc-hours" min="1" max="30" value="10" class="w-full" aria-label="Manual Task Hours per Week">
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="calc-rate" class="font-semibold text-sm text-gray-200">Average Blended Hourly Rate</label>
+                            <span id="calc-rate-val" class="font-mono text-indigo-400 font-bold text-lg">$65/hr</span>
+                        </div>
+                        <input type="range" id="calc-rate" min="20" max="200" value="65" step="5" class="w-full" aria-label="Average Blended Hourly Rate">
+                    </div>
+                </div>
+                
+                <!-- Results Card -->
+                <div class="lg:col-span-5 reveal-on-scroll">
+                    <div class="bg-gradient-to-br from-indigo-950/60 to-pink-950/60 p-8 rounded-2xl border border-indigo-500/40 shadow-2xl space-y-6 text-center">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-900/60 rounded-full text-indigo-300 text-xs font-mono">
+                            <i class="fas fa-bolt text-amber-400"></i> Projected 75% Automation Efficiency
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Estimated Annual Time Saved</p>
+                            <div id="res-hours-saved" class="text-4xl sm:text-5xl font-bold font-space gradient-text">1,950 hrs</div>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-slate-800">
+                            <p class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Estimated Annual Cost Savings</p>
+                            <div id="res-money-saved" class="text-4xl sm:text-5xl font-bold font-space text-emerald-400">$126,750</div>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <a href="#contact" class="inline-block w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold transition-colors">
+                                Schedule Automation Discovery &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Expertise Grid -->
+    <section id="tech" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">Technical <span class="gradient-text">Expertise</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400 max-w-xl mx-auto">Languages, frameworks, and workflow tools powering high-grade automation.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6">
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-indigo-500/40 transition-colors reveal-on-scroll">
+                    <i class="fab fa-python text-4xl text-indigo-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">Python</h4>
+                    <p class="text-xs text-gray-400 mt-1">AI Agents, Automation</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-yellow-500/40 transition-colors reveal-on-scroll">
+                    <i class="fab fa-js text-4xl text-yellow-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">JavaScript</h4>
+                    <p class="text-xs text-gray-400 mt-1">Web Development</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-cyan-500/40 transition-colors reveal-on-scroll">
+                    <i class="fab fa-react text-4xl text-cyan-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">React</h4>
+                    <p class="text-xs text-gray-400 mt-1">Frontend UI Systems</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-colors reveal-on-scroll">
+                    <i class="fas fa-network-wired text-4xl text-emerald-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">n8n</h4>
+                    <p class="text-xs text-gray-400 mt-1">Workflow Automation</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-pink-500/40 transition-colors reveal-on-scroll">
+                    <i class="fas fa-puzzle-piece text-4xl text-pink-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">Activepieces</h4>
+                    <p class="text-xs text-gray-400 mt-1">Open Source Platform</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-orange-500/40 transition-colors reveal-on-scroll">
+                    <i class="fas fa-database text-4xl text-orange-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">SQL & Data</h4>
+                    <p class="text-xs text-gray-400 mt-1">Pipelines & Querying</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-purple-500/40 transition-colors reveal-on-scroll">
+                    <i class="fas fa-plug text-4xl text-purple-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">REST APIs</h4>
+                    <p class="text-xs text-gray-400 mt-1">System Integration</p>
+                </div>
+                
+                <div class="text-center p-6 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-blue-500/40 transition-colors reveal-on-scroll">
+                    <i class="fab fa-docker text-4xl text-blue-400 mb-4 tech-glow"></i>
+                    <h4 class="font-bold font-space text-lg">Docker</h4>
+                    <p class="text-xs text-gray-400 mt-1">Containerization</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-24 bg-slate-900/70 border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">What <span class="gradient-text">Clients</span> Say</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-slate-800/40 p-8 rounded-2xl border border-slate-700/80 glass-panel reveal-on-scroll">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-lg">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold font-space text-lg">QA Automation Success</h4>
+                            <p class="text-xs text-indigo-400">Healthcare Industry</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic text-sm leading-relaxed mb-6">
+                        "The automation expertise transformed our QA testing lifecycle. We achieved flawless execution with AI-augmented engineering and modern tooling that accelerated our delivery speed by 40%."
+                    </p>
+                    <div class="flex text-amber-400 gap-1 text-sm">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-slate-800/40 p-8 rounded-2xl border border-slate-700/80 glass-panel reveal-on-scroll">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-pink-600 to-rose-600 rounded-full flex items-center justify-center text-white text-lg">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold font-space text-lg">Workflow Optimization</h4>
+                            <p class="text-xs text-pink-400">E-commerce Solutions</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic text-sm leading-relaxed mb-6">
+                        "Real-world automation solutions that actually perform. The custom n8n templates and API integrations saved our operations team countless hours weekly while dramatically reducing human error."
+                    </p>
+                    <div class="flex text-amber-400 gap-1 text-sm">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold font-space mb-4">Let's <span class="gradient-text">Connect</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400 max-w-xl mx-auto">
+                    Ready to elevate your engineering with AI automation or custom web development? Let's build something powerful together.
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-5 reveal-on-scroll">
+                    <div class="bg-slate-900/60 p-8 rounded-2xl border border-slate-800 glass-panel h-full flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold font-space mb-4">Get In Touch</h3>
+                            <p class="text-gray-400 text-sm mb-8">
+                                Whether you require custom n8n automation, AI agent architecture, or frontend web engineering, I am available to consult and build.
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-11 h-11 bg-indigo-950/80 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 flex-shrink-0 text-lg">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Email</h4>
+                                        <p class="text-gray-400 text-xs">teefisher2k20@github.com</p>
+                                        <a href="mailto:teefisher2k20@github.com" class="text-indigo-400 hover:text-indigo-300 text-xs mt-1 inline-block font-semibold">Send Direct Message &rarr;</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start gap-4">
+                                    <div class="w-11 h-11 bg-pink-950/80 border border-pink-500/30 rounded-xl flex items-center justify-center text-pink-400 flex-shrink-0 text-lg">
+                                        <i class="fab fa-github"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">GitHub</h4>
+                                        <p class="text-gray-400 text-xs">github.com/teefisher2k20</p>
+                                        <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" class="text-pink-400 hover:text-pink-300 text-xs mt-1 inline-block font-semibold">View Repositories &rarr;</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start gap-4">
+                                    <div class="w-11 h-11 bg-cyan-950/80 border border-cyan-500/30 rounded-xl flex items-center justify-center text-cyan-400 flex-shrink-0 text-lg">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Web Presence</h4>
+                                        <p class="text-gray-400 text-xs">xennials.tech &amp; xennials.blog</p>
+                                        <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 text-xs mt-1 inline-block font-semibold">Visit Official Site &rarr;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-slate-800">
+                            <h4 class="font-bold text-sm mb-3">Follow Online</h4>
+                            <div class="flex space-x-3">
+                                <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:bg-pink-600 hover:text-white transition-colors">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://xennials.blog" target="_blank" rel="noopener noreferrer" aria-label="Blog" class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:bg-cyan-600 hover:text-white transition-colors">
+                                    <i class="fas fa-rss"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-7 reveal-on-scroll">
+                    <div class="bg-gradient-to-br from-indigo-950/30 to-pink-950/30 p-8 rounded-2xl border border-slate-800 glass-panel">
+                        <h3 class="text-2xl font-bold font-space mb-6">Send A Message</h3>
+                        
+                        <form id="contact-form" class="space-y-5">
+                            <div class="grid sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="contact-name" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Your Name</label>
+                                    <input type="text" id="contact-name" required placeholder="Alex Turner" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
+                                </div>
+                                <div>
+                                    <label for="contact-email" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email Address</label>
+                                    <input type="email" id="contact-email" required placeholder="alex@company.com" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="contact-subject" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Project Subject</label>
+                                <input type="text" id="contact-subject" placeholder="AI Automation / Web Development Project" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors">
+                            </div>
+                            
+                            <div>
+                                <label for="contact-message" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Message</label>
+                                <textarea id="contact-message" rows="5" required placeholder="Tell me about your project goals, timelines, or key requirements..." class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-sm focus:outline-none transition-colors resize-none"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-pink-600 rounded-xl text-white font-semibold hover:from-indigo-700 hover:to-pink-700 transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                                <i class="fas fa-paper-plane text-sm"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-8 text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2">
+                    <a href="#" class="text-2xl font-bold font-space inline-block mb-4">
+                        <span class="gradient-text">Xennials</span>
+                    </a>
+                    <p class="text-gray-400 max-w-md leading-relaxed mb-4 text-xs sm:text-sm">
+                        Bridging analog vibration with digital precision through AI automation and web development. Engineering intelligent solutions that scale seamlessly.
+                    </p>
+                    <p class="text-gray-500 text-xs">
+                        &copy; 2026 Xennials. All Rights Reserved.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="#about" class="hover:text-indigo-400 transition-colors">About Xennials</a></li>
+                        <li><a href="#services" class="hover:text-indigo-400 transition-colors">Services</a></li>
+                        <li><a href="#projects" class="hover:text-indigo-400 transition-colors">Featured Projects</a></li>
+                        <li><a href="#calculator" class="hover:text-indigo-400 transition-colors">ROI Calculator</a></li>
+                        <li><a href="#tech" class="hover:text-indigo-400 transition-colors">Technical Stack</a></li>
+                        <li><a href="#contact" class="hover:text-indigo-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold font-space text-gray-200 mb-4 uppercase text-xs tracking-wider">Connect</h4>
+                    <div class="flex space-x-3 mb-4 text-lg">
+                        <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                        <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" aria-label="Website" class="hover:text-white transition-colors"><i class="fas fa-globe"></i></a>
+                        <a href="https://xennials.blog" target="_blank" rel="noopener noreferrer" aria-label="Blog" class="hover:text-white transition-colors"><i class="fas fa-rss"></i></a>
+                    </div>
+                    <p class="text-gray-500 text-xs font-mono">teefisher2k20@github.com</p>
+                    <p class="text-gray-500 text-xs font-mono mt-1">xennials.tech</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                <div>
+                    Xennial Generation: Bridging Analog Foundations &amp; AI Digital Precision.
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/teefisher2k20" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300">GitHub Profile</a>
+                    <span>&bull;</span>
+                    <a href="https://xennials.tech" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300">Official Portal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Project Quick View Modal -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-container p-8 relative">
+            <button id="modal-close-btn" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl" aria-label="Close Modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mb-4">
+                <span id="modal-category" class="px-3 py-1 bg-indigo-950 border border-indigo-500/40 text-indigo-300 rounded-full text-xs font-mono">
+                    Category
+                </span>
+            </div>
+            <h3 id="modal-title" class="text-2xl font-bold font-space mb-4 text-white">Project Title</h3>
+            <p id="modal-description" class="text-gray-300 text-sm leading-relaxed mb-6">Description</p>
+            
+            <div class="mb-6">
+                <h4 class="text-xs uppercase font-semibold text-gray-400 mb-2">Technologies Used</h4>
+                <div id="modal-tech" class="flex flex-wrap gap-2"></div>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-800 flex justify-end gap-4">
+                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-colors inline-flex items-center gap-2">
+                    Open on GitHub <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back To Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Custom Script -->
+    <script src="script.js" defer></script>
+</body>
+</html>
