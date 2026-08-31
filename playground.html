@@ -256,35 +256,102 @@
             </div>
         </div>
 
-        <!-- ── Mode Selector Tabs ─────────────────────────────────────── -->
-        <div class="flex flex-wrap gap-3 mb-6" id="mode-tabs" data-step-number="PG-03" data-step-title="🎛️ Multimodal Workspace Modes" data-step-guide="Switch between Single LLM Chat, Side-by-Side Model Comparison, FLUX Text-to-Image synthesis, and AI Video Generation." data-step-action="👉 Click a mode tab to switch studios">
-            <button class="mode-tab active flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="chat">
-                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 transition-all"><i class="fas fa-comments"></i></span>
-                <div class="text-left">
-                    <div class="text-white font-semibold">Chat</div>
-                    <div class="text-[10px] text-gray-500">LLM conversation</div>
+        <!-- ── Top Task Capability Quick Bar (HuggingFace / ModelHub Style) ── -->
+        <div class="mb-5 p-3.5 bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel" data-step-number="PG-00" data-step-title="⚡ AI Task & Modality Quick Bar" data-step-guide="Instantly activate specialized AI task presets including Image Captioning, Chatbots, Sentiment Analysis, Text Summarization, Music Generation, and Medical Imaging." data-step-action="👉 Click any task chip to activate preset">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <div class="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    <i class="fas fa-layer-group text-indigo-400"></i> AI Capabilities & Tasks
                 </div>
-            </button>
-            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="compare">
-                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 transition-all"><i class="fas fa-columns"></i></span>
-                <div class="text-left">
-                    <div class="text-white font-semibold">Compare</div>
-                    <div class="text-[10px] text-gray-500">Side-by-side</div>
-                </div>
-            </button>
-            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="image">
-                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-pink-400 transition-all"><i class="fas fa-image"></i></span>
-                <div class="text-left">
-                    <div class="text-white font-semibold">Image</div>
-                    <div class="text-[10px] text-gray-500">Text-to-image</div>
-                </div>
-            </button>
-            <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="video">
-                <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400 transition-all"><i class="fas fa-film"></i></span>
-                <div class="text-left">
-                    <div class="text-white font-semibold">Video</div>
-                    <div class="text-[10px] text-gray-500">Text / image → video</div>
-                </div>
+                <button type="button" id="open-taxonomy-btn" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center gap-1.5 transition-colors" title="Explore 60+ AI Tasks & 50+ ML Frameworks">
+                    <span>Explore All 60+ Tasks &amp; 50+ Frameworks</span> <i class="fas fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+            <div class="task-quick-bar" id="task-quick-bar">
+                <button class="task-quick-chip" data-task="image-captioning" title="Generate descriptive captions from imagery">
+                    <i class="fas fa-closed-captioning"></i>
+                    <span>Image Captioning</span>
+                </button>
+                <button class="task-quick-chip active" data-task="chatbots" title="Conversational agent swarms">
+                    <i class="fas fa-face-smile"></i>
+                    <span>Chatbots</span>
+                </button>
+                <button class="task-quick-chip" data-task="sentiment-analysis" title="Classify positive, negative, or neutral sentiment">
+                    <i class="fas fa-face-smile-beam"></i>
+                    <span>Sentiment Analysis</span>
+                </button>
+                <button class="task-quick-chip" data-task="summarization" title="Condense long documents into key executive takeaways">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Text Summarization</span>
+                </button>
+                <button class="task-quick-chip" data-task="music-generation" title="Synthesize AI audio & music tracks">
+                    <i class="fas fa-music"></i>
+                    <span>Music Generation</span>
+                </button>
+                <button class="task-quick-chip" data-task="medical-imaging" title="Analyze radiological scans & clinical notes">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Medical Imaging</span>
+                </button>
+                <button class="task-quick-chip" data-task="financial-analysis" title="Perform earnings report audits & market modeling">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Financial Analysis</span>
+                </button>
+                <button class="task-quick-chip" data-task="game-ai" title="Reinforcement learning agents & NPC logic">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Game AI</span>
+                </button>
+                <button class="task-quick-chip" data-task="model-benchmarking" title="Compare accuracy, TPS latency & token costs">
+                    <i class="fas fa-chart-simple"></i>
+                    <span>Model Benchmarking</span>
+                </button>
+                <button class="task-quick-chip" data-task="code-generation" title="Write asynchronous Python, TypeScript, and Rust code">
+                    <i class="fas fa-code"></i>
+                    <span>Code Generation</span>
+                </button>
+                <button class="task-quick-chip" data-task="visual-qa" title="Visual Question Answering over images">
+                    <i class="fas fa-eye"></i>
+                    <span>Visual QA</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Mode Selector Tabs & Taxonomy Trigger ───────────────────── -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+            <div class="flex flex-wrap gap-3" id="mode-tabs" data-step-number="PG-03" data-step-title="🎛️ Multimodal Workspace Modes" data-step-guide="Switch between Single LLM Chat, Side-by-Side Model Comparison, FLUX Text-to-Image synthesis, and AI Video Generation." data-step-action="👉 Click a mode tab to switch studios">
+                <button class="mode-tab active flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="chat">
+                    <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 transition-all"><i class="fas fa-comments"></i></span>
+                    <div class="text-left">
+                        <div class="text-white font-semibold">Chat</div>
+                        <div class="text-[10px] text-gray-500">LLM conversation</div>
+                    </div>
+                </button>
+                <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="compare">
+                    <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 transition-all"><i class="fas fa-columns"></i></span>
+                    <div class="text-left">
+                        <div class="text-white font-semibold">Compare</div>
+                        <div class="text-[10px] text-gray-500">Side-by-side</div>
+                    </div>
+                </button>
+                <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="image">
+                    <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-pink-400 transition-all"><i class="fas fa-image"></i></span>
+                    <div class="text-left">
+                        <div class="text-white font-semibold">Image</div>
+                        <div class="text-[10px] text-gray-500">Text-to-image</div>
+                    </div>
+                </button>
+                <button class="mode-tab flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="video">
+                    <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400 transition-all"><i class="fas fa-film"></i></span>
+                    <div class="text-left">
+                        <div class="text-white font-semibold">Video</div>
+                        <div class="text-[10px] text-gray-500">Text / image → video</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Full Taxonomy Launcher Button -->
+            <button id="open-taxonomy-btn-secondary" class="px-4 py-2.5 bg-indigo-950/70 hover:bg-indigo-900/80 border border-indigo-500/40 rounded-xl text-xs font-semibold text-indigo-300 hover:text-white transition-all flex items-center gap-2 flex-shrink-0 shadow-lg shadow-indigo-950/50">
+                <i class="fas fa-cubes text-pink-400"></i>
+                <span>Task Taxonomy &amp; Frameworks</span>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-900 border border-indigo-500/30 text-[10px] text-indigo-200">60+</span>
             </button>
         </div>
 
@@ -675,6 +742,242 @@
             </div>
         </div>
     </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- HUGGINGFACE & MODELHUB AI TASK & FRAMEWORK TAXONOMY MODAL          -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div id="taxonomy-modal" class="hidden">
+        <div class="taxonomy-modal-card">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 via-pink-600 to-amber-500 flex items-center justify-center text-white text-lg shadow-lg shadow-indigo-600/30">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold font-space text-white flex items-center gap-2">
+                            AI Task Taxonomy &amp; ML Framework Hub
+                            <span class="px-2.5 py-0.5 rounded-full bg-indigo-900/80 border border-indigo-500/40 text-[10px] text-indigo-300 font-mono">60+ Tasks • 48 Frameworks</span>
+                        </h3>
+                        <p class="text-xs text-gray-400">Click any task or framework chip to instantly load model archetypes, system personas, and sampling templates.</p>
+                    </div>
+                </div>
+                <button id="close-taxonomy-modal-btn" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-gray-400 hover:text-white flex items-center justify-center text-base transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Search & Domain Filter Bar -->
+            <div class="p-4 border-b border-slate-800/80 bg-slate-900/60 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="taxonomy-search-input" placeholder="Search tasks, modalities, or frameworks (e.g. VQA, Depth Estimation, Safetensors, JAX)..." class="w-full pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl text-gray-200 text-xs pg-mono focus:outline-none transition-colors">
+                </div>
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="taxonomy-domain-tabs">
+                    <button class="domain-tab-btn active px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-colors" data-domain="all">All</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="multimodal">Multimodal</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="cv">Computer Vision</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="nlp">NLP</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="audio">Audio</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="tabular">Tabular</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="rl">RL &amp; Robotics</button>
+                    <button class="domain-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors" data-domain="frameworks">Frameworks</button>
+                </div>
+            </div>
+
+            <!-- Modal Content (Scrollable Categories) -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-8" id="taxonomy-content-body">
+
+                <!-- ── 1. MULTIMODAL ────────────────────────────────────── -->
+                <div class="taxonomy-section" data-section="multimodal">
+                    <h4 class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-layer-group"></i> Multimodal
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="audio-text-to-text"><i class="fas fa-wave-square task-icon-multimodal"></i> Audio-Text-to-Text</button>
+                        <button class="hf-task-pill" data-task="image-text-to-text"><i class="fas fa-images task-icon-multimodal"></i> Image-Text-to-Text</button>
+                        <button class="hf-task-pill" data-task="image-text-to-image"><i class="fas fa-wand-magic-sparkles task-icon-multimodal"></i> Image-Text-to-Image</button>
+                        <button class="hf-task-pill" data-task="image-text-to-video"><i class="fas fa-photo-film task-icon-multimodal"></i> Image-Text-to-Video</button>
+                        <button class="hf-task-pill" data-task="visual-qa"><i class="fas fa-camera task-icon-multimodal"></i> Visual Question Answering</button>
+                        <button class="hf-task-pill" data-task="document-qa"><i class="fas fa-file-invoice task-icon-multimodal"></i> Document Question Answering</button>
+                        <button class="hf-task-pill" data-task="video-text-to-text"><i class="fas fa-video task-icon-multimodal"></i> Video-Text-to-Text</button>
+                        <button class="hf-task-pill" data-task="visual-doc-retrieval"><i class="fas fa-crop-simple task-icon-multimodal"></i> Visual Document Retrieval</button>
+                        <button class="hf-task-pill" data-task="any-to-any"><i class="fas fa-network-wired task-icon-multimodal"></i> Any-to-Any</button>
+                    </div>
+                </div>
+
+                <!-- ── 2. COMPUTER VISION ───────────────────────────────── -->
+                <div class="taxonomy-section" data-section="cv">
+                    <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-eye"></i> Computer Vision
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="depth-estimation"><i class="fas fa-layer-group task-icon-cv"></i> Depth Estimation</button>
+                        <button class="hf-task-pill" data-task="image-classification"><i class="fas fa-image task-icon-cv"></i> Image Classification</button>
+                        <button class="hf-task-pill" data-task="object-detection"><i class="fas fa-vector-square task-icon-cv"></i> Object Detection</button>
+                        <button class="hf-task-pill" data-task="image-segmentation"><i class="fas fa-draw-polygon task-icon-cv"></i> Image Segmentation</button>
+                        <button class="hf-task-pill" data-task="text-to-image"><i class="fas fa-paintbrush task-icon-cv"></i> Text-to-Image</button>
+                        <button class="hf-task-pill" data-task="image-to-text"><i class="fas fa-file-lines task-icon-cv"></i> Image-to-Text</button>
+                        <button class="hf-task-pill" data-task="image-to-image"><i class="fas fa-photo-film task-icon-cv"></i> Image-to-Image</button>
+                        <button class="hf-task-pill" data-task="image-to-video"><i class="fas fa-film task-icon-cv"></i> Image-to-Video</button>
+                        <button class="hf-task-pill" data-task="unconditional-image-generation"><i class="fas fa-clone task-icon-cv"></i> Unconditional Image Generation</button>
+                        <button class="hf-task-pill" data-task="video-classification"><i class="fas fa-video task-icon-cv"></i> Video Classification</button>
+                        <button class="hf-task-pill" data-task="text-to-video"><i class="fas fa-clapperboard task-icon-cv"></i> Text-to-Video</button>
+                        <button class="hf-task-pill" data-task="zero-shot-image-classification"><i class="fas fa-crosshairs task-icon-cv"></i> Zero-Shot Image Classification</button>
+                        <button class="hf-task-pill" data-task="mask-generation"><i class="fas fa-mask task-icon-cv"></i> Mask Generation</button>
+                        <button class="hf-task-pill" data-task="zero-shot-object-detection"><i class="fas fa-expand task-icon-cv"></i> Zero-Shot Object Detection</button>
+                        <button class="hf-task-pill" data-task="text-to-3d"><i class="fas fa-cube task-icon-cv"></i> Text-to-3D</button>
+                        <button class="hf-task-pill" data-task="image-to-3d"><i class="fas fa-cubes-stacked task-icon-cv"></i> Image-to-3D</button>
+                        <button class="hf-task-pill" data-task="image-feature-extraction"><i class="fas fa-chart-area task-icon-cv"></i> Image Feature Extraction</button>
+                        <button class="hf-task-pill" data-task="keypoint-detection"><i class="fas fa-asterisk task-icon-cv"></i> Keypoint Detection</button>
+                        <button class="hf-task-pill" data-task="video-to-video"><i class="fas fa-circle-play task-icon-cv"></i> Video-to-Video</button>
+                    </div>
+                </div>
+
+                <!-- ── 3. NATURAL LANGUAGE PROCESSING (NLP) ─────────────── -->
+                <div class="taxonomy-section" data-section="nlp">
+                    <h4 class="text-xs font-bold text-pink-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-font"></i> Natural Language Processing
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="text-classification"><i class="fas fa-tags task-icon-nlp"></i> Text Classification</button>
+                        <button class="hf-task-pill" data-task="token-classification"><i class="fas fa-cube task-icon-nlp"></i> Token Classification</button>
+                        <button class="hf-task-pill" data-task="table-qa"><i class="fas fa-table task-icon-nlp"></i> Table Question Answering</button>
+                        <button class="hf-task-pill" data-task="question-answering"><i class="fas fa-circle-question task-icon-nlp"></i> Question Answering</button>
+                        <button class="hf-task-pill" data-task="zero-shot-classification"><i class="fas fa-sliders task-icon-nlp"></i> Zero-Shot Classification</button>
+                        <button class="hf-task-pill" data-task="translation"><i class="fas fa-language task-icon-nlp"></i> Translation</button>
+                        <button class="hf-task-pill" data-task="summarization"><i class="fas fa-file-contract task-icon-nlp"></i> Summarization</button>
+                        <button class="hf-task-pill" data-task="feature-extraction"><i class="fas fa-table-cells task-icon-nlp"></i> Feature Extraction</button>
+                        <button class="hf-task-pill" data-task="text-generation"><i class="fas fa-pen-nib task-icon-nlp"></i> Text Generation</button>
+                        <button class="hf-task-pill" data-task="fill-mask"><i class="fas fa-square-pen task-icon-nlp"></i> Fill-Mask</button>
+                        <button class="hf-task-pill" data-task="sentence-similarity"><i class="fas fa-arrows-split-up-and-left task-icon-nlp"></i> Sentence Similarity</button>
+                        <button class="hf-task-pill" data-task="text-ranking"><i class="fas fa-arrow-down-wide-short task-icon-nlp"></i> Text Ranking</button>
+                    </div>
+                </div>
+
+                <!-- ── 4. AUDIO & SPEECH ───────────────────────────────── -->
+                <div class="taxonomy-section" data-section="audio">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-headphones"></i> Audio &amp; Speech
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="text-to-speech"><i class="fas fa-microphone-lines task-icon-audio"></i> Text-to-Speech</button>
+                        <button class="hf-task-pill" data-task="text-to-audio"><i class="fas fa-music task-icon-audio"></i> Text-to-Audio</button>
+                        <button class="hf-task-pill" data-task="asr"><i class="fas fa-person-chalkboard task-icon-audio"></i> Automatic Speech Recognition</button>
+                        <button class="hf-task-pill" data-task="audio-to-audio"><i class="fas fa-sliders task-icon-audio"></i> Audio-to-Audio</button>
+                        <button class="hf-task-pill" data-task="audio-classification"><i class="fas fa-music task-icon-audio"></i> Audio Classification</button>
+                        <button class="hf-task-pill" data-task="vad"><i class="fas fa-ear-listen task-icon-audio"></i> Voice Activity Detection</button>
+                    </div>
+                </div>
+
+                <!-- ── 5. TABULAR & TIME SERIES ────────────────────────── -->
+                <div class="taxonomy-section" data-section="tabular">
+                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-table-columns"></i> Tabular &amp; Time Series
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="tabular-classification"><i class="fas fa-table-list task-icon-tabular"></i> Tabular Classification</button>
+                        <button class="hf-task-pill" data-task="tabular-regression"><i class="fas fa-chart-line task-icon-tabular"></i> Tabular Regression</button>
+                        <button class="hf-task-pill" data-task="time-series-forecasting"><i class="fas fa-water task-icon-tabular"></i> Time Series Forecasting</button>
+                    </div>
+                </div>
+
+                <!-- ── 6. REINFORCEMENT LEARNING & ROBOTICS ────────────── -->
+                <div class="taxonomy-section" data-section="rl">
+                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-robot"></i> Reinforcement Learning &amp; Robotics
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="reinforcement-learning"><i class="fas fa-robot task-icon-rl"></i> Reinforcement Learning</button>
+                        <button class="hf-task-pill" data-task="robotics"><i class="fas fa-screwdriver-wrench task-icon-rl"></i> Robotics</button>
+                    </div>
+                </div>
+
+                <!-- ── 7. OTHER / GRAPH ────────────────────────────────── -->
+                <div class="taxonomy-section" data-section="graph">
+                    <h4 class="text-xs font-bold text-violet-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-diagram-project"></i> Other &amp; Graph Machine Learning
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="hf-task-pill" data-task="graph-ml"><i class="fas fa-circle-nodes task-icon-graph"></i> Graph Machine Learning</button>
+                    </div>
+                </div>
+
+                <!-- ── 8. MACHINE LEARNING FRAMEWORKS & RUNTIMES ──────── -->
+                <div class="taxonomy-section" data-section="frameworks">
+                    <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fas fa-gears"></i> ML Frameworks, Runtimes &amp; Formats (48)
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="framework-badge" data-framework="pytorch"><i class="fas fa-fire text-orange-500"></i> PyTorch</span>
+                        <span class="framework-badge" data-framework="tensorflow"><i class="fas fa-cubes text-amber-500"></i> TensorFlow</span>
+                        <span class="framework-badge" data-framework="jax"><i class="fas fa-bolt text-cyan-400"></i> JAX</span>
+                        <span class="framework-badge" data-framework="safetensors"><i class="fas fa-shield-halved text-emerald-400"></i> Safetensors</span>
+                        <span class="framework-badge" data-framework="transformers"><i class="fas fa-face-smile text-yellow-400"></i> Transformers</span>
+                        <span class="framework-badge" data-framework="peft"><i class="fas fa-sliders text-indigo-400"></i> PEFT</span>
+                        <span class="framework-badge" data-framework="tensorboard"><i class="fas fa-chart-line text-orange-400"></i> TensorBoard</span>
+                        <span class="framework-badge" data-framework="gguf"><i class="fas fa-cube text-cyan-400"></i> GGUF</span>
+                        <span class="framework-badge" data-framework="diffusers"><i class="fas fa-paintbrush text-pink-400"></i> Diffusers</span>
+                        <span class="framework-badge" data-framework="onnx"><i class="fas fa-gem text-purple-400"></i> ONNX</span>
+                        <span class="framework-badge" data-framework="stable-baselines3"><i class="fas fa-gamepad text-emerald-400"></i> stable-baselines3</span>
+                        <span class="framework-badge" data-framework="sentence-transformers"><i class="fas fa-share-nodes text-indigo-400"></i> sentence-transformers</span>
+                        <span class="framework-badge" data-framework="ml-agents"><i class="fas fa-robot text-teal-400"></i> ml-agents</span>
+                        <span class="framework-badge" data-framework="mlx"><i class="fas fa-microchip text-gray-300"></i> MLX</span>
+                        <span class="framework-badge" data-framework="tf-keras"><i class="fas fa-k text-red-400"></i> TF-Keras</span>
+                        <span class="framework-badge" data-framework="keras"><i class="fas fa-k text-red-500"></i> Keras</span>
+                        <span class="framework-badge" data-framework="adapters"><i class="fas fa-plug text-blue-400"></i> Adapters</span>
+                        <span class="framework-badge" data-framework="setfit"><i class="fas fa-bullseye text-green-400"></i> setfit</span>
+                        <span class="framework-badge" data-framework="joblib"><i class="fas fa-floppy-disk text-gray-400"></i> Joblib</span>
+                        <span class="framework-badge" data-framework="timm"><i class="fas fa-eye text-sky-400"></i> timm</span>
+                        <span class="framework-badge" data-framework="transformers-js"><i class="fab fa-js text-yellow-400"></i> Transformers.js</span>
+                        <span class="framework-badge" data-framework="sample-factory"><i class="fas fa-industry text-amber-400"></i> sample-factory</span>
+                        <span class="framework-badge" data-framework="openvino"><i class="fas fa-circle-notch text-purple-400"></i> OpenVINO</span>
+                        <span class="framework-badge" data-framework="flair"><i class="fas fa-fire-flame-curved text-amber-500"></i> Flair</span>
+                        <span class="framework-badge" data-framework="fastai"><i class="fas fa-bolt-lightning text-teal-400"></i> fastai</span>
+                        <span class="framework-badge" data-framework="espnet"><i class="fas fa-microphone text-pink-400"></i> ESPnet</span>
+                        <span class="framework-badge" data-framework="bertopic"><i class="fas fa-tags text-indigo-400"></i> BERTopic</span>
+                        <span class="framework-badge" data-framework="spacy"><i class="fas fa-s text-cyan-400"></i> spaCy</span>
+                        <span class="framework-badge" data-framework="nemo"><i class="fas fa-eye text-emerald-400"></i> NeMo</span>
+                        <span class="framework-badge" data-framework="litert"><i class="fas fa-microchip text-blue-400"></i> LiteRT</span>
+                        <span class="framework-badge" data-framework="coreml"><i class="fab fa-apple text-teal-300"></i> Core ML</span>
+                        <span class="framework-badge" data-framework="fasttext"><i class="fas fa-bolt text-rose-400"></i> fastText</span>
+                        <span class="framework-badge" data-framework="openclip"><i class="fas fa-paperclip text-sky-300"></i> OpenCLIP</span>
+                        <span class="framework-badge" data-framework="scikit-learn"><i class="fas fa-brain text-orange-400"></i> Scikit-learn</span>
+                        <span class="framework-badge" data-framework="rust"><i class="fas fa-gear text-orange-500"></i> Rust</span>
+                        <span class="framework-badge" data-framework="kerashub"><i class="fas fa-k text-red-400"></i> KerasHub</span>
+                        <span class="framework-badge" data-framework="asteroid"><i class="fas fa-meteor text-rose-400"></i> Asteroid</span>
+                        <span class="framework-badge" data-framework="speechbrain"><i class="fas fa-brain text-emerald-300"></i> speechbrain</span>
+                        <span class="framework-badge" data-framework="allennlp"><i class="fas fa-book text-blue-400"></i> AllenNLP</span>
+                        <span class="framework-badge" data-framework="llamafile"><i class="fas fa-hand-holding-hand text-yellow-400"></i> llamafile</span>
+                        <span class="framework-badge" data-framework="fairseq"><i class="fas fa-code-branch text-purple-400"></i> Fairseq</span>
+                        <span class="framework-badge" data-framework="paddlepaddle"><i class="fas fa-table-tennis-paddle-ball text-indigo-400"></i> PaddlePaddle</span>
+                        <span class="framework-badge" data-framework="paddleocr"><i class="fas fa-file-lines text-cyan-400"></i> PaddleOCR</span>
+                        <span class="framework-badge" data-framework="stanza"><i class="fas fa-feather text-rose-400"></i> Stanza</span>
+                        <span class="framework-badge" data-framework="habana"><i class="fas fa-server text-yellow-500"></i> Habana</span>
+                        <span class="framework-badge" data-framework="pyannote-audio"><i class="fas fa-waveform text-teal-400"></i> pyannote.audio</span>
+                        <span class="framework-badge" data-framework="graphcore"><i class="fas fa-cubes text-blue-400"></i> Graphcore</span>
+                        <span class="framework-badge" data-framework="spanmarker"><i class="fas fa-highlighter text-pink-400"></i> SpanMarker</span>
+                        <span class="framework-badge" data-framework="paddlenlp"><i class="fas fa-lines-leaning text-emerald-400"></i> paddlenlp</span>
+                        <span class="framework-badge" data-framework="unity-sentis"><i class="fab fa-unity text-gray-200"></i> unity-sentis</span>
+                        <span class="framework-badge" data-framework="dduf"><i class="fas fa-database text-violet-400"></i> DDUF</span>
+                        <span class="framework-badge" data-framework="univa"><i class="fas fa-cloud text-sky-400"></i> univa</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3.5 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between text-xs text-gray-400 flex-shrink-0">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-lightbulb text-amber-400"></i>
+                    <span>Clicking any task configures system instructions, prompt templates &amp; routing.</span>
+                </div>
+                <button id="close-taxonomy-modal-bottom-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-gray-200 rounded-lg text-xs font-semibold transition-colors">
+                    Close Explorer
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Gateway Settings Modal -->
     <div id="gateway-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">

@@ -61,6 +61,7 @@
         bindVideoMode();
         bindAutoResize();
         bindRandomPromptGenerators();
+        bindTaxonomyModalAndTasks();
 
         // Load saved config from localStorage
         const savedUrl = localStorage.getItem('pg_gateway_url');
@@ -1272,6 +1273,330 @@
         }
     }
 
+    // ═════════════════════════════════════════════════════════════════════
+    // AI TASK TAXONOMY & ML FRAMEWORK PRESET ENGINE
+    // ═════════════════════════════════════════════════════════════════════
+
+    const TASK_TAXONOMY_MAP = {
+        'image-captioning': {
+            name: 'Image Captioning',
+            mode: 'chat',
+            system: 'You are an expert Vision-Language AI model. Generate detailed, dense, and semantically accurate captions for visual scenes, noting spatial layout, lighting, colors, and key entities.',
+            prompt: 'Provide a comprehensive, high-resolution descriptive caption for a panoramic shot of an autonomous drone swarm inspecting offshore wind turbines at sunset.',
+        },
+        'chatbots': {
+            name: 'Conversational Chatbots',
+            mode: 'chat',
+            system: 'You are a versatile, friendly, and highly intelligent AI assistant equipped with chain-of-thought problem-solving abilities.',
+            prompt: 'How can a growing software business architect a resilient 7-agent workforce using LangGraph state machines?',
+        },
+        'sentiment-analysis': {
+            name: 'Sentiment & Emotion Analysis',
+            mode: 'chat',
+            system: 'You are a precision NLP Sentiment and Emotion Analysis Engine. Classify tone, sentiment polarity (-1.0 to +1.0), and emotional nuances with step-by-step rationale.',
+            prompt: 'Analyze the sentiment and emotional nuance in this enterprise review:\n"The new autonomous indexing pipeline is blazingly fast, but our engineering team struggled with sparse SDK documentation during initial onboarding."',
+        },
+        'summarization': {
+            name: 'Text Summarization',
+            mode: 'chat',
+            system: 'You are an Executive Summarization Engine. Condense complex multi-page reports into clear key takeaways, action items, and risk matrices.',
+            prompt: 'Summarize the following architecture briefing into a 3-bullet executive brief with a risk matrix:\n"We evaluated deploying local 70B LLMs with llamafile vs cloud router endpoints. While latency dropped by 42% on-prem, VRAM hardware scaling costs exceeded initial forecasts by $12,000/mo."',
+        },
+        'music-generation': {
+            name: 'Music & Audio Generation',
+            mode: 'chat',
+            system: 'You are an AI Audio & Music Synthesis Engineer. Create detailed musical composition prompts, BPM tempo markings, instrumentation schemas, and lyric structures for text-to-audio models.',
+            prompt: 'Generate a detailed production prompt and structural layout for a synthwave cyberpunk track with arpeggiated analog basslines, 128 BPM, and atmospheric rain field recordings.',
+        },
+        'medical-imaging': {
+            name: 'Medical Imaging & Clinical AI',
+            mode: 'chat',
+            system: 'You are a Clinical Biomedical AI Specialist. Assist researchers in understanding radiological patterns, anatomical segmentation workflows, and DICOM metadata pipelines.',
+            prompt: 'Outline a computer vision pipeline using PyTorch, MONAI, and UNet3D for segmenting pulmonary nodules in low-dose thoracic CT scans.',
+        },
+        'financial-analysis': {
+            name: 'Financial & Quant Analysis',
+            mode: 'chat',
+            system: 'You are a Quantitative Financial Analyst and Algorithmic Modeling Specialist. Audit SEC filings, calculate EBITDA margin shifts, and forecast cash flow sensitivities.',
+            prompt: 'Build a discounted cash flow (DCF) sensitivity table evaluating a SaaS startup growing ARR from $5M to $25M with 82% gross margins and 14% WACC.',
+        },
+        'game-ai': {
+            name: 'Game AI & NPC Logic',
+            mode: 'chat',
+            system: 'You are a Game AI Architect. Design reinforcement learning state spaces, behavior trees, and procedural narrative engines for interactive games.',
+            prompt: 'Design a hierarchical task network (HTN) behavior tree for autonomous squad tactical NPCs navigating dynamic urban cover.',
+        },
+        'model-benchmarking': {
+            name: 'Dual Model Benchmarking',
+            mode: 'compare',
+            system: 'Compare reasoning quality, time-to-first-token, and throughput efficiency across models.',
+            prompt: 'Solve this algorithmic challenge with full time-complexity proof: Given an array of integers, find the maximum product subarray in O(N) time and O(1) auxiliary space.',
+        },
+        'code-generation': {
+            name: 'Production Code Generation',
+            mode: 'chat',
+            system: 'You are an elite Software Engineer. Provide production-grade, highly optimized code with error handling, type annotations, and unit tests.',
+            prompt: 'Write a high-performance concurrent worker pool in Python using asyncio, semaphores, and structured backoff retries for polling external webhooks.',
+        },
+        'visual-qa': {
+            name: 'Visual Question Answering (VQA)',
+            mode: 'chat',
+            system: 'You are a Visual Question Answering (VQA) reasoning engine. Answer specific queries regarding visual documents, diagrams, and camera feeds.',
+            prompt: 'Based on an architectural blueprint diagram, identify all structural load-bearing columns and calculate total square footage of the open-plan office.',
+        },
+        'text-to-image': {
+            name: 'Text-to-Image Diffusion',
+            mode: 'image',
+            prompt: 'A breathtaking ultra-detailed architectural photography of a biophilic solar observatory nestled in Norwegian fjords, warm golden hour lighting, cinematic 8k.',
+        },
+        'image-to-image': {
+            name: 'Image-to-Image Synthesis',
+            mode: 'image',
+            prompt: 'Transform this input concept sketch into a hyperrealistic 3D rendered cybernetic exoskeleton with carbon fiber and brushed titanium plating.',
+        },
+        'text-to-video': {
+            name: 'Text-to-Video Synthesis',
+            mode: 'video',
+            prompt: 'Cinematic aerial slow-motion drone flyover of a futuristic neon cyber-metropolis during a torrential rainstorm, reflections on glass towers, photorealistic.',
+        },
+        'image-to-video': {
+            name: 'Image-to-Video Motion',
+            mode: 'video',
+            prompt: 'Bring this still artwork to life with subtle atmospheric camera orbiting, glowing holographic pulse lights, and floating volumetric smoke.',
+        },
+        'depth-estimation': {
+            name: 'Depth Estimation',
+            mode: 'chat',
+            system: 'You are a Computer Vision Depth Estimation and 3D Geometry Specialist with expertise in MiDaS, Depth Anything, and ZoeDepth.',
+            prompt: 'Explain how Depth Anything v2 achieves zero-shot metric depth estimation across monocular video streams without LiDAR ground truth.',
+        },
+        'object-detection': {
+            name: 'Object Detection & Segmentation',
+            mode: 'chat',
+            system: 'You are an Object Detection Engineer specializing in YOLOv11, RT-DETR, and Segment Anything Model (SAM 2).',
+            prompt: 'Compare real-time latency and mAP trade-offs between YOLOv11-X and RT-DETR v2 for high-speed edge camera inference.',
+        },
+        'text-to-3d': {
+            name: 'Text-to-3D Synthesis',
+            mode: 'chat',
+            system: 'You are a 3D Generative AI Specialist. Create NeRF, Gaussian Splatting, and mesh generation prompts and pipelines.',
+            prompt: 'Describe the end-to-end pipeline for converting single-view product photos into textured 3D Gaussian Splats ready for WebGL Sentis runtime.',
+        },
+        'asr': {
+            name: 'Automatic Speech Recognition (ASR)',
+            mode: 'chat',
+            system: 'You are an Automatic Speech Recognition (ASR) and Audio Transcription Specialist with Whisper, SpeechBrain, and ESPnet expertise.',
+            prompt: 'Compare Whisper v3 vs Conformer-CTC for real-time low-latency edge speech recognition in noisy industrial environments.',
+        },
+        'tabular-classification': {
+            name: 'Tabular Classification & Modeling',
+            mode: 'chat',
+            system: 'You are an expert Data Scientist specializing in Tabular Machine Learning, XGBoost, LightGBM, CatBoost, and TabNet.',
+            prompt: 'Provide a complete Python pipeline using LightGBM and Optuna to classify customer churn risk using transaction telemetry.',
+        },
+        'time-series-forecasting': {
+            name: 'Time Series Forecasting',
+            mode: 'chat',
+            system: 'You are an expert Time Series Forecasting Engineer specializing in PatchTST, Chronos, and AutoARIMA.',
+            prompt: 'Write a Python pipeline utilizing Chronos-Bolt foundation model for zero-shot multi-step retail inventory demand forecasting.',
+        },
+        'reinforcement-learning': {
+            name: 'Reinforcement Learning',
+            mode: 'chat',
+            system: 'You are an expert Reinforcement Learning Researcher specializing in PPO, SAC, and Multi-Agent RL (MARL).',
+            prompt: 'Write a custom Gymnasium environment and Proximal Policy Optimization (PPO) training loop in PyTorch with generalized advantage estimation (GAE).',
+        },
+        'graph-ml': {
+            name: 'Graph Machine Learning',
+            mode: 'chat',
+            system: 'You are a Graph Machine Learning and Knowledge Graph Engineer specializing in PyTorch Geometric (PyG) and DGL.',
+            prompt: 'Implement a Graph Convolutional Network (GCN) in PyTorch Geometric for link prediction on a large heterogeneous biomedical knowledge graph.',
+        }
+    };
+
+    function bindTaxonomyModalAndTasks() {
+        const modal = $('#taxonomy-modal');
+        const openBtn1 = $('#open-taxonomy-btn');
+        const openBtn2 = $('#open-taxonomy-btn-secondary');
+        const closeBtn1 = $('#close-taxonomy-modal-btn');
+        const closeBtn2 = $('#close-taxonomy-modal-bottom-btn');
+        const searchInput = $('#taxonomy-search-input');
+        const domainTabs = $$('.domain-tab-btn');
+
+        const openModal = () => {
+            if (modal) {
+                modal.classList.remove('hidden');
+                if (searchInput) searchInput.focus();
+            }
+        };
+
+        const closeModal = () => {
+            if (modal) modal.classList.add('hidden');
+        };
+
+        if (openBtn1) openBtn1.addEventListener('click', openModal);
+        if (openBtn2) openBtn2.addEventListener('click', openModal);
+        if (closeBtn1) closeBtn1.addEventListener('click', closeModal);
+        if (closeBtn2) closeBtn2.addEventListener('click', closeModal);
+
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        }
+
+        // Domain Tab Filters
+        domainTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                domainTabs.forEach(t => {
+                    t.classList.remove('active', 'bg-indigo-600', 'text-white');
+                    t.classList.add('bg-slate-800', 'text-gray-300');
+                });
+                tab.classList.add('active', 'bg-indigo-600', 'text-white');
+                tab.classList.remove('bg-slate-800', 'text-gray-300');
+
+                const domain = tab.dataset.domain;
+                $$('.taxonomy-section').forEach(sec => {
+                    if (domain === 'all' || sec.dataset.section === domain) {
+                        sec.style.display = 'block';
+                    } else {
+                        sec.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Search Filtering
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                $$('.hf-task-pill').forEach(pill => {
+                    const text = pill.textContent.toLowerCase();
+                    const task = (pill.dataset.task || '').toLowerCase();
+                    if (!query || text.includes(query) || task.includes(query)) {
+                        pill.style.display = 'inline-flex';
+                    } else {
+                        pill.style.display = 'none';
+                    }
+                });
+
+                $$('.framework-badge').forEach(badge => {
+                    const text = badge.textContent.toLowerCase();
+                    const fw = (badge.dataset.framework || '').toLowerCase();
+                    if (!query || text.includes(query) || fw.includes(query)) {
+                        badge.style.display = 'inline-flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+
+                // Show/hide parent sections based on children visibility
+                $$('.taxonomy-section').forEach(sec => {
+                    const visibleItems = sec.querySelectorAll('.hf-task-pill:not([style*="display: none"]), .framework-badge:not([style*="display: none"])');
+                    sec.style.display = (visibleItems.length > 0) ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Handle Task Activation (Both Top Quick Bar and Taxonomy Modal)
+        function activateTask(taskId) {
+            const config = TASK_TAXONOMY_MAP[taskId] || {
+                name: taskId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+                mode: 'chat',
+                system: `You are an expert AI specialized in ${taskId.replace(/-/g, ' ')}.`,
+                prompt: `Perform an advanced, production-grade analysis for the task of ${taskId.replace(/-/g, ' ')}.`,
+            };
+
+            // Switch to required mode
+            const targetMode = config.mode || 'chat';
+            STATE.activeMode = targetMode;
+            $$('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === targetMode));
+            $$('.mode-panel').forEach(p => p.classList.add('hidden'));
+            const panel = $(`#mode-${targetMode}`);
+            if (panel) panel.classList.remove('hidden');
+
+            // Update active state in top quick bar
+            $$('.task-quick-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.task === taskId);
+            });
+
+            // Update active state in taxonomy modal
+            $$('.hf-task-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.task === taskId);
+            });
+
+            // Set system prompt if applicable
+            if (config.system && $('#system-prompt')) {
+                $('#system-prompt').value = config.system;
+            }
+
+            // Set input prompt
+            if (targetMode === 'chat' && $('#chat-input')) {
+                const input = $('#chat-input');
+                input.value = config.prompt;
+                input.classList.remove('prompt-flash-highlight');
+                void input.offsetWidth;
+                input.classList.add('prompt-flash-highlight');
+                input.focus();
+                if ($('#chat-send-btn') && STATE.selectedModel) $('#chat-send-btn').disabled = false;
+            } else if (targetMode === 'compare' && $('#compare-prompt')) {
+                const input = $('#compare-prompt');
+                input.value = config.prompt;
+                input.classList.remove('prompt-flash-highlight');
+                void input.offsetWidth;
+                input.classList.add('prompt-flash-highlight');
+                input.focus();
+                if ($('#compare-send-btn') && $('#compare-model-a').value && $('#compare-model-b').value) {
+                    $('#compare-send-btn').disabled = false;
+                }
+            } else if (targetMode === 'image' && $('#image-prompt')) {
+                const input = $('#image-prompt');
+                input.value = config.prompt;
+                input.classList.remove('prompt-flash-highlight');
+                void input.offsetWidth;
+                input.classList.add('prompt-flash-highlight');
+                input.focus();
+            } else if (targetMode === 'video' && $('#video-prompt')) {
+                const input = $('#video-prompt');
+                input.value = config.prompt;
+                input.classList.remove('prompt-flash-highlight');
+                void input.offsetWidth;
+                input.classList.add('prompt-flash-highlight');
+                input.focus();
+            }
+
+            closeModal();
+            showToast(`Task Activated: ${config.name} (${targetMode.toUpperCase()} Mode)`, 'success');
+        }
+
+        // Attach clicks to Top Quick Bar
+        $$('.task-quick-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const taskId = chip.dataset.task;
+                if (taskId) activateTask(taskId);
+            });
+        });
+
+        // Attach clicks to Modal HF Task Pills
+        $$('.hf-task-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const taskId = pill.dataset.task;
+                if (taskId) activateTask(taskId);
+            });
+        });
+
+        // Attach clicks to Framework Badges
+        $$('.framework-badge').forEach(badge => {
+            badge.addEventListener('click', () => {
+                const fw = badge.dataset.framework || badge.textContent.trim();
+                $$('.framework-badge').forEach(b => b.classList.remove('active'));
+                badge.classList.add('active');
+                showToast(`Runtime Architecture: ${badge.textContent.trim()} Selected (Engine Ready)`, 'info');
+                closeModal();
+            });
+        });
+    }
+
     function showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
         if (!toast) return;
@@ -1290,3 +1615,4 @@
     }
 
 })();
+
