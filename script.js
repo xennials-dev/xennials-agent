@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPlaygroundStudio();
     initBlogHub();
     initWorkflowSuite();
+    initGuidedAnnotationsAndTour();
 });
 
 /* Hero Background Ambient Canvas */
@@ -1080,4 +1081,252 @@ function initCostOptimizerCalculator() {
     if (routingCheckbox) routingCheckbox.addEventListener('change', updateCalculations);
     updateCalculations();
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   HOVER ANNOTATIONS & INTERACTIVE GUIDED TOUR ENGINE
+   ═════════════════════════════════════════════════════════════════════ */
+
+function initGuidedAnnotationsAndTour() {
+    const hoverCard = document.getElementById('hover-annotation-card');
+    const badgeEl = document.getElementById('annotation-step-badge');
+    const titleEl = document.getElementById('annotation-title');
+    const descEl = document.getElementById('annotation-desc');
+    const actionEl = document.getElementById('annotation-action-text');
+    const guideToggle = document.getElementById('guide-mode-toggle');
+    const startTourBtn = document.getElementById('start-tour-btn');
+    const modal = document.getElementById('tour-spotlight-modal');
+    const modalStep = document.getElementById('tour-modal-step');
+    const modalTitle = document.getElementById('tour-modal-title');
+    const modalDesc = document.getElementById('tour-modal-desc');
+    const modalTip = document.getElementById('tour-modal-tip');
+    const modalPrev = document.getElementById('tour-modal-prev');
+    const modalNext = document.getElementById('tour-modal-next');
+    const modalClose = document.getElementById('tour-modal-close');
+    const modalDots = document.getElementById('tour-modal-dots');
+
+    let isGuideActive = localStorage.getItem('guide_mode_active') !== 'false';
+    document.body.classList.toggle('guide-mode-active', isGuideActive);
+    updateGuideButtonState();
+
+    function updateGuideButtonState() {
+        if (!guideToggle) return;
+        if (isGuideActive) {
+            guideToggle.classList.add('active');
+            guideToggle.innerHTML = '<i class="fas fa-lightbulb text-amber-400"></i> <span>Guide: <strong class="text-white">ON</strong></span>';
+        } else {
+            guideToggle.classList.remove('active');
+            guideToggle.innerHTML = '<i class="far fa-lightbulb text-gray-400"></i> <span>Guide: <strong class="text-gray-300">OFF</strong></span>';
+        }
+    }
+
+    if (guideToggle) {
+        guideToggle.addEventListener('click', () => {
+            isGuideActive = !isGuideActive;
+            localStorage.setItem('guide_mode_active', isGuideActive);
+            document.body.classList.toggle('guide-mode-active', isGuideActive);
+            updateGuideButtonState();
+            if (!isGuideActive && hoverCard) {
+                hoverCard.classList.remove('visible');
+            }
+            showToast(isGuideActive ? 'Interactive Guide Mode Enabled' : 'Guide Mode Disabled');
+        });
+    }
+
+    // ─── Hover Annotation Cards ──────────────────────────────────────────
+    let hoverTimeout;
+    const annotatedElements = document.querySelectorAll('[data-step-guide]');
+
+    annotatedElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            if (!isGuideActive || !hoverCard) return;
+            clearTimeout(hoverTimeout);
+
+            const guide = el.getAttribute('data-step-guide') || '';
+            const title = el.getAttribute('data-step-title') || 'Interactive Feature';
+            const action = el.getAttribute('data-step-action') || '👉 Click to interact';
+            const stepNum = el.getAttribute('data-step-number') || '01';
+
+            if (badgeEl) badgeEl.textContent = `STEP ${stepNum} • ONBOARDING GUIDE`;
+            if (titleEl) titleEl.textContent = title;
+            if (descEl) descEl.textContent = guide;
+            if (actionEl) actionEl.textContent = action;
+
+            const rect = el.getBoundingClientRect();
+            const cardWidth = 320;
+            const cardHeight = 150;
+
+            // Position card smartly above or below target
+            let left = rect.left + (rect.width / 2) - (cardWidth / 2);
+            let top = rect.top - cardHeight - 12;
+
+            // Clamp horizontally
+            left = Math.max(16, Math.min(left, window.innerWidth - cardWidth - 16));
+
+            // If too high for viewport, show below element
+            if (top < 16) {
+                top = rect.bottom + 12;
+            }
+
+            hoverCard.style.left = `${left}px`;
+            hoverCard.style.top = `${top}px`;
+            hoverCard.classList.add('visible');
+        });
+
+        el.addEventListener('mouseleave', () => {
+            if (!hoverCard) return;
+            hoverTimeout = setTimeout(() => {
+                hoverCard.classList.remove('visible');
+            }, 100);
+        });
+    });
+
+    // ─── Step-by-Step Interactive Guided Tour ────────────────────────────
+    const TOUR_STEPS = [
+        {
+            selector: '[data-step-number="01"]',
+            title: 'Step 1: Theme Personalization',
+            desc: 'Start by customizing the platform theme. Switch seamlessly between Indigo Cyber, Cyber Cyan & Emerald, or Deep Purple & Amber styles.',
+            tip: '💡 Pro-Tip: Themes persist across all pages in local storage.'
+        },
+        {
+            selector: '[data-step-number="02"]',
+            title: 'Step 2: Instant Project Consultation',
+            desc: 'Use the primary action button to jump directly to our automated project intake and custom agent specification form.',
+            tip: '💡 Pro-Tip: Ideal for businesses seeking zero-touch automation swarms.'
+        },
+        {
+            selector: '[data-step-number="03"]',
+            title: 'Step 3: Open Source Ecosystem',
+            desc: 'Explore our catalog of 379+ production repositories and flagship projects categorized into AI Agents, Full Stack, and Automations.',
+            tip: '💡 Pro-Tip: Click Quick View on any project card to see tech stack breakdowns.'
+        },
+        {
+            selector: '[data-step-number="04"]',
+            title: 'Step 4: Autonomous Workflows Hub',
+            desc: 'Navigate through our 4 core architecture tabs: 6-Stage Video Pipeline, 7-Agent Workforce Matrix, API Cost Optimizer, and Client Onboarding Engine.',
+            tip: '💡 Pro-Tip: Each tab offers production-ready architectural schemas.'
+        },
+        {
+            selector: '[data-step-number="05"]',
+            title: 'Step 5: Multi-Agent Execution Simulator',
+            desc: 'Test our 6-stage video automation pipeline in real time. Enter any topic keyword and watch research, scripting, voiceover, and video rendering stream in live logs.',
+            tip: '💡 Pro-Tip: Demonstrates zero-touch content pipeline capabilities.'
+        },
+        {
+            selector: '[data-step-number="06"]',
+            title: 'Step 6: Real-Time API Cost Optimizer',
+            desc: 'Adjust the monthly job slider and toggle Prompt Caching and Smart Model Routing to see how per-video costs drop from $2.10 down to $0.46 (78% margin).',
+            tip: '💡 Pro-Tip: Shows how tiered LLM routing maximizes ROI.'
+        },
+        {
+            selector: '[data-step-number="07"]',
+            title: 'Step 7: Team Automation ROI Calculator',
+            desc: 'Calculate annual hours recovered and gross dollar savings when deploying Xennials AI automations across your team size.',
+            tip: '💡 Pro-Tip: Adjust manual hours per person to match your team workflows.'
+        },
+        {
+            selector: '[data-step-number="08"]',
+            title: 'Step 8: Deploy Custom AI Infrastructure',
+            desc: 'Submit your specific technical requirements and our team will design, test, and deploy customized autonomous agent swarms for your organization.',
+            tip: '💡 Pro-Tip: Responses are typically delivered within 24 hours.'
+        }
+    ];
+
+    let currentTourStep = 0;
+
+    function renderTourDots() {
+        if (!modalDots) return;
+        modalDots.innerHTML = '';
+        TOUR_STEPS.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = `w-2 h-2 rounded-full transition-all ${idx === currentTourStep ? 'bg-indigo-500 w-5' : 'bg-slate-700'}`;
+            modalDots.appendChild(dot);
+        });
+    }
+
+    function showTourStep(stepIndex) {
+        if (stepIndex < 0 || stepIndex >= TOUR_STEPS.length) return;
+        currentTourStep = stepIndex;
+
+        // Clear previous highlights
+        document.querySelectorAll('.tour-step-highlight').forEach(el => el.classList.remove('tour-step-highlight'));
+
+        const stepData = TOUR_STEPS[currentTourStep];
+        const targetEl = document.querySelector(stepData.selector);
+
+        if (targetEl) {
+            targetEl.classList.add('tour-step-highlight');
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        if (modalStep) modalStep.textContent = `STEP ${currentTourStep + 1} OF ${TOUR_STEPS.length}`;
+        if (modalTitle) modalTitle.textContent = stepData.title;
+        if (modalDesc) modalDesc.textContent = stepData.desc;
+        if (modalTip) modalTip.textContent = stepData.tip;
+
+        if (modalPrev) modalPrev.disabled = currentTourStep === 0;
+        if (modalPrev) modalPrev.style.opacity = currentTourStep === 0 ? '0.4' : '1';
+
+        if (modalNext) {
+            if (currentTourStep === TOUR_STEPS.length - 1) {
+                modalNext.innerHTML = 'Finish Tour <i class="fas fa-check ml-1"></i>';
+                modalNext.className = 'px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow-lg shadow-emerald-600/30 transition-all';
+            } else {
+                modalNext.innerHTML = 'Next Step <i class="fas fa-chevron-right ml-1"></i>';
+                modalNext.className = 'px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-lg shadow-indigo-600/30 transition-all';
+            }
+        }
+
+        renderTourDots();
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeTour() {
+        if (modal) modal.classList.remove('active');
+        document.querySelectorAll('.tour-step-highlight').forEach(el => el.classList.remove('tour-step-highlight'));
+    }
+
+    if (startTourBtn) {
+        startTourBtn.addEventListener('click', () => {
+            showTourStep(0);
+        });
+    }
+
+    if (modalNext) {
+        modalNext.addEventListener('click', () => {
+            if (currentTourStep >= TOUR_STEPS.length - 1) {
+                closeTour();
+                showToast('Guided Tour Complete! Enjoy exploring Xennials.', 'success');
+            } else {
+                showTourStep(currentTourStep + 1);
+            }
+        });
+    }
+
+    if (modalPrev) {
+        modalPrev.addEventListener('click', () => {
+            if (currentTourStep > 0) {
+                showTourStep(currentTourStep - 1);
+            }
+        });
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeTour);
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeTour();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (!modal || !modal.classList.contains('active')) return;
+        if (e.key === 'Escape') closeTour();
+        if (e.key === 'ArrowRight' && currentTourStep < TOUR_STEPS.length - 1) showTourStep(currentTourStep + 1);
+        if (e.key === 'ArrowLeft' && currentTourStep > 0) showTourStep(currentTourStep - 1);
+    });
+}
+
 

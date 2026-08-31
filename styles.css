@@ -650,3 +650,198 @@ input[type=range]::-webkit-slider-thumb:hover {
     box-shadow: 0 0 20px rgba(236, 72, 153, 0.5) !important;
 }
 
+/* ═════════════════════════════════════════════════════════════════════
+   HOVER ANNOTATIONS & STEP-BY-STEP GUIDED ONBOARDING SYSTEM
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Target elements with annotations have subtle pulse indicator in Guide Mode */
+body.guide-mode-active [data-step-guide] {
+    position: relative;
+    outline: 1px dashed rgba(99, 102, 241, 0.4);
+    outline-offset: 4px;
+    border-radius: inherit;
+    transition: outline 0.2s ease;
+}
+
+body.guide-mode-active [data-step-guide]:hover {
+    outline: 2px solid #6366f1;
+    outline-offset: 4px;
+}
+
+/* Floating Hover Annotation Tooltip Card */
+#hover-annotation-card {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px) scale(0.97);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 320px;
+    min-width: 260px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.25);
+}
+
+#hover-annotation-card.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.annotation-step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(236, 72, 153, 0.25));
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    color: #c7d2fe;
+    margin-bottom: 0.5rem;
+}
+
+.annotation-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #ffffff;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.annotation-desc {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #94a3b8;
+    margin-bottom: 0.6rem;
+}
+
+.annotation-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(51, 65, 85, 0.5);
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: #818cf8;
+}
+
+/* Floating Tour Controller HUD */
+#tour-guide-hud {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    padding: 0.4rem 0.6rem;
+    border-radius: 9999px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(99, 102, 241, 0.2);
+    transition: all 0.3s ease;
+}
+
+#tour-guide-hud:hover {
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.3);
+}
+
+.hud-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.hud-toggle-btn {
+    background: rgba(30, 41, 59, 0.8);
+    color: #94a3b8;
+    border: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+.hud-toggle-btn.active {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.hud-start-tour-btn {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+}
+
+.hud-start-tour-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.6);
+}
+
+/* Interactive Tour Modal / Spotlight Overlay */
+#tour-spotlight-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    pointer-events: auto;
+    display: none;
+    background: rgba(3, 7, 18, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+#tour-spotlight-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tour-modal-card {
+    max-width: 480px;
+    width: 90%;
+    background: #0f172a;
+    border: 1px solid #6366f1;
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(99, 102, 241, 0.35);
+    position: relative;
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.tour-step-highlight {
+    outline: 3px solid #ec4899 !important;
+    outline-offset: 6px !important;
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.6) !important;
+    position: relative;
+    z-index: 9998;
+    transition: all 0.4s ease;
+}
+
+
