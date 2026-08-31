@@ -46,6 +46,24 @@ export default defineConfig({
           });
         },
       },
+      // Proxy DeepTutor / Hermes Backend (/api/skills, /api/models, /api/tools)
+      '/api': {
+        target: process.env.HERMES_DASHBOARD_URL || 'http://127.0.0.1:9119',
+        changeOrigin: true,
+        ws: true,
+        configure: (proxy) => {
+          proxy.on('error', (err, req, res) => {
+            if (!res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: { message: 'Hermes backend offline. Start with `hermes dashboard` on port 9119.' } }));
+            }
+          });
+        },
+      },
+      '/dashboard-plugins': {
+        target: process.env.HERMES_DASHBOARD_URL || 'http://127.0.0.1:9119',
+        changeOrigin: true,
+      },
     },
   },
 });
