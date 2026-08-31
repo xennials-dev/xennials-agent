@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initWorkflowSuite();
     initGuidedAnnotationsAndTour();
     initAgentCinemaExperience();
+    initHermesDocumentStudio();
 });
 
 /* Hero Background Ambient Canvas */
@@ -1352,6 +1353,42 @@ function initGuidedAnnotationsAndTour() {
                 title: 'DeepTutor: Socratic Simulator',
                 desc: 'Experience how TutorBot decomposes complex problems step-by-step using active Socratic inquiry instead of spoon-feeding direct answers.',
                 tip: '💡 Pro-Tip: Select different academic domains to test.'
+            },
+            {
+                selector: '[data-step-number="HOS-01"]',
+                title: 'Hermes OS: Gateway & Brain Setup',
+                desc: 'Configure Hermes CLI and multi-channel messaging gateways (Telegram, Discord, Slack) with OpenRouter, Nous Portal, or Anthropic backends.',
+                tip: '💡 Direction: Run "hermes setup" to link your API key and "hermes gateway setup" to connect channels.'
+            },
+            {
+                selector: '[data-step-number="HOS-02"]',
+                title: 'Hermes OS: CodeGraph Indexing Engine',
+                desc: 'Integrate CodeGraph to pre-index repository symbols and AST maps, cutting token burn by 57% and eliminating 71% of tool calls.',
+                tip: '💡 Direction: Run "codegraph install" then "codegraph init" in your codebase root.'
+            },
+            {
+                selector: '[data-step-number="HOS-03"]',
+                title: 'Hermes OS: Mission Control & /steer Protocol',
+                desc: 'Decompose multi-week goals between human tasks and autonomous agent actions, using /steer to course-correct in flight.',
+                tip: '💡 Direction: Type /steer in chat to adjust agent instructions without restarting conversations.'
+            },
+            {
+                selector: '[data-step-number="HOS-04"]',
+                title: 'Hermes OS: Efficiency Telemetry',
+                desc: 'Live verified benchmark stats comparing raw LLM recursive file reading against pre-indexed CodeGraph memory topology.',
+                tip: '💡 Direction: CodeGraph saves an estimated 86% of tokens on large multi-file repositories.'
+            },
+            {
+                selector: '[data-step-number="HOS-05"]',
+                title: 'Hermes OS: Visual Document & Artifact Studio',
+                desc: 'Centralized document repository storing all generated invoices, code specs, HTML previews, and markdown briefs with 5-word titles and 14-word summaries.',
+                tip: '💡 Direction: Filter by type, preview in modal, or use the interactive generator below.'
+            },
+            {
+                selector: '[data-step-number="HOS-06"]',
+                title: 'Hermes OS: 1-Click Prompt Arsenal',
+                desc: 'Instant copy-paste prompts to install the Document Management interface and link CodeGraph directly into Hermes Agent.',
+                tip: '💡 Direction: Click Copy Prompt and paste directly into your Hermes terminal.'
             }
         ];
     } else {
@@ -1624,6 +1661,385 @@ function initAgentCinemaExperience() {
 
     startAutoCycle();
 }
+
+/* ==========================================================================
+   Hermes Agentic OS • Visual Document & Artifact Studio Engine
+   ========================================================================== */
+function initHermesDocumentStudio() {
+    const filterBtns = document.querySelectorAll('.doc-filter-btn');
+    const docGrid = document.getElementById('hermes-document-grid');
+    const modal = document.getElementById('hermes-doc-modal');
+    const modalTitle = document.getElementById('modal-doc-title');
+    const modalContent = document.getElementById('modal-doc-content');
+    const modalPath = document.getElementById('modal-doc-path');
+    const modalCloseBtn = document.getElementById('close-hermes-modal-btn');
+    const modalCopyBtn = document.getElementById('modal-copy-btn');
+    const generateBtn = document.getElementById('hermes-generate-doc-btn');
+    const promptInput = document.getElementById('hermes-new-doc-prompt');
+
+    if (!docGrid) return;
+
+    const DOC_CONTENTS = {
+        'doc-1': {
+            title: 'Enterprise Client Invoice Template',
+            path: 'assets/invoices/invoice_dana_ufc_50k.html',
+            content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice #XEN-2026-8842</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f8fafc; padding: 40px; }
+    .invoice-card { max-width: 680px; margin: 0 auto; background: #131b2e; border: 1px solid #334155; border-radius: 16px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .header { display: flex; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 20px; }
+    .gold-brand { color: #fbbf24; font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+    .bill-to { margin: 24px 0; font-size: 14px; color: #94a3b8; }
+    .total-due { font-size: 28px; font-weight: 700; color: #10b981; margin-top: 16px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #1e293b; font-size: 13px; }
+    th { color: #6366f1; text-transform: uppercase; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="invoice-card">
+    <div class="header">
+      <div>
+        <div class="gold-brand">XENNIALS AI AGENT CORP</div>
+        <p style="font-size: 12px; color: #64748b;">Autonomous Agent Workforce Engineering</p>
+      </div>
+      <div style="text-align: right; font-size: 12px; color: #94a3b8;">
+        <strong>INVOICE #XEN-2026-8842</strong><br>
+        Date: August 30, 2026<br>
+        Due: Upon Receipt
+      </div>
+    </div>
+    
+    <div class="bill-to">
+      <strong style="color: #fff;">Billed To:</strong><br>
+      Dana White • Ultimate Fighting Championship (UFC)<br>
+      6650 S Torrey Pines Dr, Las Vegas, NV 89118
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Description</th><th>Hours / Scope</th><th>Rate</th><th>Amount</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Autonomous Agent Workforce & LangGraph State Machine Architecture</td>
+          <td>Tier 1 Enterprise Spec</td>
+          <td>$50,000</td>
+          <td style="color: #10b981; font-weight: 600;">$50,000.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align: right; margin-top: 24px;">
+      <span style="font-size: 12px; color: #64748b;">TOTAL BALANCE DUE</span>
+      <div class="total-due">$50,000.00 USD</div>
+    </div>
+  </div>
+</body>
+</html>`
+        },
+        'doc-2': {
+            title: 'CodeGraph Repository Knowledge Map',
+            path: '.codegraph/schema.json',
+            content: `{
+  "codegraph_version": "2.4.1",
+  "project_root": "c:/Users/tee/scratch/xennials-web",
+  "total_symbols": 842,
+  "indexed_files": 48,
+  "metrics": {
+    "token_reduction_ratio": 0.574,
+    "tool_call_efficiency": 0.712,
+    "ast_scan_time_ms": 142
+  },
+  "dependency_nodes": [
+    { "file": "playground-engine.js", "imports": ["script.js", "styles.css"], "exports": ["TASK_TAXONOMY_MAP", "bindTaxonomyModalAndTasks"] },
+    { "file": "script.js", "imports": ["styles.css"], "exports": ["initGuidedAnnotationsAndTour", "initHermesDocumentStudio"] },
+    { "file": "deeptutor.html", "renders": ["#hermes-document-grid", "#hermes-doc-modal"] }
+  ],
+  "symbol_references": {
+    "bindTaxonomyModalAndTasks": { "callers": ["init"], "line": 1354, "complexity": 3 },
+    "initHermesDocumentStudio": { "callers": ["DOMContentLoaded"], "line": 1668, "complexity": 4 }
+  }
+}`
+        },
+        'doc-3': {
+            title: 'Mission Control 30-Day Growth Goal',
+            path: 'goals/growth_strategy.md',
+            content: `# Mission Control • 30-Day YouTube 1,000 Subscriber Roadmap
+
+## High-Level Objective
+Scale Xennials Developer YouTube channel from 0 to 1,000 active engineering subscribers in 30 days utilizing autonomous Hermes research and production workflows.
+
+---
+
+### Phase 1: Shared Task Allocation
+
+#### 👤 Human Creator Tasks
+- Record 4 high-fidelity Loom architectural walkthroughs (10-15 mins).
+- Deliver personal voice commentary on real startup AI automation case studies.
+- Approve final video edits rendered by the pipeline.
+
+#### 🤖 Hermes Autonomous Agent Tasks
+- Run nightly deep research on trending LangGraph and AI Agent search queries.
+- Draft 12 SEO-optimized YouTube video scripts with hook formulas and timestamps.
+- Generate 3 high-CTR thumbnail concept prompts for Flux diffusion.
+- Transcribe and auto-generate clean video description markdown with GitHub links.
+
+---
+
+### Phase 2: Live /steer Commands
+- Use \`/steer\` during script creation to pivot tone towards enterprise developers:
+  \`\`\`bash
+  /steer adjust script to focus on 57% token reduction with CodeGraph and live CLI benchmarks
+  \`\`\`
+`
+        },
+        'doc-4': {
+            title: 'Nightly Dream Insights Brief',
+            path: 'dreams/brief_2026_08_30.json',
+            content: `{
+  "dream_run_id": "drm_20260830_040000",
+  "synthesized_sources": [
+    "Claude Code Terminal Sessions (14 turns)",
+    "Hermes CLI Logs (28 turns)",
+    "AntiGravity IDE Transcripts (62 steps)"
+  ],
+  "key_insights": [
+    {
+      "category": "Cost Optimization",
+      "severity": "HIGH_IMPACT",
+      "finding": "Claude 3.5 Sonnet was used for 42 mechanical regex string formatting tasks that Hermes MiMo / DeepSeek could execute for $0.00.",
+      "actionable_recommendation": "Route parsing jobs to Mercury persona on local Ollama, saving ~$420/month."
+    },
+    {
+      "category": "Code Repetition",
+      "severity": "MEDIUM_IMPACT",
+      "finding": "Discovered 4 redundant file scans across /scripts directory before CodeGraph was initialized.",
+      "actionable_recommendation": "Enabled auto-sync hook in .codegraph/config.yaml to maintain zero-cost AST state."
+    }
+  ],
+  "morning_brief_summary": "Good morning! Your agentic operating system ran for 4 hours overnight. CodeGraph is synchronized, and 3 model routing shortcuts were staged to reduce your daily API burn."
+}`
+        },
+        'doc-5': {
+            title: 'Athena Strategic Architectural Spec',
+            path: 'pantheon/athena_spec.py',
+            content: `"""
+Athena Strategic Persona Specification
+Xennials Agentic Operating System • Role-Based Swarm Dispatch
+"""
+
+from typing import Dict, Any
+
+ATHENA_CONFIG: Dict[str, Any] = {
+    "persona_name": "Athena",
+    "domain": "Strategic Architecture & LangGraph State Machines",
+    "preferred_model": "claude-3-7-sonnet-thought",
+    "fallback_model": "deepseek-reasoner",
+    "system_prompt": (
+        "You are Athena, the Chief AI Systems Architect of the Xennials workforce. "
+        "Your mission is to decompose complex human business objectives into fault-tolerant, "
+        "asynchronous multi-agent state machines. Enforce zero token waste, structured schema output, "
+        "and deterministic failover mechanisms at every graph node."
+    ),
+    "max_context_window": 128000,
+    "temperature": 0.2,
+    "mcp_tools_enabled": [
+        "codegraph_query",
+        "doc_manager_store",
+        "langgraph_validator"
+    ]
+}
+`
+        },
+        'doc-6': {
+            title: 'Automated Expense Telemetry Data',
+            path: 'analytics/spend_matrix.html',
+            content: `<!-- Real-Time AI Spend & Token Telemetry Dashboard -->
+<div class="telemetry-grid" style="font-family: monospace; color: #e2e8f0;">
+  <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 8px;">
+    <span>PLATFORM</span>
+    <span>DAILY TOKENS</span>
+    <span>COST (USD)</span>
+    <span>EFFICIENCY STATUS</span>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #38bdf8;">
+    <span>Claude Code CLI</span>
+    <span>420,500</span>
+    <span>$1.26</span>
+    <span style="color: #10b981;">OPTIMIZED (-57% via CodeGraph)</span>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #fbbf24;">
+    <span>Hermes Agent Swarm</span>
+    <span>1,240,000</span>
+    <span>$0.38</span>
+    <span style="color: #10b981;">HIGH ROI (MiMo & OpenRouter)</span>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #ec4899;">
+    <span>AntiGravity IDE</span>
+    <span>890,200</span>
+    <span>$0.00</span>
+    <span style="color: #38bdf8;">TIER 1 (Built-in Workspace)</span>
+  </div>
+</div>`
+        }
+    };
+
+    // Filter Buttons
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('active', 'bg-indigo-600', 'text-white');
+                b.classList.add('bg-slate-900', 'text-gray-300');
+            });
+            btn.classList.add('active', 'bg-indigo-600', 'text-white');
+            btn.classList.remove('bg-slate-900', 'text-gray-300');
+
+            const filterType = btn.dataset.docType;
+            const cards = docGrid.querySelectorAll('.hermes-doc-card');
+            let count = 0;
+
+            cards.forEach(card => {
+                const cardType = card.dataset.type;
+                if (filterType === 'all' || cardType === filterType) {
+                    card.style.display = 'flex';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // View Document Modal Handler
+    function attachDocActions() {
+        const viewBtns = docGrid.querySelectorAll('.view-doc-btn');
+        const copyBtns = docGrid.querySelectorAll('.copy-doc-btn');
+        const deleteBtns = docGrid.querySelectorAll('.delete-doc-btn');
+
+        viewBtns.forEach(btn => {
+            btn.onclick = () => {
+                const docId = btn.dataset.docId;
+                const doc = DOC_CONTENTS[docId] || {
+                    title: btn.closest('.hermes-doc-card').querySelector('h4').textContent,
+                    path: 'assets/documents/custom_doc.txt',
+                    content: 'Generated Document Content synchronized with Hermes Agent Workspace.'
+                };
+
+                if (modalTitle) modalTitle.textContent = doc.title;
+                if (modalPath) modalPath.textContent = doc.path;
+                if (modalContent) modalContent.textContent = doc.content;
+
+                if (modalCopyBtn) {
+                    modalCopyBtn.onclick = () => {
+                        navigator.clipboard.writeText(doc.content);
+                        showToast('Document content copied to clipboard!', 'success');
+                    };
+                }
+
+                if (modal) modal.classList.remove('hidden');
+            };
+        });
+
+        copyBtns.forEach(btn => {
+            btn.onclick = () => {
+                const card = btn.closest('.hermes-doc-card');
+                const title = card.querySelector('h4').textContent;
+                const desc = card.querySelector('p').textContent;
+                navigator.clipboard.writeText(`${title}\n${desc}`);
+                showToast('Document metadata copied to clipboard!', 'success');
+            };
+        });
+
+        deleteBtns.forEach(btn => {
+            btn.onclick = () => {
+                const card = btn.closest('.hermes-doc-card');
+                const title = card.querySelector('h4').textContent;
+                card.style.transition = 'all 0.3s ease';
+                card.style.transform = 'scale(0.9)';
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.remove();
+                    updateDocCounts();
+                    showToast(`Deleted document: ${title}`, 'info');
+                }, 300);
+            };
+        });
+    }
+
+    function updateDocCounts() {
+        const allCards = docGrid.querySelectorAll('.hermes-doc-card');
+        const countAll = document.getElementById('count-all');
+        if (countAll) countAll.textContent = allCards.length;
+    }
+
+    if (modalCloseBtn && modal) {
+        modalCloseBtn.onclick = () => modal.classList.add('hidden');
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        };
+    }
+
+    // Generate New Document from Prompt
+    if (generateBtn && promptInput) {
+        generateBtn.onclick = () => {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                showToast('Please enter a document prompt or invoice scenario.', 'error');
+                return;
+            }
+
+            // Derive 5-word title and 14-word description
+            const words = prompt.split(/\s+/);
+            const title = words.slice(0, 5).join(' ').replace(/[^\w\s]/g, '') || 'New Autonomous Generated Document';
+            const desc = words.slice(0, 14).join(' ') || 'Custom document generated in real-time by Hermes Agent and saved to workspace.';
+
+            const docId = `doc-custom-${Date.now()}`;
+            DOC_CONTENTS[docId] = {
+                title: title,
+                path: `assets/generated/${title.toLowerCase().replace(/\s+/g, '_')}.html`,
+                content: `<!-- Hermes Agent Generated Document -->\n<!-- Prompt: ${prompt} -->\n\n<div class="generated-artifact">\n  <h2>${title}</h2>\n  <p>${desc}</p>\n  <p>Generated at: ${new Date().toLocaleString()}</p>\n  <p>Status: Synchronized with Hermes Workspace</p>\n</div>`
+            };
+
+            // Create New Card
+            const newCard = document.createElement('div');
+            newCard.className = 'hermes-doc-card animate-fadeIn';
+            newCard.dataset.type = 'html';
+            newCard.innerHTML = `
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="hermes-doc-tag doc-tag-html"><i class="fas fa-magic"></i> AI Generated</span>
+                        <span class="text-[10px] text-gray-500 font-mono">Just Now</span>
+                    </div>
+                    <h4 class="font-bold font-space text-white text-base mb-2">${title}</h4>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">${desc}</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-slate-800/80 text-xs">
+                    <span class="text-gray-500 font-mono text-[10px]">${DOC_CONTENTS[docId].path}</span>
+                    <div class="flex gap-2">
+                        <button class="px-2.5 py-1 bg-slate-800 hover:bg-indigo-600 rounded text-gray-300 hover:text-white font-mono view-doc-btn" data-doc-id="${docId}">View</button>
+                        <button class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-gray-400 hover:text-white copy-doc-btn" title="Copy Content"><i class="fas fa-copy"></i></button>
+                        <button class="px-2 py-1 bg-slate-800 hover:bg-red-950/80 rounded text-gray-400 hover:text-red-400 delete-doc-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+
+            docGrid.prepend(newCard);
+            promptInput.value = '';
+            attachDocActions();
+            updateDocCounts();
+            showToast(`Hermes Agent Generated Document: "${title}"`, 'success');
+        };
+    }
+
+    attachDocActions();
+}
+
+
 
 
 
