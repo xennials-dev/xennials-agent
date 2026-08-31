@@ -1088,11 +1088,77 @@ function initCostOptimizerCalculator() {
    ═════════════════════════════════════════════════════════════════════ */
 
 function initGuidedAnnotationsAndTour() {
-    const hoverCard = document.getElementById('hover-annotation-card');
-    const badgeEl = document.getElementById('annotation-step-badge');
-    const titleEl = document.getElementById('annotation-title');
-    const descEl = document.getElementById('annotation-desc');
-    const actionEl = document.getElementById('annotation-action-text');
+    // ─── Auto-inject Universal Tour & Annotation DOM elements if missing ──
+    if (!document.getElementById('universal-hover-annotation-card')) {
+        const hoverCardDiv = document.createElement('div');
+        hoverCardDiv.id = 'universal-hover-annotation-card';
+        hoverCardDiv.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+                <span class="annotation-step-badge" id="hover-card-step">FEATURE GUIDE</span>
+                <span class="text-[10px] text-gray-500 font-mono">XENNIALS TOUR</span>
+            </div>
+            <h4 class="font-bold text-white text-sm mb-1 font-space" id="hover-card-title">Interactive Element</h4>
+            <p class="text-xs text-gray-300 leading-relaxed mb-2" id="hover-card-desc">Description will appear here...</p>
+            <div class="text-[11px] text-indigo-300 font-mono font-semibold" id="hover-card-action">👉 Click to interact</div>
+        `;
+        document.body.appendChild(hoverCardDiv);
+    }
+
+    if (!document.getElementById('floating-tour-hud')) {
+        const floatingHudDiv = document.createElement('div');
+        floatingHudDiv.id = 'floating-tour-hud';
+        floatingHudDiv.className = 'floating-guide-hud';
+        floatingHudDiv.innerHTML = `
+            <button id="guide-mode-toggle" class="hud-btn hud-toggle-btn active" title="Toggle Hover Annotations & Guide Highlights">
+                <i class="fas fa-lightbulb text-amber-400"></i>
+                <span>Guide: <strong class="text-white">ON</strong></span>
+            </button>
+            <button id="start-tour-btn" class="hud-btn hud-start-tour-btn" title="Start Step-by-Step Interactive Walkthrough">
+                <i class="fas fa-route"></i>
+                <span>Interactive Tour</span>
+            </button>
+        `;
+        document.body.appendChild(floatingHudDiv);
+    }
+
+    if (!document.getElementById('tour-spotlight-modal')) {
+        const tourModalDiv = document.createElement('div');
+        tourModalDiv.id = 'tour-spotlight-modal';
+        tourModalDiv.innerHTML = `
+            <div class="tour-modal-card">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="annotation-step-badge" id="tour-modal-step">STEP 1 OF 8</span>
+                    <button id="tour-modal-close" class="text-gray-400 hover:text-white text-lg focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <h3 class="text-xl font-bold font-space text-white mb-2" id="tour-modal-title">Getting Started</h3>
+                <p class="text-gray-300 text-sm leading-relaxed mb-5" id="tour-modal-desc">
+                    Step-by-step explanation for where everything is placed...
+                </p>
+                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-indigo-300 font-mono mb-6" id="tour-modal-tip">
+                    💡 Pro-Tip: Click anywhere on the highlighted area to test it live.
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                    <button id="tour-modal-prev" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-gray-300 text-xs font-semibold rounded-lg transition-colors">
+                        <i class="fas fa-chevron-left mr-1"></i> Previous
+                    </button>
+                    <div class="flex gap-1.5" id="tour-modal-dots"></div>
+                    <button id="tour-modal-next" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-lg shadow-indigo-600/30 transition-all">
+                        Next Step <i class="fas fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(tourModalDiv);
+    }
+
+    const hoverCard = document.getElementById('universal-hover-annotation-card');
+    const badgeEl = document.getElementById('hover-card-step');
+    const titleEl = document.getElementById('hover-card-title');
+    const descEl = document.getElementById('hover-card-desc');
+    const actionEl = document.getElementById('hover-card-action');
+
     const guideToggle = document.getElementById('guide-mode-toggle');
     const startTourBtn = document.getElementById('start-tour-btn');
     const modal = document.getElementById('tour-spotlight-modal');
@@ -1133,11 +1199,27 @@ function initGuidedAnnotationsAndTour() {
         });
     }
 
-    // ─── Hover Annotation Cards ──────────────────────────────────────────
+    // ─── Inject Pulsing Beacon Pins & Attach Hover Handlers ──────────────
     let hoverTimeout;
     const annotatedElements = document.querySelectorAll('[data-step-guide]');
 
     annotatedElements.forEach(el => {
+        // Ensure relative positioning for pin containment
+        const computedStyle = window.getComputedStyle(el);
+        if (computedStyle.position === 'static') {
+            el.style.position = 'relative';
+        }
+
+        // Add beacon pin if not already added
+        if (!el.querySelector('.interactive-beacon-pin')) {
+            const pin = document.createElement('span');
+            pin.className = 'interactive-beacon-pin';
+            const stepNum = el.getAttribute('data-step-number') || '•';
+            pin.textContent = stepNum.length <= 4 ? stepNum : '•';
+            pin.title = el.getAttribute('data-step-title') || 'Interactive Feature';
+            el.appendChild(pin);
+        }
+
         el.addEventListener('mouseenter', () => {
             if (!isGuideActive || !hoverCard) return;
             clearTimeout(hoverTimeout);
@@ -1181,64 +1263,157 @@ function initGuidedAnnotationsAndTour() {
         });
     });
 
-    // ─── Step-by-Step Interactive Guided Tour ────────────────────────────
-    const TOUR_STEPS = [
-        {
-            selector: '[data-step-number="01"]',
-            title: 'Step 1: Theme Personalization',
-            desc: 'Start by customizing the platform theme. Switch seamlessly between Indigo Cyber, Cyber Cyan & Emerald, or Deep Purple & Amber styles.',
-            tip: '💡 Pro-Tip: Themes persist across all pages in local storage.'
-        },
-        {
-            selector: '[data-step-number="02"]',
-            title: 'Step 2: Instant Project Consultation',
-            desc: 'Use the primary action button to jump directly to our automated project intake and custom agent specification form.',
-            tip: '💡 Pro-Tip: Ideal for businesses seeking zero-touch automation swarms.'
-        },
-        {
-            selector: '[data-step-number="03"]',
-            title: 'Step 3: Open Source Ecosystem',
-            desc: 'Explore our catalog of 379+ production repositories and flagship projects categorized into AI Agents, Full Stack, and Automations.',
-            tip: '💡 Pro-Tip: Click Quick View on any project card to see tech stack breakdowns.'
-        },
-        {
-            selector: '[data-step-number="04"]',
-            title: 'Step 4: Autonomous Workflows Hub',
-            desc: 'Navigate through our 4 core architecture tabs: 6-Stage Video Pipeline, 7-Agent Workforce Matrix, API Cost Optimizer, and Client Onboarding Engine.',
-            tip: '💡 Pro-Tip: Each tab offers production-ready architectural schemas.'
-        },
-        {
-            selector: '[data-step-number="05"]',
-            title: 'Step 5: Multi-Agent Execution Simulator',
-            desc: 'Test our 6-stage video automation pipeline in real time. Enter any topic keyword and watch research, scripting, voiceover, and video rendering stream in live logs.',
-            tip: '💡 Pro-Tip: Demonstrates zero-touch content pipeline capabilities.'
-        },
-        {
-            selector: '[data-step-number="06"]',
-            title: 'Step 6: Real-Time API Cost Optimizer',
-            desc: 'Adjust the monthly job slider and toggle Prompt Caching and Smart Model Routing to see how per-video costs drop from $2.10 down to $0.46 (78% margin).',
-            tip: '💡 Pro-Tip: Shows how tiered LLM routing maximizes ROI.'
-        },
-        {
-            selector: '[data-step-number="07"]',
-            title: 'Step 7: Team Automation ROI Calculator',
-            desc: 'Calculate annual hours recovered and gross dollar savings when deploying Xennials AI automations across your team size.',
-            tip: '💡 Pro-Tip: Adjust manual hours per person to match your team workflows.'
-        },
-        {
-            selector: '[data-step-number="08"]',
-            title: 'Step 8: Deploy Custom AI Infrastructure',
-            desc: 'Submit your specific technical requirements and our team will design, test, and deploy customized autonomous agent swarms for your organization.',
-            tip: '💡 Pro-Tip: Responses are typically delivered within 24 hours.'
-        }
-    ];
+    // ─── Step-by-Step Interactive Guided Tour Matrix ─────────────────────
+    const pathname = window.location.pathname.toLowerCase();
+    let currentTourMatrix = [];
+
+    if (pathname.includes('playground')) {
+        currentTourMatrix = [
+            {
+                selector: '[data-step-number="PG-01"]',
+                title: 'Playground: API Gateway & Proxy',
+                desc: 'Check live connectivity to LiteLLM Proxy (:4000) or local Ollama (:11434). Click Settings to add custom API keys or fal.ai diffusion tokens.',
+                tip: '💡 Pro-Tip: Zero setup required for local development.'
+            },
+            {
+                selector: '[data-step-number="PG-03"]',
+                title: 'Playground: Multimodal Modes',
+                desc: 'Switch fluidly between Chat, Dual-Model Comparison, FLUX Image Diffusion, and Generative AI Video rendering studios.',
+                tip: '💡 Pro-Tip: All four studios remember your active configurations.'
+            },
+            {
+                selector: '[data-step-number="PG-04"]',
+                title: 'Playground: Neural Model Catalog',
+                desc: 'Select from available local or cloud LLM routers including deepseek-coder, llama3, and high-reasoning Kimi K3 & GLM-5.3.',
+                tip: '💡 Pro-Tip: Click the refresh icon to scan for newly running local models.'
+            },
+            {
+                selector: '[data-step-number="PG-05"]',
+                title: 'Playground: System Role Presets',
+                desc: 'Fine-tune the assistant persona with built-in presets: Concise, Coder, Creative, or Socratic Tutor.',
+                tip: '💡 Pro-Tip: Persona presets dynamically update prompt reasoning.'
+            },
+            {
+                selector: '[data-step-number="PG-06"]',
+                title: 'Playground: Hyperparameter Controls',
+                desc: 'Adjust Temperature, Top-P sampling, Max Tokens, and toggle live response streaming on or off.',
+                tip: '💡 Pro-Tip: Set temperature low (0.2) for code, high (0.8) for brainstorming.'
+            },
+            {
+                selector: '[data-step-number="PG-07"]',
+                title: 'Playground: Prompt Input & Dice Generator',
+                desc: 'Write prompt instructions or click the 🎲 Random Prompt button to instantly test pre-curated prompts across engineering, science, and creative tasks.',
+                tip: '💡 Pro-Tip: Works in Chat, Compare, Image, and Video modes!'
+            }
+        ];
+    } else if (pathname.includes('blog')) {
+        currentTourMatrix = [
+            {
+                selector: '[data-step-number="BL-01"]',
+                title: 'Research Hub: Instant Search',
+                desc: 'Quickly query across all research publications, architectural teardowns, and engineering benchmarks.',
+                tip: '💡 Pro-Tip: Search terms like "Socratic", "Memory", or "Prompt Caching".'
+            },
+            {
+                selector: '[data-step-number="BL-02"]',
+                title: 'Research Hub: Topic Categories',
+                desc: 'Filter articles by DeepTutor & Education, AI Agent Swarms, and Enterprise n8n Pipelines.',
+                tip: '💡 Pro-Tip: Click any pill to filter in real time.'
+            },
+            {
+                selector: '[data-step-number="BL-03"]',
+                title: 'Research Hub: Flagship Research',
+                desc: 'Discover our flagship DeepTutor architecture breakdown comparing single LLM chat windows against lifelong cognitive companions.',
+                tip: '💡 Pro-Tip: Links directly to live source code and web apps.'
+            }
+        ];
+    } else if (pathname.includes('deeptutor')) {
+        currentTourMatrix = [
+            {
+                selector: '[data-step-number="DT-01"]',
+                title: 'DeepTutor: Live TutorBot Launch',
+                desc: 'Launch the deployed production TutorBot interface or clone the official repository directly into your local machine.',
+                tip: '💡 Pro-Tip: Clone via git clone https://github.com/xennials-dev/DeepTutor.git'
+            },
+            {
+                selector: '[data-step-number="DT-02"]',
+                title: 'DeepTutor: Cognitive Telemetry',
+                desc: 'Inspect real-time memory synchronization, active Socratic agent swarms, and local RAG document grounding with zero external data leaks.',
+                tip: '💡 Pro-Tip: All embeddings run client-side or on private servers.'
+            },
+            {
+                selector: '[data-step-number="DT-03"]',
+                title: 'DeepTutor: Direct Project Connect',
+                desc: 'Copy git checkout commands or jump straight to GitHub issues and contributions.',
+                tip: '💡 Pro-Tip: Click Copy Clone URL for instant clipboard copy.'
+            },
+            {
+                selector: '[data-step-number="DT-04"]',
+                title: 'DeepTutor: Socratic Simulator',
+                desc: 'Experience how TutorBot decomposes complex problems step-by-step using active Socratic inquiry instead of spoon-feeding direct answers.',
+                tip: '💡 Pro-Tip: Select different academic domains to test.'
+            }
+        ];
+    } else {
+        // Default: Home Page Tour
+        currentTourMatrix = [
+            {
+                selector: '[data-step-number="01"]',
+                title: 'Step 1: Theme Personalization',
+                desc: 'Start by customizing the platform theme. Switch seamlessly between Indigo Cyber, Cyber Cyan & Emerald, or Deep Purple & Amber styles.',
+                tip: '💡 Pro-Tip: Themes persist across all pages in local storage.'
+            },
+            {
+                selector: '[data-step-number="02"]',
+                title: 'Step 2: Instant Project Consultation',
+                desc: 'Use the primary action button to jump directly to our automated project intake and custom agent specification form.',
+                tip: '💡 Pro-Tip: Ideal for businesses seeking zero-touch automation swarms.'
+            },
+            {
+                selector: '[data-step-number="03"]',
+                title: 'Step 3: Open Source Ecosystem',
+                desc: 'Explore our catalog of 379+ production repositories and flagship projects categorized into AI Agents, Full Stack, and Automations.',
+                tip: '💡 Pro-Tip: Click Quick View on any project card to see tech stack breakdowns.'
+            },
+            {
+                selector: '[data-step-number="04"]',
+                title: 'Step 4: Autonomous Workflows Hub',
+                desc: 'Navigate through our 4 core architecture tabs: 6-Stage Video Pipeline, 7-Agent Workforce Matrix, API Cost Optimizer, and Client Onboarding Engine.',
+                tip: '💡 Pro-Tip: Each tab offers production-ready architectural schemas.'
+            },
+            {
+                selector: '[data-step-number="05"]',
+                title: 'Step 5: Multi-Agent Execution Simulator',
+                desc: 'Test our 6-stage video automation pipeline in real time. Enter any topic keyword and watch research, scripting, voiceover, and video rendering stream in live logs.',
+                tip: '💡 Pro-Tip: Demonstrates zero-touch content pipeline capabilities.'
+            },
+            {
+                selector: '[data-step-number="06"]',
+                title: 'Step 6: Real-Time API Cost Optimizer',
+                desc: 'Adjust the monthly job slider and toggle Prompt Caching and Smart Model Routing to see how per-video costs drop from $2.10 down to $0.46 (78% margin).',
+                tip: '💡 Pro-Tip: Shows how tiered LLM routing maximizes ROI.'
+            },
+            {
+                selector: '[data-step-number="07"]',
+                title: 'Step 7: Team Automation ROI Calculator',
+                desc: 'Calculate annual hours recovered and gross dollar savings when deploying Xennials AI automations across your team size.',
+                tip: '💡 Pro-Tip: Adjust manual hours per person to match your team workflows.'
+            },
+            {
+                selector: '[data-step-number="08"]',
+                title: 'Step 8: Deploy Custom AI Infrastructure',
+                desc: 'Submit your specific technical requirements and our team will design, test, and deploy customized autonomous agent swarms for your organization.',
+                tip: '💡 Pro-Tip: Responses are typically delivered within 24 hours.'
+            }
+        ];
+    }
 
     let currentTourStep = 0;
 
     function renderTourDots() {
         if (!modalDots) return;
         modalDots.innerHTML = '';
-        TOUR_STEPS.forEach((_, idx) => {
+        currentTourMatrix.forEach((_, idx) => {
             const dot = document.createElement('div');
             dot.className = `w-2 h-2 rounded-full transition-all ${idx === currentTourStep ? 'bg-indigo-500 w-5' : 'bg-slate-700'}`;
             modalDots.appendChild(dot);
@@ -1246,13 +1421,13 @@ function initGuidedAnnotationsAndTour() {
     }
 
     function showTourStep(stepIndex) {
-        if (stepIndex < 0 || stepIndex >= TOUR_STEPS.length) return;
+        if (stepIndex < 0 || stepIndex >= currentTourMatrix.length) return;
         currentTourStep = stepIndex;
 
         // Clear previous highlights
         document.querySelectorAll('.tour-step-highlight').forEach(el => el.classList.remove('tour-step-highlight'));
 
-        const stepData = TOUR_STEPS[currentTourStep];
+        const stepData = currentTourMatrix[currentTourStep];
         const targetEl = document.querySelector(stepData.selector);
 
         if (targetEl) {
@@ -1260,7 +1435,7 @@ function initGuidedAnnotationsAndTour() {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        if (modalStep) modalStep.textContent = `STEP ${currentTourStep + 1} OF ${TOUR_STEPS.length}`;
+        if (modalStep) modalStep.textContent = `STEP ${currentTourStep + 1} OF ${currentTourMatrix.length}`;
         if (modalTitle) modalTitle.textContent = stepData.title;
         if (modalDesc) modalDesc.textContent = stepData.desc;
         if (modalTip) modalTip.textContent = stepData.tip;
@@ -1269,7 +1444,7 @@ function initGuidedAnnotationsAndTour() {
         if (modalPrev) modalPrev.style.opacity = currentTourStep === 0 ? '0.4' : '1';
 
         if (modalNext) {
-            if (currentTourStep === TOUR_STEPS.length - 1) {
+            if (currentTourStep === currentTourMatrix.length - 1) {
                 modalNext.innerHTML = 'Finish Tour <i class="fas fa-check ml-1"></i>';
                 modalNext.className = 'px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow-lg shadow-emerald-600/30 transition-all';
             } else {
@@ -1295,7 +1470,7 @@ function initGuidedAnnotationsAndTour() {
 
     if (modalNext) {
         modalNext.addEventListener('click', () => {
-            if (currentTourStep >= TOUR_STEPS.length - 1) {
+            if (currentTourStep >= currentTourMatrix.length - 1) {
                 closeTour();
                 showToast('Guided Tour Complete! Enjoy exploring Xennials.', 'success');
             } else {
@@ -1325,7 +1500,7 @@ function initGuidedAnnotationsAndTour() {
     document.addEventListener('keydown', (e) => {
         if (!modal || !modal.classList.contains('active')) return;
         if (e.key === 'Escape') closeTour();
-        if (e.key === 'ArrowRight' && currentTourStep < TOUR_STEPS.length - 1) showTourStep(currentTourStep + 1);
+        if (e.key === 'ArrowRight' && currentTourStep < currentTourMatrix.length - 1) showTourStep(currentTourStep + 1);
         if (e.key === 'ArrowLeft' && currentTourStep > 0) showTourStep(currentTourStep - 1);
     });
 }

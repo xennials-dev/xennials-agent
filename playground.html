@@ -243,21 +243,21 @@
             </div>
             <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
                 <!-- Gateway Status -->
-                <div id="gateway-status" class="flex items-center gap-2 px-3 py-1.5 bg-slate-950/80 border border-slate-700 rounded-full text-xs pg-mono">
+                <div id="gateway-status" class="flex items-center gap-2 px-3 py-1.5 bg-slate-950/80 border border-slate-700 rounded-full text-xs pg-mono" data-step-number="PG-01" data-step-title="🔌 API Gateway Status & Settings" data-step-guide="Monitors your LiteLLM Proxy (:4000) and Ollama (:11434) connectivity. Click Settings to configure custom endpoints and fal.ai diffusion keys." data-step-action="👉 Click Settings to configure API keys">
                     <span class="status-dot checking"></span>
                     <span class="text-gray-400">Checking gateway...</span>
                 </div>
                 <button id="open-gateway-modal-btn" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 rounded-full text-xs pg-mono text-gray-300 transition-colors inline-flex items-center gap-1.5" title="Configure LiteLLM & fal.ai Gateway Settings">
                     <i class="fas fa-sliders text-indigo-400"></i> Settings
                 </button>
-                <a href="deeptutor.html" class="px-4 py-2 bg-indigo-900/60 hover:bg-indigo-900 border border-indigo-500/40 rounded-xl text-xs pg-mono text-indigo-300 transition-colors inline-flex items-center gap-1.5">
+                <a href="deeptutor.html" class="px-4 py-2 bg-indigo-900/60 hover:bg-indigo-900 border border-indigo-500/40 rounded-xl text-xs pg-mono text-indigo-300 transition-colors inline-flex items-center gap-1.5" data-step-number="PG-02" data-step-title="🎓 DeepTutor Cognitive Platform" data-step-guide="Jump directly to the DeepTutor multi-agent tutoring platform featuring persistent memory and Socratic instruction." data-step-action="👉 Click to open DeepTutor">
                     <i class="fas fa-graduation-cap"></i> DeepTutor
                 </a>
             </div>
         </div>
 
         <!-- ── Mode Selector Tabs ─────────────────────────────────────── -->
-        <div class="flex flex-wrap gap-3 mb-6" id="mode-tabs">
+        <div class="flex flex-wrap gap-3 mb-6" id="mode-tabs" data-step-number="PG-03" data-step-title="🎛️ Multimodal Workspace Modes" data-step-guide="Switch between Single LLM Chat, Side-by-Side Model Comparison, FLUX Text-to-Image synthesis, and AI Video Generation." data-step-action="👉 Click a mode tab to switch studios">
             <button class="mode-tab active flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium transition-all" data-mode="chat">
                 <span class="mode-icon w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 transition-all"><i class="fas fa-comments"></i></span>
                 <div class="text-left">
@@ -297,7 +297,7 @@
             <aside class="lg:col-span-3 space-y-4" id="sidebar">
 
                 <!-- Model Selector -->
-                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden" data-step-number="PG-04" data-step-title="🧠 Neural Model Selector" data-step-guide="Choose between local Ollama models (deepseek-coder, llama3) and cloud router models (Kimi K3, GLM-5.3, Qwen 3.8). Automatic fallback engages when offline." data-step-action="👉 Click any model card to select">
                     <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
                         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Model</h3>
                         <button id="refresh-models-btn" class="text-indigo-400 hover:text-indigo-300 text-xs pg-mono" title="Refresh model list">
@@ -313,7 +313,7 @@
                 </div>
 
                 <!-- System Prompt -->
-                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden" data-step-number="PG-05" data-step-title="📜 System Persona & Role Presets" data-step-guide="Assign explicit instructions and role behaviors to the AI assistant. Use one of our quick presets (Coder, Tutor, Creative, Concise) or define your own." data-step-action="👉 Click preset button or customize text">
                     <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
                         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">System Prompt</h3>
                         <button id="system-prompt-toggle" class="text-indigo-400 hover:text-indigo-300 text-xs">
@@ -332,7 +332,7 @@
                 </div>
 
                 <!-- Parameter Controls -->
-                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden">
+                <div class="bg-slate-900/80 rounded-2xl border border-slate-800 glass-panel overflow-hidden" data-step-number="PG-06" data-step-title="🎚️ Model Hyperparameters" data-step-guide="Fine-tune generation temperature (higher = creative, lower = deterministic), Top-P nucleus sampling threshold, and maximum token cutoff length." data-step-action="👉 Slide to customize temperature">
                     <div class="px-4 py-3 border-b border-slate-800">
                         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Parameters</h3>
                     </div>
@@ -442,7 +442,7 @@
                         </div>
 
                         <!-- Chat Input -->
-                        <div class="px-5 py-4 border-t border-slate-800 flex-shrink-0">
+                        <div class="px-5 py-4 border-t border-slate-800 flex-shrink-0" data-step-number="PG-07" data-step-title="✨ Prompt Input & Random Generators" data-step-guide="Type your instructions or click '🎲 Random Prompt' to instantly populate creative, coding, or analytical prompts across all models." data-step-action="👉 Click Random Prompt or type message">
                             <form id="chat-form" class="flex flex-col gap-2">
                                 <div class="flex items-center justify-between px-1">
                                     <span class="text-[11px] font-medium text-gray-500 uppercase tracking-wider">Your Message</span>
@@ -472,7 +472,7 @@
                 </div>
 
                 <!-- ── COMPARE MODE ───────────────────────────────────── -->
-                <div id="mode-compare" class="mode-panel hidden">
+                <div id="mode-compare" class="mode-panel hidden" data-step-number="PG-08" data-step-title="⚖️ Dual Model Benchmarking" data-step-guide="Run identical prompts simultaneously across two independent LLMs to compare reasoning output, tokens per second, and response fidelity." data-step-action="👉 Pick Model A & B and click Compare">
                     <div class="space-y-4">
                         <!-- Compare Controls -->
                         <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-4">
@@ -533,7 +533,7 @@
                 </div>
 
                 <!-- ── IMAGE MODE ─────────────────────────────────────── -->
-                <div id="mode-image" class="mode-panel hidden">
+                <div id="mode-image" class="mode-panel hidden" data-step-number="PG-09" data-step-title="🎨 FLUX Image Diffusion Studio" data-step-guide="Synthesize photorealistic 8K imagery using FLUX.1 [schnell] or Krea 2 Turbo with customizable aspect ratios." data-step-action="👉 Enter visual prompt and generate">
                     <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-6 space-y-5">
                         <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
                             <div class="w-9 h-9 rounded-lg bg-pink-950 border border-pink-500/30 flex items-center justify-center text-pink-400">
@@ -597,7 +597,7 @@
                 </div>
 
                 <!-- ── VIDEO MODE ─────────────────────────────────────── -->
-                <div id="mode-video" class="mode-panel hidden">
+                <div id="mode-video" class="mode-panel hidden" data-step-number="PG-10" data-step-title="🎥 Generative AI Video Studio" data-step-guide="Render high-definition motion video sequences from text prompts or reference images using Kling v3 and MiniMax H3 models." data-step-action="👉 Enter video prompt and generate">
                     <div class="bg-slate-900/90 rounded-2xl border border-slate-800 glass-panel p-6 space-y-5">
                         <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
                             <div class="w-9 h-9 rounded-lg bg-amber-950 border border-amber-500/30 flex items-center justify-center text-amber-400">
