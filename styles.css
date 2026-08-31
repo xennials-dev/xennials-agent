@@ -1332,3 +1332,373 @@ body.guide-mode-active [data-step-guide]:hover {
     overflow: hidden;
 }
 
+/* ═════════════════════════════════════════════════════════════════════
+   KINETIC AI CAPSULE SHOWCASE & DRIBBLE MOTION STAGE (PLAYGROUND)
+   ═════════════════════════════════════════════════════════════════════ */
+
+.kinetic-stage-wrapper {
+    position: relative;
+    width: 100%;
+    background: radial-gradient(circle at 50% 40%, rgba(30, 27, 75, 0.45) 0%, rgba(10, 15, 29, 0.95) 65%, #050811 100%);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 2rem;
+    padding: 3.5rem 2rem 4rem;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    box-shadow: 0 35px 80px -20px rgba(0, 0, 0, 0.9), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+    perspective: 1200px;
+}
+
+/* Giant Parallax Typography */
+.kinetic-huge-text-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.kinetic-huge-text {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(4.5rem, 13vw, 11.5rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: rgba(255, 255, 255, 0.07);
+    text-transform: capitalize;
+    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+.kinetic-stage-wrapper:hover .kinetic-huge-text {
+    color: rgba(255, 255, 255, 0.12);
+}
+
+.kinetic-huge-text.left {
+    transform: translateX(-2%);
+}
+
+.kinetic-huge-text.right {
+    transform: translateX(2%);
+    text-align: right;
+}
+
+/* Center 3D Floating Capsule */
+.kinetic-capsule-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 440px;
+    margin: 0 auto;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+}
+
+.kinetic-capsule-card {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1/1.25;
+    border-radius: 3rem;
+    background: #02040a;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(99, 102, 241, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    animation: capsuleFloat 5s ease-in-out infinite alternate;
+}
+
+@keyframes capsuleFloat {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(0.4deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.capsule-image-render {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 3rem;
+    filter: contrast(1.08) brightness(1.03);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.kinetic-capsule-card:hover .capsule-image-render {
+    transform: scale(1.03);
+    filter: contrast(1.12) brightness(1.08);
+}
+
+/* Interactive Floating UI Chips over Capsule */
+.capsule-interactive-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem 1.25rem 1.75rem;
+    background: linear-gradient(180deg, transparent 40%, rgba(2, 6, 23, 0.85) 75%, rgba(2, 6, 23, 0.98) 100%);
+    gap: 0.6rem;
+}
+
+.capsule-chip-row {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.capsule-chip-btn {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #e2e8f0;
+    font-size: 0.68rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.capsule-chip-btn:hover {
+    background: rgba(99, 102, 241, 0.25);
+    border-color: rgba(99, 102, 241, 0.8);
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.5);
+}
+
+/* Annotation Callout Cards (AWS Dribbble Style) */
+.kinetic-callout-card {
+    position: absolute;
+    z-index: 15;
+    background: rgba(11, 15, 25, 0.88);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 1.15rem;
+    padding: 1rem 1.25rem;
+    max-width: 270px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(99, 102, 241, 0.12);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: floatCallout 6s ease-in-out infinite alternate;
+}
+
+.kinetic-callout-card:hover {
+    border-color: rgba(99, 102, 241, 0.7);
+    background: rgba(15, 23, 42, 0.96);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(99, 102, 241, 0.3);
+}
+
+.kinetic-callout-card.top-left {
+    top: 18%;
+    left: 4%;
+    animation-delay: 0s;
+}
+
+.kinetic-callout-card.bottom-left {
+    bottom: 15%;
+    left: 4%;
+    animation-delay: -1.8s;
+}
+
+.kinetic-callout-card.top-right {
+    top: 18%;
+    right: 4%;
+    animation-delay: -3.2s;
+}
+
+@keyframes floatCallout {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+.kinetic-callout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.kinetic-callout-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.4rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #818cf8;
+    font-size: 0.75rem;
+}
+
+.kinetic-callout-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+.kinetic-callout-desc {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+/* Pinwheel Vortex (Agent / Business / Research / Development) */
+.orbital-vortex-card {
+    position: absolute;
+    bottom: 12%;
+    right: 4%;
+    z-index: 15;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.orbital-vortex-wheel {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(99, 102, 241, 0.35), rgba(236, 72, 153, 0.35), rgba(245, 158, 11, 0.35), rgba(99, 102, 241, 0.35));
+    mask: radial-gradient(circle, transparent 38%, black 40%);
+    -webkit-mask: radial-gradient(circle, transparent 38%, black 40%);
+    animation: rotateWheel 14s linear infinite;
+    transition: animation-duration 0.3s ease;
+}
+
+.orbital-vortex-card:hover .orbital-vortex-wheel {
+    animation-duration: 4s;
+}
+
+@keyframes rotateWheel {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.orbital-vortex-center {
+    position: relative;
+    z-index: 2;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #0b0f19;
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.orbital-vortex-center span {
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.orbital-label {
+    position: absolute;
+    font-size: 0.6rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+}
+
+.orbital-label.top { top: -4px; }
+.orbital-label.bottom-left { bottom: 6px; left: -10px; }
+.orbital-label.bottom-right { bottom: 6px; right: -10px; }
+
+/* Magnetic Floating Action Button (Launch AI) */
+.magnetic-launch-action {
+    position: absolute;
+    top: 50%;
+    right: 28%;
+    transform: translateY(-50%);
+    z-index: 25;
+}
+
+.magnetic-launch-circle {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 25px rgba(99, 102, 241, 0.35);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magnetic-launch-circle:hover {
+    transform: scale(1.12);
+    border-color: rgba(99, 102, 241, 0.8);
+    background: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 20px 45px -5px rgba(99, 102, 241, 0.6), 0 0 35px rgba(236, 72, 153, 0.4);
+}
+
+.magnetic-launch-circle i {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    transition: transform 0.25s ease;
+}
+
+.magnetic-launch-circle:hover i {
+    transform: translate(2px, -2px);
+}
+
+.magnetic-launch-circle span {
+    font-size: 0.68rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Responsive Hide for mobile */
+@media (max-width: 1024px) {
+    .kinetic-callout-card {
+        display: none;
+    }
+    .orbital-vortex-card {
+        display: none;
+    }
+    .magnetic-launch-action {
+        right: 10%;
+        top: 80%;
+    }
+}
+
+

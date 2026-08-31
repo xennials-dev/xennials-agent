@@ -62,6 +62,7 @@
         bindAutoResize();
         bindRandomPromptGenerators();
         bindTaxonomyModalAndTasks();
+        bindKineticCapsuleInteractions();
 
         // Load saved config from localStorage
         const savedUrl = localStorage.getItem('pg_gateway_url');
@@ -1640,6 +1641,145 @@
         });
     }
 
+    // ═════════════════════════════════════════════════════════════════════
+    // KINETIC 3D CAPSULE & DRIBBLE MOTION ENGINE
+    // ═════════════════════════════════════════════════════════════════════
+
+    function bindKineticCapsuleInteractions() {
+        const stage = $('#playground-kinetic-stage');
+        const card = $('#kinetic-capsule-card');
+        const textLeft = $('#kinetic-text-left');
+        const textRight = $('#kinetic-text-right');
+        const launchBtn = $('#magnetic-launch-btn');
+        const launchAction = $('#magnetic-launch-action');
+
+        // 1. Mouse Parallax 3D Tilt on the Stage
+        if (stage && card) {
+            stage.addEventListener('mousemove', (e) => {
+                const rect = stage.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+                const rotateY = (x / rect.width) * 18; // degrees
+                const rotateX = -(y / rect.height) * 18; // degrees
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                
+                if (textLeft && textRight) {
+                    textLeft.style.transform = `translateX(${-2 - (x / rect.width) * 6}%) translateY(${-(y / rect.height) * 8}px)`;
+                    textRight.style.transform = `translateX(${2 + (x / rect.width) * 6}%) translateY(${(y / rect.height) * 8}px)`;
+                }
+
+                // Magnetic pull on launch button
+                if (launchAction) {
+                    const btnRect = launchAction.getBoundingClientRect();
+                    const btnCenterX = btnRect.left + btnRect.width / 2;
+                    const btnCenterY = btnRect.top + btnRect.height / 2;
+                    const dist = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+
+                    if (dist < 150) {
+                        const pullX = (e.clientX - btnCenterX) * 0.25;
+                        const pullY = (e.clientY - btnCenterY) * 0.25;
+                        launchAction.style.transform = `translate(${pullX}px, calc(-50% + ${pullY}px)) scale(1.05)`;
+                    } else {
+                        launchAction.style.transform = `translate(0, -50%) scale(1)`;
+                    }
+                }
+            });
+
+            stage.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                if (textLeft) textLeft.style.transform = `translateX(-2%) translateY(0)`;
+                if (textRight) textRight.style.transform = `translateX(2%) translateY(0)`;
+                if (launchAction) launchAction.style.transform = `translate(0, -50%) scale(1)`;
+            });
+        }
+
+        // 2. Launch AI Button Click
+        if (launchBtn) {
+            launchBtn.addEventListener('click', () => {
+                const anchor = $('#workspace-controls-anchor');
+                if (anchor) {
+                    anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    showToast('AI Studio Active — Ready to create', 'success');
+                }
+            });
+        }
+
+        // 3. Interactive Capsule Chips
+        const promptChip = $('#capsule-prompt-chip');
+        const codeChip = $('#capsule-code-chip');
+        const modelChip = $('#capsule-model-chip');
+        const analyticsChip = $('#capsule-analytics-chip');
+        const apiChip = $('#capsule-api-chip');
+
+        if (promptChip) {
+            promptChip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const activePromptBtn = document.querySelector(`.mode-panel:not(.hidden) .random-prompt-btn`) || $('#random-chat-prompt-btn');
+                if (activePromptBtn) activePromptBtn.click();
+                const anchor = $('#workspace-controls-anchor');
+                if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('Prompt Generator Synthesized Random Creative Prompt', 'success');
+            });
+        }
+
+        if (codeChip) {
+            codeChip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const chatTab = document.querySelector('.mode-tab[data-mode="chat"]');
+                if (chatTab) chatTab.click();
+                const chatInput = $('#chat-input');
+                if (chatInput) {
+                    chatInput.value = "Write a high-performance, fault-tolerant Python async worker with Redis queue streaming, exponential backoff, and distributed locks.";
+                    chatInput.focus();
+                }
+                const anchor = $('#workspace-controls-anchor');
+                if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('Code Engine Mode Armed with High-Performance Prompt', 'info');
+            });
+        }
+
+        if (modelChip) {
+            modelChip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const compareTab = document.querySelector('.mode-tab[data-mode="compare"]');
+                if (compareTab) compareTab.click();
+                const anchor = $('#workspace-controls-anchor');
+                if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('Side-by-Side Model Comparator Armed', 'info');
+            });
+        }
+
+        if (analyticsChip) {
+            analyticsChip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const modal = $('#taxonomy-modal');
+                if (modal) modal.classList.remove('hidden');
+                showToast('AI Task Taxonomy & ML Framework Matrix Opened', 'info');
+            });
+        }
+
+        if (apiChip) {
+            apiChip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const modal = $('#gateway-modal');
+                if (modal) modal.classList.remove('hidden');
+                showToast('AI Gateway & Provider Settings Opened', 'info');
+            });
+        }
+
+        // 4. Orbital Tri-Wheel Click
+        const vortex = $('#orbital-vortex-card');
+        if (vortex) {
+            vortex.addEventListener('click', () => {
+                const modal = $('#taxonomy-modal');
+                if (modal) modal.classList.remove('hidden');
+                showToast('Autonomous Agent Workflow Orbit Matrix Active', 'success');
+            });
+        }
+    }
+
     function showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
         if (!toast) return;
@@ -1658,4 +1798,5 @@
     }
 
 })();
+
 
