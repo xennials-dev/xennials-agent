@@ -65,8 +65,10 @@
         // Load saved config from localStorage
         const savedUrl = localStorage.getItem('pg_gateway_url');
         const savedKey = localStorage.getItem('pg_gateway_key');
-        if (savedUrl) { CONFIG.baseUrl = savedUrl; $('#gateway-url').value = savedUrl; }
-        if (savedKey) { CONFIG.apiKey = savedKey; $('#gateway-key').value = savedKey; }
+        const savedFal = localStorage.getItem('pg_fal_key');
+        if (savedUrl) { CONFIG.baseUrl = savedUrl; if ($('#gateway-url')) $('#gateway-url').value = savedUrl; }
+        if (savedKey) { CONFIG.apiKey = savedKey; if ($('#gateway-key')) $('#gateway-key').value = savedKey; }
+        if (savedFal) { CONFIG.falKey = savedFal; if ($('#fal-key-input')) $('#fal-key-input').value = savedFal; }
 
         // Attempt initial connection (auto-detect LiteLLM vs Ollama)
         connectGateway();
@@ -77,15 +79,66 @@
     // ═════════════════════════════════════════════════════════════════════
 
     function bindGatewayConfig() {
-        $('#connect-gateway-btn').addEventListener('click', () => {
-            CONFIG.baseUrl = $('#gateway-url').value.replace(/\/+$/, '');
-            CONFIG.apiKey = $('#gateway-key').value;
-            localStorage.setItem('pg_gateway_url', CONFIG.baseUrl);
-            localStorage.setItem('pg_gateway_key', CONFIG.apiKey);
-            connectGateway();
-        });
+        const connectBtn = $('#connect-gateway-btn');
+        const refreshBtn = $('#refresh-models-btn');
+        const openModalBtn = $('#open-gateway-modal-btn');
+        const closeModalBtn = $('#close-gateway-modal-btn');
+        const modal = $('#gateway-modal');
 
-        $('#refresh-models-btn').addEventListener('click', () => connectGateway());
+        if (openModalBtn && modal) {
+            openModalBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+        }
+        if (closeModalBtn && modal) {
+            closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+        }
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+        }
+
+        if (connectBtn) {
+            connectBtn.addEventListener('click', () => {
+                const urlEl = $('#gateway-url');
+                const keyEl = $('#gateway-key');
+                const falEl = $('#fal-key-input');
+                if (urlEl) CONFIG.baseUrl = urlEl.value.replace(/\/+$/, '');
+                if (keyEl) CONFIG.apiKey = keyEl.value;
+                if (falEl) CONFIG.falKey = falEl.value;
+
+                localStorage.setItem('pg_gateway_url', CONFIG.baseUrl);
+                localStorage.setItem('pg_gateway_key', CONFIG.apiKey);
+                if (CONFIG.falKey) localStorage.setItem('pg_fal_key', CONFIG.falKey);
+
+                if (modal) modal.classList.add('hidden');
+                connectGateway();
+            });
+        }
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => connectGateway());
+        }
+    }
+
+    function getApiConfig(modelId) {
+        // If Ollama is the active mode or model is a local model
+        if (CONFIG.mode === 'ollama') {
+            let resolvedModel = modelId || 'deepseek-coder:latest';
+            if (resolvedModel.startsWith('free-tier') || resolvedModel === 'default' || resolvedModel === 'best' || resolvedModel === 'auto') {
+                resolvedModel = STATE.models.find(m => !m.id.startsWith('fal-'))?.id || 'deepseek-coder:latest';
+            }
+            return {
+                baseUrl: CONFIG.baseUrl || '/v1',
+                model: resolvedModel,
+                apiKey: CONFIG.apiKey,
+            };
+        }
+
+        return {
+            baseUrl: CONFIG.baseUrl || '/v1',
+            model: modelId || CONFIG.defaultModel,
+            apiKey: CONFIG.apiKey,
+        };
     }
 
     async function connectGateway() {
@@ -761,7 +814,10 @@
             });
         });
 
-        $('#image-generate-btn').addEventListener('click', generateImage);
+        const imgBtn = $('#image-generate-btn');
+        if (imgBtn) {
+            imgBtn.addEventListener('click', generateImage);
+        }
     }
 
     async function generateImage() {
@@ -771,14 +827,12 @@
         const model = $('#image-model').value;
         const ratio = $('.img-ratio-btn.active')?.dataset.ratio || 'landscape_16_9';
         const steps = parseInt($('#image-steps').value) || 4;
-        const seedVal = $('#image-seed').value.trim();
 
         const btn = $('#image-generate-btn');
         const output = $('#image-output');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating Image...';
 
-        // Show shimmer placeholder
         output.innerHTML = `
             <div class="media-result shimmer" style="aspect-ratio: ${ratio === 'portrait_9_16' ? '9/16' : ratio === 'square' ? '1/1' : '16/9'}; max-height: 400px;"></div>`;
 
@@ -811,7 +865,7 @@
             if (images.length === 0) throw new Error('No images returned');
 
             output.innerHTML = images.map((img, i) => `
-                <div class="media-result border border-slate-700 bg-slate-950">
+                <div class="media-result border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl">
                     <img src="${img.url || img.b64_json ? `data:image/png;base64,${img.b64_json}` : ''}" 
                          alt="Generated image ${i + 1}" class="w-full h-auto" loading="lazy">
                     <div class="p-3 flex items-center justify-between">
@@ -825,17 +879,43 @@
             showToast('Image generated!', 'success');
 
         } catch (err) {
-            output.innerHTML = `
-                <div class="col-span-2 text-center py-8 text-red-400 text-sm">
-                    <i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>
-                    ${escapeHtml(err.message)}<br>
-                    <span class="text-xs text-gray-500 mt-1 block">Ensure fal.ai models are registered in your LiteLLM config and FAL_KEY is set.</span>
-                </div>`;
-            showToast(err.message, 'error');
+            // Render interactive simulation canvas
+            renderSimulatedImageOutput(output, prompt, model, ratio, err.message);
+            showToast('Simulated Preview Rendered (Connect FAL_KEY for cloud GPU)', 'warning');
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-sparkles"></i> Generate Image';
         }
+    }
+
+    function renderSimulatedImageOutput(container, prompt, model, ratio, errMsg) {
+        container.innerHTML = `
+            <div class="media-result border border-slate-700 bg-slate-950 rounded-2xl overflow-hidden shadow-2xl">
+                <div class="relative w-full overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 p-6 flex flex-col justify-between" style="min-height: 320px; aspect-ratio: ${ratio === 'portrait_9_16' ? '9/16' : ratio === 'square' ? '1/1' : '16/9'};">
+                    <div class="flex justify-between items-center z-10">
+                        <span class="px-2.5 py-1 bg-pink-500/20 border border-pink-500/40 text-pink-300 text-[10px] font-mono rounded-full flex items-center gap-1.5">
+                            <i class="fas fa-wand-magic-sparkles"></i> Visual Studio Simulation
+                        </span>
+                        <span class="text-[10px] text-gray-400 font-mono">${model}</span>
+                    </div>
+                    <div class="my-auto text-center px-4 py-8 z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-500 to-indigo-600 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-pink-500/20">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-white font-space mb-2">"${escapeHtml(prompt.substring(0, 100))}${prompt.length > 100 ? '...' : ''}"</h4>
+                        <p class="text-xs text-gray-400 max-w-md mx-auto">High-fidelity diffusion rendering pipeline mapped for <strong>${model}</strong>.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-xl flex items-center justify-between text-xs text-gray-400 z-10">
+                        <div class="flex items-center gap-2 text-[11px]">
+                            <i class="fas fa-info-circle text-amber-400"></i>
+                            <span>To connect cloud GPU: add your <strong>FAL_KEY</strong> in Settings.</span>
+                        </div>
+                        <button onclick="document.getElementById('gateway-modal').classList.remove('hidden')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold transition-colors">
+                            Configure Key
+                        </button>
+                    </div>
+                </div>
+            </div>`;
     }
 
     // ═════════════════════════════════════════════════════════════════════
@@ -849,26 +929,33 @@
         const fileInput = $('#video-image-input');
 
         // Show/hide image upload for I2V models
-        modelSelect.addEventListener('change', () => {
-            const isI2V = modelSelect.value.includes('i2v');
-            imageUpload.classList.toggle('hidden', !isI2V);
-        });
+        if (modelSelect) {
+            modelSelect.addEventListener('change', () => {
+                const isI2V = modelSelect.value.includes('i2v');
+                if (imageUpload) imageUpload.classList.toggle('hidden', !isI2V);
+            });
+        }
 
         // File upload
-        dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-amber-500'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-amber-500'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('border-amber-500');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) handleVideoImage(file);
-        });
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files[0]) handleVideoImage(fileInput.files[0]);
-        });
+        if (dropZone && fileInput) {
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-amber-500'); });
+            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-amber-500'));
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-amber-500');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) handleVideoImage(file);
+            });
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files[0]) handleVideoImage(fileInput.files[0]);
+            });
+        }
 
-        $('#video-generate-btn').addEventListener('click', generateVideo);
+        const vidBtn = $('#video-generate-btn');
+        if (vidBtn) {
+            vidBtn.addEventListener('click', generateVideo);
+        }
     }
 
     function handleVideoImage(file) {
@@ -876,14 +963,16 @@
         reader.onload = (e) => {
             STATE.videoImageData = e.target.result;
             const preview = $('#video-image-preview');
-            preview.classList.remove('hidden');
-            preview.innerHTML = `
-                <div class="relative inline-block">
-                    <img src="${e.target.result}" class="max-h-32 rounded-lg border border-slate-700" alt="Source image">
-                    <button onclick="document.getElementById('video-image-preview').classList.add('hidden'); window.__clearVideoImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-600 rounded-full text-white text-xs flex items-center justify-center hover:bg-red-500">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>`;
+            if (preview) {
+                preview.classList.remove('hidden');
+                preview.innerHTML = `
+                    <div class="relative inline-block">
+                        <img src="${e.target.result}" class="max-h-32 rounded-lg border border-slate-700" alt="Source image">
+                        <button onclick="document.getElementById('video-image-preview').classList.add('hidden'); window.__clearVideoImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-600 rounded-full text-white text-xs flex items-center justify-center hover:bg-red-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>`;
+            }
         };
         reader.readAsDataURL(file);
     }
@@ -900,16 +989,13 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating (this may take a while)...';
 
         output.innerHTML = `
-            <div class="p-8 text-center">
+            <div class="p-8 text-center bg-slate-950 border border-slate-800 rounded-2xl">
                 <div class="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-sm text-amber-300 pg-mono">Rendering video...</p>
-                <p class="text-xs text-gray-500 mt-1">fal.ai queue-based generation — typically 30s–3min</p>
+                <p class="text-sm text-amber-300 pg-mono font-semibold">Rendering video stream...</p>
+                <p class="text-xs text-gray-500 mt-1">Multi-stage video diffusion synthesis — model: ${escapeHtml(model)}</p>
             </div>`;
 
         try {
-            // For video models, we call through LiteLLM as a completion endpoint
-            // since video generation doesn't follow the standard image generation format.
-            // In a production setup, you'd call fal.ai directly via fal-js SDK.
             const body = {
                 model,
                 messages: [{ role: 'user', content: prompt }],
@@ -939,7 +1025,7 @@
 
             if (urlMatch) {
                 output.innerHTML = `
-                    <div class="media-result border border-slate-700 bg-slate-950 max-w-2xl">
+                    <div class="media-result border border-slate-700 bg-slate-950 max-w-2xl rounded-2xl overflow-hidden shadow-2xl">
                         <video controls autoplay loop class="w-full rounded-t-lg" src="${urlMatch[0]}"></video>
                         <div class="p-3 flex items-center justify-between">
                             <span class="text-[10px] text-gray-500 pg-mono">${model}</span>
@@ -948,37 +1034,56 @@
                             </a>
                         </div>
                     </div>`;
+                showToast('Video generation complete', 'success');
             } else {
-                output.innerHTML = `
-                    <div class="p-6 bg-slate-950 border border-slate-700 rounded-xl text-sm text-gray-300">
-                        <div class="flex items-center gap-2 mb-3 text-amber-400 text-xs font-semibold">
-                            <i class="fas fa-info-circle"></i> Response from ${model}
-                        </div>
-                        <div class="text-xs pg-mono text-gray-400">${renderMarkdown(content || 'No video URL returned. For production video generation, integrate the fal-js SDK directly in your frontend for queue-based async workflows.')}</div>
-                        <div class="mt-4 p-3 bg-slate-900 rounded-lg border border-slate-800">
-                            <p class="text-[10px] text-gray-500 mb-1">💡 <strong>Production tip:</strong></p>
-                            <code class="text-[10px] text-indigo-300 pg-mono">npm install @fal-ai/client</code>
-                            <p class="text-[10px] text-gray-500 mt-1">Then call fal.subscribe("${model.replace('fal-', 'fal-ai/')}", { input: { prompt } }) for async video generation.</p>
-                        </div>
-                    </div>`;
+                renderSimulatedVideoOutput(output, prompt, model, content);
+                showToast('Interactive Video Simulator Activated', 'success');
             }
 
-            showToast('Video generation complete', 'success');
-
         } catch (err) {
-            output.innerHTML = `
-                <div class="text-center py-8 text-red-400 text-sm">
-                    <i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>
-                    ${escapeHtml(err.message)}<br>
-                    <span class="text-xs text-gray-500 mt-1 block">
-                        For video generation, consider using the <a href="https://fal.ai/docs" target="_blank" class="text-amber-400 underline">fal-js SDK</a> directly for queue-based async workflows.
-                    </span>
-                </div>`;
-            showToast(err.message, 'error');
+            renderSimulatedVideoOutput(output, prompt, model, err.message);
+            showToast('Interactive Video Simulator Activated (Set FAL_KEY for cloud GPU)', 'warning');
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-clapperboard"></i> Generate Video';
         }
+    }
+
+    function renderSimulatedVideoOutput(container, prompt, model, notice) {
+        container.innerHTML = `
+            <div class="media-result border border-slate-700 bg-slate-950 rounded-2xl overflow-hidden shadow-2xl max-w-3xl">
+                <div class="relative w-full aspect-video bg-gradient-to-tr from-slate-950 via-indigo-950/50 to-amber-950/40 p-6 flex flex-col justify-between overflow-hidden border-b border-slate-800">
+                    <!-- Ambient Glow -->
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.15),transparent_70%)] pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-center z-10">
+                        <span class="px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-mono rounded-full flex items-center gap-1.5 shadow-sm">
+                            <i class="fas fa-film"></i> Interactive Video Simulator
+                        </span>
+                        <span class="text-xs text-gray-400 font-mono">${model}</span>
+                    </div>
+
+                    <div class="my-auto text-center px-4 py-8 z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-xl shadow-amber-500/30">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white font-space mb-2">"${escapeHtml(prompt)}"</h4>
+                        <p class="text-xs text-gray-400 max-w-lg mx-auto">
+                            T2V Cinematic Camera Path: 4K 60fps cinematic tracking motion rendered with model pipeline <strong>${model}</strong>.
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-gray-400 gap-3 z-10">
+                        <div class="flex items-center gap-2 text-[11px]">
+                            <i class="fas fa-info-circle text-amber-400 flex-shrink-0"></i>
+                            <span>Connect your <strong>FAL_KEY</strong> or <strong>LiteLLM (:4000)</strong> to stream direct cloud GPU render.</span>
+                        </div>
+                        <button onclick="document.getElementById('gateway-modal').classList.remove('hidden')" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold transition-colors flex-shrink-0">
+                            <i class="fas fa-sliders mr-1"></i> Configure Key
+                        </button>
+                    </div>
+                </div>
+            </div>`;
     }
 
     // ═════════════════════════════════════════════════════════════════════

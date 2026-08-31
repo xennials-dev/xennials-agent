@@ -141,7 +141,7 @@
             font-family: 'JetBrains Mono', monospace;
         }
     </style>
-  <script type="module" crossorigin src="/assets/playground-Dbv-LhA0.js"></script>
+  <script type="module" crossorigin src="/assets/playground-CgcP2xJv.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/script-DQA0-eq8.js">
   <link rel="stylesheet" crossorigin href="/assets/script-Cn6dBOJK.css">
 </head>
@@ -243,12 +243,15 @@
                     Multimodal AI sandbox — Chat, generate images & videos, compare models side-by-side. Powered by LiteLLM + Ollama + fal.ai.
                 </p>
             </div>
-            <div class="flex items-center gap-3 flex-shrink-0">
+            <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
                 <!-- Gateway Status -->
                 <div id="gateway-status" class="flex items-center gap-2 px-3 py-1.5 bg-slate-950/80 border border-slate-700 rounded-full text-xs pg-mono">
                     <span class="status-dot checking"></span>
                     <span class="text-gray-400">Checking gateway...</span>
                 </div>
+                <button id="open-gateway-modal-btn" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 rounded-full text-xs pg-mono text-gray-300 transition-colors inline-flex items-center gap-1.5" title="Configure LiteLLM & fal.ai Gateway Settings">
+                    <i class="fas fa-sliders text-indigo-400"></i> Settings
+                </button>
                 <a href="deeptutor.html" class="px-4 py-2 bg-indigo-900/60 hover:bg-indigo-900 border border-indigo-500/40 rounded-xl text-xs pg-mono text-indigo-300 transition-colors inline-flex items-center gap-1.5">
                     <i class="fas fa-graduation-cap"></i> DeepTutor
                 </a>
@@ -675,13 +678,40 @@
         </div>
     </footer>
 
-    <!-- Toast Notification -->
-    <div id="toast"></div>
-
-    <!-- Back To Top Button -->
-    <button id="back-to-top" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    <!-- Gateway Settings Modal -->
+    <div id="gateway-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button id="close-gateway-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-lg font-bold font-space text-white mb-2 flex items-center gap-2">
+                <i class="fas fa-server text-indigo-400"></i> AI Gateway Configuration
+            </h3>
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                Connect to your LiteLLM Proxy (:4000) or local Ollama instance (:11434) and set API keys for media generation.
+            </p>
+            <div class="space-y-4 text-xs font-mono">
+                <div>
+                    <label class="block text-gray-300 mb-1">LiteLLM Gateway Base URL</label>
+                    <input type="text" id="gateway-url" value="/v1" placeholder="/v1 or http://localhost:4000" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-white focus:border-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">LiteLLM Master Key</label>
+                    <input type="password" id="gateway-key" value="sk-xennials-playground-dev-key" placeholder="sk-..." class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-white focus:border-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">fal.ai API Key (for Video / Image)</label>
+                    <input type="password" id="fal-key-input" placeholder="fal_key_..." class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-white focus:border-amber-500 focus:outline-none">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between items-center">
+                <span class="text-[10px] text-gray-500 font-mono">Saved in browser storage</span>
+                <button id="connect-gateway-btn" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold text-xs transition-colors shadow-lg shadow-indigo-600/30">
+                    Save & Connect
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Core Script (nav, theme, back-to-top) -->
 
