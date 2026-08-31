@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import fs from "fs";
 
-const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:9119";
+const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:8080";
 
 /**
  * In production the Python `hermes dashboard` server injects a one-shot
