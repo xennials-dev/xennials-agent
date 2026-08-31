@@ -844,4 +844,76 @@ body.guide-mode-active [data-step-guide]:hover {
     transition: all 0.4s ease;
 }
 
+/* ==========================================================================
+   Autonomous Agent Workforce Cinema & Dribbble Motion Architecture
+   ========================================================================== */
+
+.agent-cinema-frame {
+    background: radial-gradient(circle at 50% 30%, rgba(30, 20, 10, 0.6) 0%, rgba(9, 10, 15, 0.95) 70%, #06070a 100%);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(245, 158, 11, 0.25);
+    perspective: 1000px;
+}
+
+.cinema-stage-view {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinema-stage-view.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    display: flex !important;
+}
+
+.cinema-stage-view.hidden {
+    display: none !important;
+}
+
+.cinema-headline {
+    font-family: 'Anton', 'Bebas Neue', 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.cinema-hud-card {
+    border: 1px solid rgba(245, 158, 11, 0.18);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.05);
+    animation: floatHud 6s ease-in-out infinite alternate;
+}
+
+.cinema-hud-card:nth-child(2) {
+    animation-delay: -1.5s;
+}
+
+.cinema-hud-card:nth-child(3) {
+    animation-delay: -3s;
+}
+
+.cinema-hud-card:nth-child(4) {
+    animation-delay: -4.5s;
+}
+
+@keyframes floatHud {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+.cinema-bento-card {
+    background: linear-gradient(180deg, rgba(20, 22, 32, 0.85) 0%, rgba(10, 11, 16, 0.95) 100%);
+    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.cinema-bento-card:hover {
+    box-shadow: 0 30px 60px -15px rgba(245, 158, 11, 0.2), inset 0 1px 1px rgba(245, 158, 11, 0.3);
+}
+
+.cinema-watermark {
+    font-family: 'Anton', 'Bebas Neue', sans-serif;
+    letter-spacing: -0.05em;
+    user-select: none;
+    line-height: 0.8;
+}
+
+
 

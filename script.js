@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBlogHub();
     initWorkflowSuite();
     initGuidedAnnotationsAndTour();
+    initAgentCinemaExperience();
 });
 
 /* Hero Background Ambient Canvas */
@@ -1328,5 +1329,126 @@ function initGuidedAnnotationsAndTour() {
         if (e.key === 'ArrowLeft' && currentTourStep > 0) showTourStep(currentTourStep - 1);
     });
 }
+
+/* ==========================================================================
+   Autonomous Agent Workforce Cinema & Dribbble Motion Architecture Engine
+   ========================================================================== */
+function initAgentCinemaExperience() {
+    const stageTabs = document.querySelectorAll('.cinema-tab-btn');
+    const stageCore = document.getElementById('stage-core');
+    const stageAutopilot = document.getElementById('stage-autopilot');
+    const cinemaFrame = document.getElementById('cinema-frame');
+    const autoCycleBtn = document.getElementById('cinema-auto-cycle-btn');
+    const cycleStatus = document.getElementById('cinema-cycle-status');
+    const cycleIcon = document.getElementById('cinema-cycle-icon');
+    const interactiveSpace = document.getElementById('cinema-interactive-space');
+    
+    if (!stageCore || !stageAutopilot) return;
+
+    let currentStage = 'core';
+    let autoCycleActive = true;
+    let cycleInterval = null;
+
+    function setStage(stage) {
+        currentStage = stage;
+
+        stageTabs.forEach(tab => {
+            const isTarget = tab.getAttribute('data-stage') === stage;
+            if (isTarget) {
+                tab.classList.add('active', 'text-amber-200', 'bg-amber-500/20', 'border-amber-500/30');
+                tab.classList.remove('text-gray-400');
+            } else {
+                tab.classList.remove('active', 'text-amber-200', 'bg-amber-500/20', 'border-amber-500/30');
+                tab.classList.add('text-gray-400');
+            }
+        });
+
+        if (stage === 'core') {
+            stageAutopilot.classList.add('hidden');
+            stageAutopilot.classList.remove('active');
+            stageCore.classList.remove('hidden');
+            setTimeout(() => stageCore.classList.add('active'), 50);
+        } else {
+            stageCore.classList.add('hidden');
+            stageCore.classList.remove('active');
+            stageAutopilot.classList.remove('hidden');
+            setTimeout(() => stageAutopilot.classList.add('active'), 50);
+        }
+    }
+
+    stageTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const stage = tab.getAttribute('data-stage');
+            if (stage) setStage(stage);
+        });
+    });
+
+    // Auto-cycle loop
+    function startAutoCycle() {
+        if (cycleInterval) clearInterval(cycleInterval);
+        cycleInterval = setInterval(() => {
+            if (!autoCycleActive) return;
+            const nextStage = currentStage === 'core' ? 'autopilot' : 'core';
+            setStage(nextStage);
+        }, 7000);
+    }
+
+    function stopAutoCycle() {
+        if (cycleInterval) clearInterval(cycleInterval);
+        cycleInterval = null;
+    }
+
+    if (autoCycleBtn) {
+        autoCycleBtn.addEventListener('click', () => {
+            autoCycleActive = !autoCycleActive;
+            if (autoCycleActive) {
+                cycleStatus.textContent = 'ON';
+                cycleStatus.className = 'text-emerald-400';
+                cycleIcon.className = 'fas fa-play text-emerald-400 text-[10px]';
+                startAutoCycle();
+            } else {
+                cycleStatus.textContent = 'OFF';
+                cycleStatus.className = 'text-gray-400';
+                cycleIcon.className = 'fas fa-pause text-gray-400 text-[10px]';
+                stopAutoCycle();
+            }
+        });
+    }
+
+    // Pause on hover
+    if (cinemaFrame) {
+        cinemaFrame.addEventListener('mouseenter', () => {
+            if (autoCycleActive) stopAutoCycle();
+        });
+        cinemaFrame.addEventListener('mouseleave', () => {
+            if (autoCycleActive) startAutoCycle();
+            if (interactiveSpace) {
+                interactiveSpace.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            }
+        });
+
+        // 3D Parallax Tracking
+        cinemaFrame.addEventListener('mousemove', (e) => {
+            if (!interactiveSpace) return;
+            const rect = cinemaFrame.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            const rotateX = (-y / rect.height) * 8;
+            const rotateY = (x / rect.width) * 8;
+
+            interactiveSpace.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+
+            const hudCards = interactiveSpace.querySelectorAll('.cinema-hud-card');
+            hudCards.forEach((card, index) => {
+                const depth = (index + 1) * 3;
+                card.style.transform = `translate3d(${(x / 40) * depth}px, ${(y / 40) * depth}px, ${depth * 4}px)`;
+            });
+        });
+    }
+
+    startAutoCycle();
+}
+
 
 
