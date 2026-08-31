@@ -821,6 +821,72 @@
         }
     }
 
+    // Model mapping for fal.ai cloud endpoints
+    const FAL_MODEL_ENDPOINTS = {
+        // Video models
+        'fal-minimax-h3-max-t2v': 'fal-ai/minimax/video-01/text-to-video',
+        'fal-minimax-h3-i2v': 'fal-ai/minimax-video/image-to-video',
+        'fal-minimax-h3-max-i2v': 'fal-ai/minimax/video-01/image-to-video',
+        'fal-seedance-2.5-t2v': 'fal-ai/kling-video/v1.5/pro/text-to-video',
+        'fal-seedance-2.5-i2v': 'fal-ai/kling-video/v1.5/pro/image-to-video',
+        'fal-flux-3-i2v': 'fal-ai/flux/dev/image-to-image',
+        'fal-kling-v3-pro-i2v': 'fal-ai/kling-video/v1/standard/image-to-video',
+        // Image models
+        'fal-flux-schnell': 'fal-ai/flux/schnell',
+        'fal-flux-dev': 'fal-ai/flux/dev',
+        'fal-flux-pro': 'fal-ai/flux-pro/v1.1',
+        'fal-krea-2-turbo': 'fal-ai/krea-2/turbo',
+    };
+
+    async function callFalApi(modelKey, inputPayload) {
+        const falKey = CONFIG.falKey || localStorage.getItem('pg_fal_key');
+        if (!falKey) return null;
+
+        const endpoint = FAL_MODEL_ENDPOINTS[modelKey] || modelKey.replace(/^fal-/, 'fal-ai/');
+        
+        // 1. Submit request to queue
+        const submitRes = await fetch(`https://queue.fal.run/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Key ${falKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(inputPayload),
+        });
+
+        if (!submitRes.ok) {
+            const errData = await submitRes.json().catch(() => ({}));
+            throw new Error(errData.detail || errData.message || `Fal API error ${submitRes.status}`);
+        }
+
+        const submitData = await submitRes.json();
+        const requestId = submitData.request_id;
+        if (!requestId) return submitData;
+
+        // 2. Poll for completion (up to 90s)
+        const statusUrl = `https://queue.fal.run/${endpoint}/requests/${requestId}/status`;
+        const resultUrl = `https://queue.fal.run/${endpoint}/requests/${requestId}`;
+
+        for (let i = 0; i < 45; i++) {
+            await new Promise(r => setTimeout(r, 2000));
+            const statusRes = await fetch(statusUrl, {
+                headers: { 'Authorization': `Key ${falKey}` },
+            });
+            if (!statusRes.ok) continue;
+            const statusData = await statusRes.json();
+            
+            if (statusData.status === 'COMPLETED') {
+                const resRes = await fetch(resultUrl, {
+                    headers: { 'Authorization': `Key ${falKey}` },
+                });
+                return await resRes.json();
+            } else if (statusData.status === 'FAILED') {
+                throw new Error(statusData.error || 'Fal generation failed');
+            }
+        }
+        throw new Error('Fal queue request timed out');
+    }
+
     async function generateImage() {
         const prompt = $('#image-prompt').value.trim();
         if (!prompt) { showToast('Enter an image prompt', 'error'); return; }
@@ -838,51 +904,41 @@
             <div class="media-result shimmer" style="aspect-ratio: ${ratio === 'portrait_9_16' ? '9/16' : ratio === 'square' ? '1/1' : '16/9'}; max-height: 400px;"></div>`;
 
         try {
-            const body = {
-                model,
-                prompt,
-                n: 1,
-                size: ratio === 'portrait_9_16' ? '576x1024' : ratio === 'square' ? '1024x1024' : '1024x576',
-            };
+            const falKey = CONFIG.falKey || localStorage.getItem('pg_fal_key');
+            if (falKey) {
+                // Real Fal.ai generation
+                const falResult = await callFalApi(model, {
+                    prompt,
+                    image_size: ratio === 'portrait_9_16' ? 'portrait_16_9' : ratio === 'square' ? 'square_hd' : 'landscape_16_9',
+                    num_inference_steps: steps,
+                    num_images: 1,
+                });
 
-            const api = getApiConfig(model);
-            const imgHeaders = { 'Content-Type': 'application/json' };
-            if (api.apiKey) imgHeaders['Authorization'] = `Bearer ${api.apiKey}`;
-
-            const res = await fetch(`${api.baseUrl}/images/generations`, {
-                method: 'POST',
-                headers: imgHeaders,
-                body: JSON.stringify(body),
-            });
-
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(err.error?.message || `HTTP ${res.status}`);
+                const images = falResult?.images || falResult?.data || [];
+                if (images.length > 0) {
+                    output.innerHTML = images.map((img, i) => `
+                        <div class="media-result border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl">
+                            <img src="${img.url || img.b64_json ? `data:image/png;base64,${img.b64_json}` : img}" 
+                                 alt="Generated image ${i + 1}" class="w-full h-auto" loading="lazy">
+                            <div class="p-3 flex items-center justify-between">
+                                <span class="text-[10px] text-gray-500 pg-mono truncate max-w-[70%]">${escapeHtml(prompt).substring(0, 60)}...</span>
+                                <a href="${img.url || img}" download target="_blank" class="text-indigo-400 hover:text-indigo-300 text-xs">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </div>`).join('');
+                    showToast('Image generated via fal.ai Cloud GPU!', 'success');
+                    return;
+                }
             }
 
-            const data = await res.json();
-            const images = data.data || [];
-
-            if (images.length === 0) throw new Error('No images returned');
-
-            output.innerHTML = images.map((img, i) => `
-                <div class="media-result border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl">
-                    <img src="${img.url || img.b64_json ? `data:image/png;base64,${img.b64_json}` : ''}" 
-                         alt="Generated image ${i + 1}" class="w-full h-auto" loading="lazy">
-                    <div class="p-3 flex items-center justify-between">
-                        <span class="text-[10px] text-gray-500 pg-mono truncate max-w-[70%]">${escapeHtml(prompt).substring(0, 60)}...</span>
-                        <a href="${img.url || '#'}" download target="_blank" class="text-indigo-400 hover:text-indigo-300 text-xs">
-                            <i class="fas fa-download"></i>
-                        </a>
-                    </div>
-                </div>`).join('');
-
-            showToast('Image generated!', 'success');
+            // Interactive Simulator Fallback
+            renderSimulatedImageOutput(output, prompt, model, ratio, 'Interactive Preview');
+            showToast('Simulated Preview Rendered (Connect FAL_KEY for cloud GPU)', 'warning');
 
         } catch (err) {
-            // Render interactive simulation canvas
             renderSimulatedImageOutput(output, prompt, model, ratio, err.message);
-            showToast('Simulated Preview Rendered (Connect FAL_KEY for cloud GPU)', 'warning');
+            showToast('Simulated Preview Rendered', 'warning');
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-sparkles"></i> Generate Image';
@@ -987,7 +1043,7 @@
         const btn = $('#video-generate-btn');
         const output = $('#video-output');
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating (this may take a while)...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating Video (this may take a moment)...';
 
         output.innerHTML = `
             <div class="p-8 text-center bg-slate-950 border border-slate-800 rounded-2xl">
@@ -997,53 +1053,40 @@
             </div>`;
 
         try {
-            const body = {
-                model,
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: 1,
-            };
+            const falKey = CONFIG.falKey || localStorage.getItem('pg_fal_key');
+            if (falKey) {
+                const isI2V = model.includes('i2v');
+                const payload = { prompt };
+                if (isI2V && STATE.videoImageData) {
+                    payload.image_url = STATE.videoImageData;
+                }
 
-            const api = getApiConfig(model);
-            const vidHeaders = { 'Content-Type': 'application/json' };
-            if (api.apiKey) vidHeaders['Authorization'] = `Bearer ${api.apiKey}`;
+                const falResult = await callFalApi(model, payload);
+                const videoUrl = falResult?.video?.url || falResult?.url || falResult?.data?.video_url;
 
-            const res = await fetch(`${api.baseUrl}/chat/completions`, {
-                method: 'POST',
-                headers: vidHeaders,
-                body: JSON.stringify({ ...body, model: api.model }),
-            });
-
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(err.error?.message || `HTTP ${res.status}`);
+                if (videoUrl) {
+                    output.innerHTML = `
+                        <div class="media-result border border-slate-700 bg-slate-950 max-w-2xl rounded-2xl overflow-hidden shadow-2xl">
+                            <video controls autoplay loop class="w-full rounded-t-lg" src="${videoUrl}"></video>
+                            <div class="p-3 flex items-center justify-between">
+                                <span class="text-[10px] text-gray-500 pg-mono">${model}</span>
+                                <a href="${videoUrl}" download target="_blank" class="text-amber-400 hover:text-amber-300 text-xs font-semibold">
+                                    <i class="fas fa-download mr-1"></i> Download Video
+                                </a>
+                            </div>
+                        </div>`;
+                    showToast('Video generated via fal.ai Cloud GPU!', 'success');
+                    return;
+                }
             }
 
-            const data = await res.json();
-            const content = data.choices?.[0]?.message?.content || '';
-
-            // Check if we got a video URL back
-            const urlMatch = content.match(/https?:\/\/[^\s"]+\.(mp4|webm|mov)/i);
-
-            if (urlMatch) {
-                output.innerHTML = `
-                    <div class="media-result border border-slate-700 bg-slate-950 max-w-2xl rounded-2xl overflow-hidden shadow-2xl">
-                        <video controls autoplay loop class="w-full rounded-t-lg" src="${urlMatch[0]}"></video>
-                        <div class="p-3 flex items-center justify-between">
-                            <span class="text-[10px] text-gray-500 pg-mono">${model}</span>
-                            <a href="${urlMatch[0]}" download target="_blank" class="text-amber-400 hover:text-amber-300 text-xs">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </a>
-                        </div>
-                    </div>`;
-                showToast('Video generation complete', 'success');
-            } else {
-                renderSimulatedVideoOutput(output, prompt, model, content);
-                showToast('Interactive Video Simulator Activated', 'success');
-            }
+            // When no FAL_KEY is configured, activate the rich Interactive Video Diffusion Simulator
+            renderSimulatedVideoOutput(output, prompt, model);
+            showToast('Interactive Video Simulator Activated (Set FAL_KEY for cloud GPU)', 'warning');
 
         } catch (err) {
             renderSimulatedVideoOutput(output, prompt, model, err.message);
-            showToast('Interactive Video Simulator Activated (Set FAL_KEY for cloud GPU)', 'warning');
+            showToast('Interactive Video Simulator Activated', 'warning');
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-clapperboard"></i> Generate Video';
@@ -1077,7 +1120,7 @@
                     <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-gray-400 gap-3 z-10">
                         <div class="flex items-center gap-2 text-[11px]">
                             <i class="fas fa-info-circle text-amber-400 flex-shrink-0"></i>
-                            <span>Connect your <strong>FAL_KEY</strong> or <strong>LiteLLM (:4000)</strong> to stream direct cloud GPU render.</span>
+                            <span>To connect cloud GPU: add your <strong>FAL_KEY</strong> in Settings.</span>
                         </div>
                         <button onclick="document.getElementById('gateway-modal').classList.remove('hidden')" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold transition-colors flex-shrink-0">
                             <i class="fas fa-sliders mr-1"></i> Configure Key
