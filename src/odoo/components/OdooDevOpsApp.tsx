@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyTextToClipboard } from '@/lib/clipboard';
 import { 
   Server, 
   Terminal, 
@@ -82,7 +83,7 @@ export default function OdooDevOpsApp() {
   };
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    void copyTextToClipboard(text);
     setCopiedFile(label);
     setTimeout(() => setCopiedFile(null), 2500);
   };

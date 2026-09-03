@@ -1,3 +1,4 @@
+import { copyTextToClipboard } from '@/lib/clipboard';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Briefcase, 
@@ -965,7 +966,7 @@ export default function AiAgencyHqApp() {
                     <div className="mt-4 pt-3 border-t border-[#252A33] flex justify-end gap-2 text-xs font-mono">
                       <button 
                         onClick={() => {
-                          navigator.clipboard.writeText(scrapedJobs[0].content);
+                          void copyTextToClipboard(scrapedJobs[0].content);
                           speakAvatarMessage("Copied scraped markdown layout directly to your system clipboard!");
                         }}
                         className="bg-[#1C2129] border border-white/5 hover:bg-[#252B35] text-white px-3 py-1.5 rounded-lg transition"

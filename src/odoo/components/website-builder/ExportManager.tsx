@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyTextToClipboard } from '@/lib/clipboard';
 import { 
   Download, 
   Copy, 
@@ -23,7 +24,7 @@ export default function ExportManager({ docs, agents }: ExportManagerProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const handleCopy = (key: string, text: string) => {
-    navigator.clipboard.writeText(text);
+    void copyTextToClipboard(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
   };

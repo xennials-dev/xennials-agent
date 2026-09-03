@@ -89,7 +89,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(rootDir, "./src"),
-      "@hermes/shared": path.resolve(rootDir, "../apps/shared/src"),
+      "@hermes/shared": path.resolve(rootDir, "./src/vendor/hermes-shared.ts"),
+      "@nous-research/ui": path.resolve(rootDir, "./node_modules/@nous-research/ui/dist"),
     },
     // When @nous-research/ui is symlinked via `file:../../design-language`,
     // Node's module resolution would pick up shared deps from

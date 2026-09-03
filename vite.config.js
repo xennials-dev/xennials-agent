@@ -44,6 +44,7 @@ export default defineConfig({
         deeptutor: resolve(__dirname, 'deeptutor.html'),
         playground: resolve(__dirname, 'playground.html'),
         blog: resolve(__dirname, 'blog.html'),
+        skills: resolve(__dirname, 'skills.html'),
       },
     },
   },

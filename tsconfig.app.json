@@ -19,7 +19,7 @@
     /* Path aliases */
     "paths": {
       "@/*": ["./src/*"],
-      "@hermes/shared": ["../apps/shared/src/index.ts"]
+      "@hermes/shared": ["./src/vendor/hermes-shared.ts"]
     },
 
     /* Linting */
@@ -30,5 +30,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "../apps/shared/src"]
+  "include": ["src"]
 }

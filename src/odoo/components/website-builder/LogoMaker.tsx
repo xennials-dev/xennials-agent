@@ -1,3 +1,4 @@
+import { copyTextToClipboard } from '@/lib/clipboard';
 import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
@@ -666,7 +667,7 @@ export default function LogoMaker() {
   const activeInspiration = INSPIRATION_STYLES.find(s => s.id === selectedInspirationId) || INSPIRATION_STYLES[0];
 
   const handleCopyInspirationCode = (textToCopy: string) => {
-    navigator.clipboard.writeText(textToCopy);
+    void copyTextToClipboard(textToCopy);
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2000);
   };

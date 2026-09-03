@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyTextToClipboard } from '@/lib/clipboard';
 import { 
   FileText, 
   Folder, 
@@ -42,7 +43,7 @@ export default function GoogleDocsHub({ onInjectIntoAgent, docs, setDocs }: Goog
   const selectedDoc = docs.find(d => d.id === selectedDocId) || docs[0];
 
   const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
+    void copyTextToClipboard(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };

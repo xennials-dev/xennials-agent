@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills Library | Xennials AI</title>
+  <meta name="description" content="Browse the Xennials AI skills library for research, automation, development, and creative workflows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root { --skills-ink: #f8fafc; --skills-muted: #94a3b8; --skills-line: rgba(148,163,184,.18); --skills-accent: #38bdf8; }
+    .skills-page { min-height: 100vh; background: radial-gradient(circle at 12% 0%, rgba(14,165,233,.14), transparent 32rem), #070b12; color: var(--skills-ink); font-family: 'Space Grotesk', sans-serif; }
+    .skills-shell { max-width: 1180px; margin: 0 auto; padding: 8rem 1.5rem 4rem; }
+    .skills-nav { position: fixed; inset: 0 0 auto; z-index: 10; padding: 1rem 1.5rem; background: rgba(7,11,18,.86); border-bottom: 1px solid var(--skills-line); backdrop-filter: blur(16px); }
+    .skills-nav-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .skills-brand { color: var(--skills-ink); text-decoration: none; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .skills-back { color: var(--skills-muted); text-decoration: none; font-family: 'DM Mono', monospace; font-size: .78rem; }
+    .skills-back:hover { color: var(--skills-accent); }
+    .skills-kicker { color: var(--skills-accent); font: 500 .75rem 'DM Mono', monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .skills-title { max-width: 760px; margin: .75rem 0 1rem; font-size: clamp(2.8rem, 8vw, 6.5rem); line-height: .95; letter-spacing: -.04em; }
+    .skills-intro { max-width: 650px; color: var(--skills-muted); font-size: 1.05rem; line-height: 1.7; }
+    .skills-toolbar { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2.5rem 0 1.75rem; }
+    .skills-search, .skills-filter { border: 1px solid var(--skills-line); background: rgba(15,23,42,.72); color: var(--skills-ink); padding: .8rem 1rem; border-radius: .7rem; font: .82rem 'DM Mono', monospace; }
+    .skills-search { flex: 1 1 18rem; min-width: 0; }
+    .skills-filter { flex: 0 1 12rem; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .skill-card { min-height: 190px; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem; border: 1px solid var(--skills-line); background: linear-gradient(145deg, rgba(15,23,42,.9), rgba(8,15,26,.74)); border-radius: .9rem; transition: transform .25s, border-color .25s; }
+    .skill-card:hover { transform: translateY(-4px); border-color: rgba(56,189,248,.65); }
+    .skill-meta { display: flex; justify-content: space-between; gap: 1rem; color: var(--skills-muted); font: .68rem 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; }
+    .skill-card h2 { margin: 1.5rem 0 .5rem; font-size: 1.2rem; }
+    .skill-card p { margin: 0; color: var(--skills-muted); line-height: 1.55; font-size: .88rem; }
+    .skill-command { margin-top: 1.25rem; color: #bae6fd; font: .72rem 'DM Mono', monospace; }
+    .skills-empty { grid-column: 1 / -1; padding: 3rem; text-align: center; color: var(--skills-muted); border: 1px dashed var(--skills-line); }
+    @media (max-width: 640px) { .skills-shell { padding-inline: 1rem; } .skills-title { font-size: 3.2rem; } }
+  </style>
+</head>
+<body class="skills-page">
+  <nav class="skills-nav"><div class="skills-nav-inner"><a class="skills-brand" href="index.html">Xennials AI</a><a class="skills-back" href="index.html">Back to portal /</a></div></nav>
+  <main class="skills-shell">
+    <div class="skills-kicker">Xennials / Agent capability library</div>
+    <h1 class="skills-title">Give your agent a better instinct.</h1>
+    <p class="skills-intro">A focused catalog of reusable workflows for research, engineering, operations, and creative work. Search a skill, copy its command, and move from intent to execution.</p>
+    <div class="skills-toolbar">
+      <input id="skills-search" class="skills-search" type="search" placeholder="Search skills, domains, commands..." aria-label="Search skills">
+      <select id="skills-filter" class="skills-filter" aria-label="Filter skills by domain"><option value="all">All domains</option><option value="research">Research</option><option value="automation">Automation</option><option value="engineering">Engineering</option><option value="creative">Creative</option></select>
+    </div>
+    <section id="skills-grid" class="skills-grid" aria-live="polite"></section>
+  </main>
+  <script>
+    const skills = [
+      ['deep-research', 'Deep Research', 'research', 'Turn a broad question into a sourced brief with competing views and next actions.'],
+      ['web-recon', 'Web Recon', 'research', 'Map a market, product, or technical landscape from live sources.'],
+      ['document-synthesis', 'Document Synthesis', 'research', 'Extract themes, decisions, risks, and open questions from long files.'],
+      ['workflow-builder', 'Workflow Builder', 'automation', 'Design an event-driven automation with clear inputs, actions, and failure paths.'],
+      ['crm-operator', 'CRM Operator', 'automation', 'Qualify leads, update records, and keep follow-up work moving automatically.'],
+      ['browser-operator', 'Browser Operator', 'automation', 'Navigate repeatable browser tasks with checkpoints for sensitive actions.'],
+      ['code-review', 'Code Review', 'engineering', 'Find correctness, security, and maintainability risks before they ship.'],
+      ['test-author', 'Test Author', 'engineering', 'Turn behavior into focused tests that protect the important contract.'],
+      ['ship-check', 'Ship Check', 'engineering', 'Run a practical release readiness pass across build, config, and observability.'],
+      ['content-studio', 'Content Studio', 'creative', 'Create clear campaign, product, and editorial drafts with a consistent voice.'],
+      ['visual-direction', 'Visual Direction', 'creative', 'Translate a rough idea into a concrete visual system and production brief.'],
+      ['presentation-maker', 'Presentation Maker', 'creative', 'Shape raw material into a concise, audience-aware presentation narrative.']
+    ];
+    const grid = document.getElementById('skills-grid');
+    const search = document.getElementById('skills-search');
+    const filter = document.getElementById('skills-filter');
+    function renderSkills() {
+      const query = search.value.trim().toLowerCase();
+      const domain = filter.value;
+      const visible = skills.filter(([command, name, category, description]) => (domain === 'all' || category === domain) && [command, name, category, description].join(' ').toLowerCase().includes(query));
+      grid.innerHTML = visible.length ? visible.map(([command, name, category, description], index) => `<article class="skill-card"><div><div class="skill-meta"><span>${String(index + 1).padStart(2, '0')} / ${category}</span><span>ready</span></div><h2>${name}</h2><p>${description}</p></div><div class="skill-command">/skill ${command}</div></article>`).join('') : '<div class="skills-empty">No matching skills. Try a broader search.</div>';
+    }
+    search.addEventListener('input', renderSkills);
+    filter.addEventListener('change', renderSkills);
+    renderSkills();
+  </script>
+</body>
+</html>

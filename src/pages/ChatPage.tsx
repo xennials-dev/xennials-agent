@@ -1908,31 +1908,31 @@ export default function ChatPage({ isActive = true }: { isActive?: boolean }) {
             </span>
           </Button>
 
-          {chatPanelCollapsed && (
-            <Button
-              ghost
-              onClick={toggleChatPanel}
-              title="Show side panel (model + sessions)"
-              aria-label="Show chat side panel"
-              className={cn(
-                "absolute z-10",
-                "normal-case tracking-normal font-normal",
-                "rounded border border-current/30",
-                "bg-black/20",
-                "opacity-70 hover:opacity-100 hover:border-current/60",
-                "transition-opacity duration-150",
-                "top-2 right-2 px-2 py-1 text-xs sm:top-3 sm:right-3",
-              )}
-              style={{ color: terminalFg }}
-            >
-              <span className="inline-flex items-center gap-1">
-                <PanelRight className="h-3 w-3 shrink-0" />
-                <span className="hidden min-[400px]:inline tracking-wide">
-                  panel
-                </span>
+          <Button
+            ghost
+            size="icon"
+            onClick={toggleChatPanel}
+            title="Show side panel (model + sessions)"
+            aria-label="Show chat side panel"
+            className={cn(
+              "absolute z-10",
+              "normal-case tracking-normal font-normal",
+              "rounded border border-current/30",
+              "bg-black/20",
+              "opacity-70 hover:opacity-100 hover:border-current/60",
+              "transition-opacity duration-150",
+              "top-2 right-2 px-2 py-1 text-xs sm:top-3 sm:right-3",
+              !chatPanelCollapsed && "hidden",
+            )}
+            style={{ color: terminalFg }}
+          >
+            <span className="inline-flex items-center gap-1">
+              <PanelRight className="h-3 w-3 shrink-0" />
+              <span className="hidden min-[400px]:inline tracking-wide">
+                panel
               </span>
-            </Button>
-          )}
+            </span>
+          </Button>
         </div>
 
         {!narrow && !chatPanelCollapsed && (
