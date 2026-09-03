@@ -180,6 +180,7 @@ const BUILTIN_ROUTES_CORE: Record<string, ComponentType> = {
   "/profiles": ProfilesPage,
   "/profiles/new": ProfileBuilderPage,
   "/config": ConfigPage,
+  "/keys": EnvPage,
   "/env": EnvPage,
   "/docs": DocsPage,
 };
@@ -237,7 +238,7 @@ const BUILTIN_NAV_REST: NavItem[] = [
   { path: "/pairing", label: "Pairing", icon: ShieldCheck },
   { path: "/profiles", labelKey: "profiles", label: "Profiles", icon: Users },
   { path: "/config", labelKey: "config", label: "Config", icon: Settings },
-  { path: "/env", labelKey: "keys", label: "Keys", icon: KeyRound },
+  { path: "/keys", labelKey: "keys", label: "Keys", icon: KeyRound },
   { path: "/system", label: "System", icon: Wrench },
   {
     path: "/docs",

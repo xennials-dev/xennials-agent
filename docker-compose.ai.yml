@@ -129,6 +129,10 @@ services:
       - DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY:-}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - FAL_KEY=${FAL_KEY:-}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-}
+      - CIVITAI_API_KEY=${CIVITAI_API_KEY:-}
+      - HEDRA_API_KEY=${HEDRA_API_KEY:-}
+      - MODELSCOPE_API_KEY=${MODELSCOPE_API_KEY:-}
     command:
       - "--config=/app/config.yaml"
       - "--port=4000"

@@ -7,6 +7,15 @@ import { PluginSlot } from "@/plugins";
 
 export const HERMES_DOCS_URL = "https://hermes-agent.nousresearch.com/docs/";
 
+const HERMES_DOC_LINKS = [
+  ["Configuration", "https://hermes-agent.nousresearch.com/docs/user-guide/configuration"],
+  ["Configuring Models", "https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models"],
+  ["Providers", "https://hermes-agent.nousresearch.com/docs/integrations/providers"],
+  ["Skills", "https://hermes-agent.nousresearch.com/docs/user-guide/features/skills"],
+  ["MCP", "https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp"],
+  ["Windows Setup", "https://hermes-agent.nousresearch.com/docs/user-guide/windows-native"],
+] as const;
+
 const DS_BUTTON_OUTLINED_LINK_CN = cn(
   "group relative inline-grid grid-cols-[auto_1fr_auto] items-center",
   "px-[.9em_.75em] py-[1.25em] gap-2",
@@ -44,6 +53,28 @@ export default function DocsPage() {
       )}
     >
       <PluginSlot name="docs:top" />
+      <section className="mb-3 border border-border bg-card p-3" aria-labelledby="official-hermes-guides">
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <h2 id="official-hermes-guides" className="text-display text-xs font-medium tracking-wider text-text-secondary">
+            Official Hermes guides
+          </h2>
+          <span className="text-xs text-text-tertiary">Source of truth</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {HERMES_DOC_LINKS.map(([label, href]) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 border border-border px-2 py-1 text-xs text-text-secondary transition-colors hover:border-primary hover:text-primary"
+            >
+              {label}
+              <ExternalLink className="size-3" />
+            </a>
+          ))}
+        </div>
+      </section>
       <iframe
         title={t.app.nav.documentation}
         src={HERMES_DOCS_URL}
